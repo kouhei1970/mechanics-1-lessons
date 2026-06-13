@@ -2,7 +2,7 @@
   {
     "id": "sl13-title",
     "file": "audio/sl13-title.mp3",
-    "duration": 68.57
+    "duration": 58.08
   },
   {
     "id": "sl13-schedule",
@@ -22,12 +22,12 @@
   {
     "id": "sl13-rotation",
     "file": "audio/sl13-rotation.mp3",
-    "duration": 77.95
+    "duration": 68.64
   },
   {
     "id": "sl13-angvel",
     "file": "audio/sl13-angvel.mp3",
-    "duration": 75.43
+    "duration": 68.23
   },
   {
     "id": "sl13-linkrel",
@@ -37,42 +37,42 @@
   {
     "id": "sl13-omega-do",
     "file": "audio/sl13-omega-do.mp3",
-    "duration": 86.5
+    "duration": 73.75
   },
   {
     "id": "sl13-ucm",
     "file": "audio/sl13-ucm.mp3",
-    "duration": 76.94
+    "duration": 67.68
   },
   {
     "id": "sl13-centripetal",
     "file": "audio/sl13-centripetal.mp3",
-    "duration": 80.4
+    "duration": 75.77
   },
   {
     "id": "sl13-uacm",
     "file": "audio/sl13-uacm.mp3",
-    "duration": 82.13
+    "duration": 69.34
   },
   {
     "id": "sl13-ex1",
     "file": "audio/sl13-ex1.mp3",
-    "duration": 85.9
+    "duration": 75.86
   },
   {
     "id": "sl13-ex2",
     "file": "audio/sl13-ex2.mp3",
-    "duration": 75.84
+    "duration": 70.58
   },
   {
     "id": "sl13-table",
     "file": "audio/sl13-table.mp3",
-    "duration": 83.04
+    "duration": 66.65
   },
   {
     "id": "sl13-gear",
     "file": "audio/sl13-gear.mp3",
-    "duration": 76.1
+    "duration": 66.5
   },
   {
     "id": "sl13-pulley",
@@ -82,7 +82,7 @@
   {
     "id": "sl13-gear-do",
     "file": "audio/sl13-gear-do.mp3",
-    "duration": 69.58
+    "duration": 52.99
   },
   {
     "id": "sl13-ex3",
@@ -92,12 +92,12 @@
   {
     "id": "sl13-relintro",
     "file": "audio/sl13-relintro.mp3",
-    "duration": 74.54
+    "duration": 64.94
   },
   {
     "id": "sl13-relformula",
     "file": "audio/sl13-relformula.mp3",
-    "duration": 77.81
+    "duration": 69.91
   },
   {
     "id": "sl13-reltri-do",
@@ -107,12 +107,12 @@
   {
     "id": "sl13-river-do",
     "file": "audio/sl13-river-do.mp3",
-    "duration": 81.0
+    "duration": 76.37
   },
   {
     "id": "sl13-rel2d",
     "file": "audio/sl13-rel2d.mp3",
-    "duration": 78.29
+    "duration": 72.22
   },
   {
     "id": "sl13-ex4",
@@ -125,9 +125,19 @@
     "duration": 48.48
   },
   {
+    "id": "sl13-ex-ucm",
+    "file": "audio/sl13-ex-ucm.mp3",
+    "duration": 67.18
+  },
+  {
+    "id": "sl13-misconc",
+    "file": "audio/sl13-misconc.mp3",
+    "duration": 74.64
+  },
+  {
     "id": "sl13-summary",
     "file": "audio/sl13-summary.mp3",
-    "duration": 86.57
+    "duration": 85.66
   },
   {
     "id": "sl13-exam",

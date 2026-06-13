@@ -789,6 +789,74 @@
   </div>
 </div></section>
 
+<section class="slide" id="sl-fric-misconc" data-title="つまずき：静摩擦力は必ず μsR か？"><div class="inner">
+  <span class="tag2 tag-ex">解説</span><span class="tag2 tag-fig">図</span>
+  <p class="kicker">つまずきポイント</p>
+  <h1 class="tt">静摩擦力は、いつも μ<sub>s</sub><i>R</i> なのか？</h1>
+  <p class="desc">よくある誤り：止まっている物体の摩擦力を、いつも <i>f</i> = μ<sub>s</sub><i>R</i> と書いてしまう。これは間違い。</p>
+  <div class="twocol">
+    <div class="figbox">
+      <svg class="fig" viewBox="0 0 320 200" role="img" aria-label="外力Fと摩擦力fの関係グラフ。F<=fsmaxでf=F、超えるとfk" style="max-width:23em;">
+        <line x1="44" y1="20" x2="44" y2="166" stroke="var(--ax)" stroke-width="1.6"/>
+        <line x1="44" y1="166" x2="300" y2="166" stroke="var(--ax)" stroke-width="1.6"/>
+        <line x1="44" y1="166" x2="200" y2="58" stroke="var(--re)" stroke-width="3"/>
+        <line x1="200" y1="100" x2="296" y2="100" stroke="var(--z1)" stroke-width="3"/>
+        <line x1="44" y1="58" x2="200" y2="58" stroke="var(--re)" stroke-width="1" stroke-dasharray="4 4"/>
+        <circle cx="200" cy="58" r="5" fill="var(--re)"/>
+        <circle cx="118" cy="111" r="5" fill="var(--re)"/>
+        <line x1="118" y1="166" x2="118" y2="111" stroke="var(--mut)" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="186" y="50" style="fill:var(--re);font-size:13px">f<tspan baseline-shift="sub" font-size="9">s</tspan>=μ<tspan baseline-shift="sub" font-size="9">s</tspan>R</text>
+        <text x="92" y="128" style="fill:var(--re);font-size:13px">f=F</text>
+        <text x="100" y="183" style="fill:var(--mut);font-size:12px;font-style:normal;font-family:sans-serif">いま</text>
+        <text x="250" y="116" style="fill:var(--z1);font-size:13px">f<tspan baseline-shift="sub" font-size="9">k</tspan></text>
+        <text x="280" y="183" style="fill:var(--mut);font-size:11px;font-style:normal;font-family:sans-serif">外力 F</text>
+        <text x="6" y="40" style="fill:var(--mut);font-size:11px;font-style:normal;font-family:sans-serif">摩擦力 f</text>
+      </svg>
+      <div class="figcap">静止中は <i>f</i> = <i>F</i>（赤の点）。μ<sub>s</sub><i>R</i> は<strong>上限</strong>であって実際の値ではない</div>
+    </div>
+    <div>
+      <p class="steps">正しくは、静摩擦力は<strong>不等式</strong>で書く：</p>
+      <div class="eq big"><i>f<sub>s</sub></i> ≤ μ<sub>s</sub> <i>R</i></div>
+      <p class="steps">実際の静摩擦力 <i>f<sub>s</sub></i> は、<strong>釣合いに必要なだけ</strong>の大きさになる。μ<sub>s</sub><i>R</i> は、その<strong>最大値（上限）</strong>にすぎない。</p>
+      <div class="ex" style="border-left-color:var(--act);"><strong>数値で確認。</strong> <i>m</i>=10 kg、μ<sub>s</sub>=0.5 → <i>R</i>=<i>mg</i>=98 N、上限 μ<sub>s</sub><i>R</i>=49 N。<br>ここで外力 <i>F</i>=20 N で押すと、釣合うので <i>f<sub>s</sub></i>=<strong>20 N</strong>（49 N ではない）。<br>外力が 49 N を超えて初めて滑り出し、動摩擦 <i>f<sub>k</sub></i>=μ<sub>k</sub><i>R</i> に切替わる。</div>
+      <p class="note">「μ<sub>s</sub><i>R</i>」を使ってよいのは、<strong>滑り出す寸前（極限釣合い）</strong>のときだけ。</p>
+    </div>
+  </div>
+</div></section>
+
+<section class="slide" id="sl-screw-jack" data-title="角ねじ・ジャッキのセルフロック"><div class="inner">
+  <span class="tag2 tag-ex">解説</span><span class="tag2 tag-fig">図</span>
+  <p class="kicker">§4.5.3 角ねじ・応用例</p>
+  <h1 class="tt">ジャッキはなぜ落ちないのか（セルフロック）</h1>
+  <div class="twocol">
+    <div class="figbox">
+      <svg class="fig" viewBox="0 0 300 210" role="img" aria-label="斜面に巻いた糸として表した角ねじ。リード角theta、摩擦角phi0、荷重W、回す力F" style="max-width:21em;">
+        <path d="M40 175 H262 L40 110 Z" fill="var(--surface2)" stroke="var(--ink)" stroke-width="2"/>
+        <g transform="translate(150 137) rotate(-16)">
+          <rect x="-22" y="-26" width="44" height="26" rx="2" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/>
+        </g>
+        <line x1="150" y1="124" x2="150" y2="190" stroke="var(--ink)" stroke-width="2.6"/>
+        <polygon points="145,184 155,184 150,194" fill="var(--ink)"/>
+        <text x="156" y="186" style="fill:var(--ink);font-style:italic">W</text>
+        <line x1="150" y1="124" x2="218" y2="104" stroke="var(--act)" stroke-width="2.6"/>
+        <polygon points="210,99 213,109 222,103" fill="var(--act)"/>
+        <text x="222" y="104" style="fill:var(--act);font-style:italic">F</text>
+        <path d="M70 175 A40 40 0 0 0 60 161" fill="none" stroke="var(--ref)" stroke-width="1.8"/>
+        <text x="74" y="168" style="fill:var(--ref);font-size:13px">θ</text>
+        <text x="92" y="200" style="fill:var(--mut);font-size:11px;font-style:normal;font-family:sans-serif">リード角 θ（ねじの傾き）</text>
+      </svg>
+      <div class="figcap">角ねじ＝斜面を円筒に巻いたもの。荷重 <i>W</i> を回す力 <i>F</i> で持ち上げる</div>
+    </div>
+    <div>
+      <p class="steps">角ねじを回して荷重 <i>W</i> を<strong>持ち上げる</strong>のに要する力は、斜面を押し上げる問題と同じで</p>
+      <div class="eq"><i>F</i> = <i>W</i> tan(θ + φ<sub>0</sub>)&nbsp;&nbsp;<span style="color:var(--mut);font-size:.8em;">(4.16)</span></div>
+      <p class="steps">逆に荷重で<strong>ねじが緩む</strong>向きの力は <i>F</i> = <i>W</i> tan(θ − φ<sub>0</sub>)。摩擦角 φ<sub>0</sub> がリード角 θ より大きいと、これが<strong>負</strong>になる。</p>
+      <div class="eq big" style="text-align:center;">φ<sub>0</sub> &gt; θ ⟹ セルフロック</div>
+      <div class="ex"><strong>数値例（自動車ジャッキ）。</strong> θ=4°、μ<sub>s</sub>=0.15 → φ<sub>0</sub>=arctan 0.15=8.5°。荷重 <i>W</i>=10 kN。<br>上げる力：<i>F</i>=10000·tan(12.5°)=<strong>約2.2 kN</strong>（てこで小さくできる）。<br>φ<sub>0</sub>=8.5° &gt; θ=4° なので、手を離しても<strong>ひとりでに戻らない</strong>。だから車を持ち上げたまま止められる。</div>
+    </div>
+  </div>
+</div></section>
+
 <section class="slide" id="sl-summary" data-title="本日のまとめ"><div class="inner">
   <span class="tag2 tag-ex">解説</span>
   <p class="kicker">第10回 摩擦</p>

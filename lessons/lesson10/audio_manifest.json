@@ -32,12 +32,12 @@
   {
     "id": "sl-static",
     "file": "audio/sl-static.mp3",
-    "duration": 62.98
+    "duration": 54.29
   },
   {
     "id": "sl-kinetic",
     "file": "audio/sl-kinetic.mp3",
-    "duration": 59.42
+    "duration": 57.19
   },
   {
     "id": "sl-fF",
@@ -47,47 +47,47 @@
   {
     "id": "sl-fF-do",
     "file": "audio/sl-fF-do.mp3",
-    "duration": 70.8
+    "duration": 64.54
   },
   {
     "id": "sl-mu-table",
     "file": "audio/sl-mu-table.mp3",
-    "duration": 71.16
+    "duration": 61.44
   },
   {
     "id": "sl-fric-angle",
     "file": "audio/sl-fric-angle.mp3",
-    "duration": 70.94
+    "duration": 59.35
   },
   {
     "id": "sl-incline-crit",
     "file": "audio/sl-incline-crit.mp3",
-    "duration": 76.2
+    "duration": 66.62
   },
   {
     "id": "sl-incline-do",
     "file": "audio/sl-incline-do.mp3",
-    "duration": 97.63
+    "duration": 75.77
   },
   {
     "id": "sl-incline-block",
     "file": "audio/sl-incline-block.mp3",
-    "duration": 72.58
+    "duration": 58.78
   },
   {
     "id": "sl-ex43",
     "file": "audio/sl-ex43.mp3",
-    "duration": 70.99
+    "duration": 63.89
   },
   {
     "id": "sl-ex41",
     "file": "audio/sl-ex41.mp3",
-    "duration": 68.81
+    "duration": 63.53
   },
   {
     "id": "sl-ex41-fbd",
     "file": "audio/sl-ex41-fbd.mp3",
-    "duration": 85.75
+    "duration": 82.03
   },
   {
     "id": "sl-rolling-def",
@@ -97,17 +97,17 @@
   {
     "id": "sl-rolling-coef",
     "file": "audio/sl-rolling-coef.mp3",
-    "duration": 73.42
+    "duration": 65.57
   },
   {
     "id": "sl-rolling-do",
     "file": "audio/sl-rolling-do.mp3",
-    "duration": 74.74
+    "duration": 64.15
   },
   {
     "id": "sl-ex44",
     "file": "audio/sl-ex44.mp3",
-    "duration": 91.22
+    "duration": 79.18
   },
   {
     "id": "sl-belt",
@@ -133,6 +133,16 @@
     "id": "sl-practice",
     "file": "audio/sl-practice.mp3",
     "duration": 73.54
+  },
+  {
+    "id": "sl-fric-misconc",
+    "file": "audio/sl-fric-misconc.mp3",
+    "duration": 64.78
+  },
+  {
+    "id": "sl-screw-jack",
+    "file": "audio/sl-screw-jack.mp3",
+    "duration": 79.97
   },
   {
     "id": "sl-summary",

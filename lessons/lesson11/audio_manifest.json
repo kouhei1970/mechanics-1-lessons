@@ -12,27 +12,27 @@
   {
     "id": "sl11-schedule",
     "file": "audio/sl11-schedule.mp3",
-    "duration": 74.35
+    "duration": 69.05
   },
   {
     "id": "sl11-roadmap",
     "file": "audio/sl11-roadmap.mp3",
-    "duration": 65.02
+    "duration": 64.01
   },
   {
     "id": "sl11-recap",
     "file": "audio/sl11-recap.mp3",
-    "duration": 76.61
+    "duration": 70.42
   },
   {
     "id": "sl11-motion-type",
     "file": "audio/sl11-motion-type.mp3",
-    "duration": 60.77
+    "duration": 57.46
   },
   {
     "id": "sl11-displacement",
     "file": "audio/sl11-displacement.mp3",
-    "duration": 91.66
+    "duration": 84.72
   },
   {
     "id": "sl11-disp-vec",
@@ -42,42 +42,42 @@
   {
     "id": "sl11-velocity-def",
     "file": "audio/sl11-velocity-def.mp3",
-    "duration": 65.81
+    "duration": 63.65
   },
   {
     "id": "sl11-deriv",
     "file": "audio/sl11-deriv.mp3",
-    "duration": 73.3
+    "duration": 71.38
   },
   {
     "id": "sl11-xt-slope",
     "file": "audio/sl11-xt-slope.mp3",
-    "duration": 70.8
+    "duration": 70.75
   },
   {
     "id": "sl11-integral",
     "file": "audio/sl11-integral.mp3",
-    "duration": 72.1
+    "duration": 71.42
   },
   {
     "id": "sl11-accel",
     "file": "audio/sl11-accel.mp3",
-    "duration": 88.85
+    "duration": 86.86
   },
   {
     "id": "sl11-vt-area",
     "file": "audio/sl11-vt-area.mp3",
-    "duration": 72.19
+    "duration": 65.4
   },
   {
     "id": "sl11-xva",
     "file": "audio/sl11-xva.mp3",
-    "duration": 72.19
+    "duration": 71.93
   },
   {
     "id": "sl11-uniform-accel",
     "file": "audio/sl11-uniform-accel.mp3",
-    "duration": 83.57
+    "duration": 77.57
   },
   {
     "id": "sl11-formula-table",
@@ -92,12 +92,12 @@
   {
     "id": "sl11-freefall",
     "file": "audio/sl11-freefall.mp3",
-    "duration": 64.18
+    "duration": 61.66
   },
   {
     "id": "sl11-freefall-ex",
     "file": "audio/sl11-freefall-ex.mp3",
-    "duration": 66.41
+    "duration": 67.44
   },
   {
     "id": "sl11-throw",
@@ -107,7 +107,7 @@
   {
     "id": "sl11-graph-read",
     "file": "audio/sl11-graph-read.mp3",
-    "duration": 65.45
+    "duration": 61.37
   },
   {
     "id": "sl11-ex-train",

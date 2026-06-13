@@ -27,7 +27,7 @@
   {
     "id": "sl-velvec",
     "file": "audio/sl-velvec.mp3",
-    "duration": 61.13
+    "duration": 54.29
   },
   {
     "id": "sl-accvec",
@@ -37,7 +37,7 @@
   {
     "id": "sl-decomp",
     "file": "audio/sl-decomp.mp3",
-    "duration": 73.7
+    "duration": 64.9
   },
   {
     "id": "sl-tangent",
@@ -52,7 +52,7 @@
   {
     "id": "sl-tn-do",
     "file": "audio/sl-tn-do.mp3",
-    "duration": 82.44
+    "duration": 79.73
   },
   {
     "id": "sl-tn-summary",
@@ -67,7 +67,7 @@
   {
     "id": "sl-proj-eom",
     "file": "audio/sl-proj-eom.mp3",
-    "duration": 84.46
+    "duration": 69.94
   },
   {
     "id": "sl-trajectory",
@@ -77,32 +77,32 @@
   {
     "id": "sl-proj-do",
     "file": "audio/sl-proj-do.mp3",
-    "duration": 73.34
+    "duration": 64.01
   },
   {
     "id": "sl-ymax",
     "file": "audio/sl-ymax.mp3",
-    "duration": 73.13
+    "duration": 65.66
   },
   {
     "id": "sl-range",
     "file": "audio/sl-range.mp3",
-    "duration": 73.85
+    "duration": 63.5
   },
   {
     "id": "sl-optangle",
     "file": "audio/sl-optangle.mp3",
-    "duration": 75.24
+    "duration": 63.84
   },
   {
     "id": "sl-comp-do",
     "file": "audio/sl-comp-do.mp3",
-    "duration": 82.1
+    "duration": 72.89
   },
   {
     "id": "sl-envelope",
     "file": "audio/sl-envelope.mp3",
-    "duration": 85.44
+    "duration": 74.18
   },
   {
     "id": "sl-ex1-q",
@@ -112,17 +112,17 @@
   {
     "id": "sl-ex1-a",
     "file": "audio/sl-ex1-a.mp3",
-    "duration": 88.7
+    "duration": 68.93
   },
   {
     "id": "sl-ex2",
     "file": "audio/sl-ex2.mp3",
-    "duration": 87.65
+    "duration": 69.1
   },
   {
     "id": "sl-ex3",
     "file": "audio/sl-ex3.mp3",
-    "duration": 89.57
+    "duration": 78.0
   },
   {
     "id": "sl-practice",
@@ -132,7 +132,7 @@
   {
     "id": "sl-summary",
     "file": "audio/sl-summary.mp3",
-    "duration": 88.51
+    "duration": 80.54
   },
   {
     "id": "sl-next",
