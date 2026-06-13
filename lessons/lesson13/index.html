@@ -878,9 +878,9 @@
     ctx.font='14px Georgia,serif'; ctx.fillText('P',Px-16,Py+6); ctx.fillText('Q',Qx+8,Qy+6);
     arr(Qx,Qy,Qx+30,Qy-h*0.42,cssv('--act'),3.2);
     arr(Px,Py,Px+50,Py-h*0.28,cssv('--ref'),3);
-    arr(Qx,Qy,Qx-50,Qy+h*0.18,cssv('--im'),2.4,[5,4]);
-    arr(Qx,Qy,Qx+50,Qy-h*0.28,cssv('--thr'),3.4);
-    ctx.fillStyle=cssv('--thr'); ctx.font='bold 13px Georgia,serif'; ctx.fillText('vQ/P',Qx-2,Qy-h*0.3);
+    arr(Qx,Qy,Qx-50,Qy+h*0.28,cssv('--im'),2.4,[5,4]);
+    arr(Qx,Qy,Qx-20,Qy-h*0.14,cssv('--thr'),3.4);
+    ctx.fillStyle=cssv('--thr'); ctx.font='bold 13px Georgia,serif'; ctx.fillText('vQ/P',Qx-54,Qy-h*0.17);
     ctx.fillStyle=cssv('--act'); ctx.fillText('vQ',Qx+24,Qy-h*0.38);
     ctx.fillStyle=cssv('--im'); ctx.fillText('−vP',Qx-58,Qy+h*0.2);}
   reg('sl13-relformula',{show:draw,redraw:draw});})();

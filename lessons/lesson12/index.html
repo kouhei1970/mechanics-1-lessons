@@ -365,11 +365,11 @@
           <polygon points="162,64 173,70 159,76" fill="var(--act)"/>
           <line x1="30" y1="170" x2="170" y2="170" stroke="var(--ref)" stroke-width="2.2" stroke-dasharray="5 4"/>
           <line x1="170" y1="170" x2="170" y2="70" stroke="var(--thr)" stroke-width="2.2" stroke-dasharray="5 4"/>
-          <path d="M30 158 A12 12 0 0 0 42 165" fill="none" stroke="var(--ink)" stroke-width="1.4"/>
-          <text x="46" y="162" font-size="13">&#952;</text>
-          <text x="108" y="108" fill="var(--act)">v&#8320;</text>
-          <text x="92" y="188" fill="var(--ref)">v&#8339;&#8320;</text>
-          <text x="176" y="125" fill="var(--thr)">v&#7527;&#8320;</text>
+          <path d="M50 170 A20 20 0 0 0 46.28 158.38" fill="none" stroke="var(--ink)" stroke-width="1.4"/>
+          <text x="48" y="162" font-size="13">&#952;</text>
+          <text x="108" y="108" fill="var(--act)">v<tspan font-size="0.7em" dy="3">0</tspan></text>
+          <text x="92" y="188" fill="var(--ref)">v<tspan font-size="0.7em" dy="3">x0</tspan></text>
+          <text x="176" y="125" fill="var(--thr)">v<tspan font-size="0.7em" dy="3">y0</tspan></text>
         </svg>
       </div>
       <div>
@@ -965,7 +965,7 @@
     ctx.beginPath(); ctx.moveTo(padL,H-padB); ctx.lineTo(W-padR,H-padB); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(padL,H-padB); ctx.lineTo(padL,padT); ctx.stroke();
     ctx.fillStyle=cssv('--mut'); ctx.font='11px sans-serif';
-    ctx.fillText('θ', W-padR-2, H-padB+16); ctx.fillText('R', padL-10, padT+2);
+    ctx.fillText('θ', W-padR-2, H-padB-6); ctx.fillText('R', padL-10, padT+2);
     // 45,90 目盛り
     ctx.strokeStyle=cssv('--grd'); ctx.lineWidth=1; ctx.setLineDash([3,3]);
     ctx.beginPath(); ctx.moveTo(PX(45),H-padB); ctx.lineTo(PX(45),PY(1)); ctx.stroke(); ctx.setLineDash([]);
