@@ -1,0 +1,132 @@
+[
+  {
+    "id": "sl11-title",
+    "file": "audio/sl11-title.mp3",
+    "duration": 65.93
+  },
+  {
+    "id": "sl11-ondemand",
+    "file": "audio/sl11-ondemand.mp3",
+    "duration": 76.54
+  },
+  {
+    "id": "sl11-schedule",
+    "file": "audio/sl11-schedule.mp3",
+    "duration": 74.35
+  },
+  {
+    "id": "sl11-roadmap",
+    "file": "audio/sl11-roadmap.mp3",
+    "duration": 65.02
+  },
+  {
+    "id": "sl11-recap",
+    "file": "audio/sl11-recap.mp3",
+    "duration": 76.61
+  },
+  {
+    "id": "sl11-motion-type",
+    "file": "audio/sl11-motion-type.mp3",
+    "duration": 60.77
+  },
+  {
+    "id": "sl11-displacement",
+    "file": "audio/sl11-displacement.mp3",
+    "duration": 91.66
+  },
+  {
+    "id": "sl11-disp-vec",
+    "file": "audio/sl11-disp-vec.mp3",
+    "duration": 64.58
+  },
+  {
+    "id": "sl11-velocity-def",
+    "file": "audio/sl11-velocity-def.mp3",
+    "duration": 65.81
+  },
+  {
+    "id": "sl11-deriv",
+    "file": "audio/sl11-deriv.mp3",
+    "duration": 73.3
+  },
+  {
+    "id": "sl11-xt-slope",
+    "file": "audio/sl11-xt-slope.mp3",
+    "duration": 70.8
+  },
+  {
+    "id": "sl11-integral",
+    "file": "audio/sl11-integral.mp3",
+    "duration": 72.1
+  },
+  {
+    "id": "sl11-accel",
+    "file": "audio/sl11-accel.mp3",
+    "duration": 88.85
+  },
+  {
+    "id": "sl11-vt-area",
+    "file": "audio/sl11-vt-area.mp3",
+    "duration": 72.19
+  },
+  {
+    "id": "sl11-xva",
+    "file": "audio/sl11-xva.mp3",
+    "duration": 72.19
+  },
+  {
+    "id": "sl11-uniform-accel",
+    "file": "audio/sl11-uniform-accel.mp3",
+    "duration": 83.57
+  },
+  {
+    "id": "sl11-formula-table",
+    "file": "audio/sl11-formula-table.mp3",
+    "duration": 62.33
+  },
+  {
+    "id": "sl11-trajectory",
+    "file": "audio/sl11-trajectory.mp3",
+    "duration": 63.1
+  },
+  {
+    "id": "sl11-freefall",
+    "file": "audio/sl11-freefall.mp3",
+    "duration": 64.18
+  },
+  {
+    "id": "sl11-freefall-ex",
+    "file": "audio/sl11-freefall-ex.mp3",
+    "duration": 66.41
+  },
+  {
+    "id": "sl11-throw",
+    "file": "audio/sl11-throw.mp3",
+    "duration": 65.74
+  },
+  {
+    "id": "sl11-graph-read",
+    "file": "audio/sl11-graph-read.mp3",
+    "duration": 65.45
+  },
+  {
+    "id": "sl11-ex-train",
+    "file": "audio/sl11-ex-train.mp3",
+    "duration": 70.3
+  },
+  {
+    "id": "sl11-ex-brake",
+    "file": "audio/sl11-ex-brake.mp3",
+    "duration": 72.58
+  },
+  {
+    "id": "sl11-practice",
+    "file": "audio/sl11-practice.mp3",
+    "duration": 66.1
+  },
+  {
+    "id": "sl11-summary",
+    "file": "audio/sl11-summary.mp3",
+    "duration": 81.38
+  }
+]
