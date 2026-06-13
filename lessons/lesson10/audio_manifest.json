@@ -1,0 +1,147 @@
+[
+  {
+    "id": "sl-title",
+    "file": "audio/sl-title.mp3",
+    "duration": 49.9
+  },
+  {
+    "id": "sl-schedule",
+    "file": "audio/sl-schedule.mp3",
+    "duration": 46.66
+  },
+  {
+    "id": "sl-agenda",
+    "file": "audio/sl-agenda.mp3",
+    "duration": 43.8
+  },
+  {
+    "id": "sl-why",
+    "file": "audio/sl-why.mp3",
+    "duration": 53.26
+  },
+  {
+    "id": "sl-friction-def",
+    "file": "audio/sl-friction-def.mp3",
+    "duration": 57.72
+  },
+  {
+    "id": "sl-classify",
+    "file": "audio/sl-classify.mp3",
+    "duration": 56.78
+  },
+  {
+    "id": "sl-static",
+    "file": "audio/sl-static.mp3",
+    "duration": 62.98
+  },
+  {
+    "id": "sl-kinetic",
+    "file": "audio/sl-kinetic.mp3",
+    "duration": 59.42
+  },
+  {
+    "id": "sl-fF",
+    "file": "audio/sl-fF.mp3",
+    "duration": 64.97
+  },
+  {
+    "id": "sl-fF-do",
+    "file": "audio/sl-fF-do.mp3",
+    "duration": 70.8
+  },
+  {
+    "id": "sl-mu-table",
+    "file": "audio/sl-mu-table.mp3",
+    "duration": 71.16
+  },
+  {
+    "id": "sl-fric-angle",
+    "file": "audio/sl-fric-angle.mp3",
+    "duration": 70.94
+  },
+  {
+    "id": "sl-incline-crit",
+    "file": "audio/sl-incline-crit.mp3",
+    "duration": 76.2
+  },
+  {
+    "id": "sl-incline-do",
+    "file": "audio/sl-incline-do.mp3",
+    "duration": 97.63
+  },
+  {
+    "id": "sl-incline-block",
+    "file": "audio/sl-incline-block.mp3",
+    "duration": 72.58
+  },
+  {
+    "id": "sl-ex43",
+    "file": "audio/sl-ex43.mp3",
+    "duration": 70.99
+  },
+  {
+    "id": "sl-ex41",
+    "file": "audio/sl-ex41.mp3",
+    "duration": 68.81
+  },
+  {
+    "id": "sl-ex41-fbd",
+    "file": "audio/sl-ex41-fbd.mp3",
+    "duration": 85.75
+  },
+  {
+    "id": "sl-rolling-def",
+    "file": "audio/sl-rolling-def.mp3",
+    "duration": 64.42
+  },
+  {
+    "id": "sl-rolling-coef",
+    "file": "audio/sl-rolling-coef.mp3",
+    "duration": 73.42
+  },
+  {
+    "id": "sl-rolling-do",
+    "file": "audio/sl-rolling-do.mp3",
+    "duration": 74.74
+  },
+  {
+    "id": "sl-ex44",
+    "file": "audio/sl-ex44.mp3",
+    "duration": 91.22
+  },
+  {
+    "id": "sl-belt",
+    "file": "audio/sl-belt.mp3",
+    "duration": 47.14
+  },
+  {
+    "id": "sl-belt-do",
+    "file": "audio/sl-belt-do.mp3",
+    "duration": 60.72
+  },
+  {
+    "id": "sl-ex45",
+    "file": "audio/sl-ex45.mp3",
+    "duration": 56.5
+  },
+  {
+    "id": "sl-machine",
+    "file": "audio/sl-machine.mp3",
+    "duration": 61.34
+  },
+  {
+    "id": "sl-practice",
+    "file": "audio/sl-practice.mp3",
+    "duration": 73.54
+  },
+  {
+    "id": "sl-summary",
+    "file": "audio/sl-summary.mp3",
+    "duration": 53.69
+  },
+  {
+    "id": "sl-next",
+    "file": "audio/sl-next.mp3",
+    "duration": 49.66
+  }
+]

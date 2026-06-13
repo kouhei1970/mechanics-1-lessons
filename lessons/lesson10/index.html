@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>摩擦・摩擦角・転がり摩擦</title>
+<!-- interactive-lecture deck template — assemble.py が SLIDES と HOOKS の差し込み口に中身を挿入する。
+     外部依存ゼロ・単一HTML。詳細は reference/framework.md。 -->
+<style>
+  :root{
+    --bg:#faf9f5; --surface:#ffffff; --surface2:#f1efe8; --panel:#ece9e0;
+    --ink:#1f1e1c; --mut:#6b6a64; --grd:rgba(0,0,0,0.10); --line:rgba(0,0,0,0.14);
+    --ref:#378ADD; --act:#D85A30; --thr:#639922;
+    --sin:#7E57C2; --cos:#2E9E6B; --z1:#3FA34D; --z2:#D85A30; --zr:#7E57C2; --ax:#46443e;
+    --re:#C0392B; --im:#2E6FB0;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#1a1915; --surface:#23221d; --surface2:#2b2a24; --panel:#201f1a;
+      --ink:#ecebe4; --mut:#a3a299; --grd:rgba(255,255,255,0.12); --line:rgba(255,255,255,0.16);
+      --ref:#85B7EB; --act:#F0997B; --thr:#97C459;
+      --sin:#B39DDB; --cos:#7BD0A3; --z1:#7BD0A3; --z2:#F0997B; --zr:#B39DDB; --ax:#c9c7bd;
+      --re:#F08A7A; --im:#7FB2E8;
+    }
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%; overflow:hidden;}
+  body{margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Hiragino Sans","Yu Gothic UI",sans-serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased;}
+  i{font-family:Georgia,"Times New Roman",serif;}
+  .deck{position:fixed; inset:0; bottom:52px;}
+  .slide{position:absolute; inset:0; display:flex; flex-direction:column; justify-content:safe center;
+    overflow-y:auto; padding:2vh clamp(16px,4vw,70px); opacity:0; visibility:hidden; transition:opacity .2s;}
+  .slide.active{opacity:1; visibility:visible;}
+  /* master scale + 型スケール（フォント共通ルール）。全体拡縮は .inner、相対比は --fs-* を変更 */
+  .inner{ font-size:clamp(16px, 2.05vh, 32px); width:100%; max-width:62em; margin:0 auto; line-height:1.6;}
+  :root{
+    --fs-display:2.4em; --fs-h1:1.5em; --fs-lead:1.22em; --fs-body:1.32em; --fs-eq:1.38em; --fs-eq-lg:1.7em;
+    --fs-note:1.13em; --fs-table:1.15em; --fs-ui:.85em; --fs-label:.68em; --fs-tag:.6em; --fs-micro:.72em;
+  }
+  .tag2{display:inline-block; font-size:var(--fs-tag); font-weight:700; letter-spacing:.04em; padding:.15em .6em; border-radius:999px; margin:0 .3em .5em 0;}
+  .tag-ex{color:var(--thr); border:1px solid var(--thr);} .tag-do{color:var(--act); border:1px solid var(--act);} .tag-fig{color:var(--ref); border:1px solid var(--ref);}
+  .kicker{font-size:var(--fs-label); letter-spacing:.06em; color:var(--act); font-weight:700; margin:0 0 .25em;}
+  h1.tt{font-size:var(--fs-h1); font-weight:700; margin:0 0 .15em; line-height:1.2;}
+  .desc{font-size:var(--fs-lead); color:var(--mut); margin:.35em 0 .8em;}
+  canvas{width:100%; display:block; background:var(--surface); border:1px solid var(--line); border-radius:12px;}
+  .plot{height:clamp(150px,33vh,330px);} .plane{height:clamp(180px,42vh,400px);} .figc{height:clamp(150px,32vh,300px);}
+  .titlewave{height:clamp(96px,16vh,180px)!important;} .confirm .plane{height:clamp(150px,30vh,290px);}
+  .row{display:flex; align-items:center; gap:.7em; margin:.5em 0;}
+  .row label{font-size:var(--fs-ui); color:var(--mut); width:7.4em; flex:none;}
+  .row .val{font-size:var(--fs-ui); font-weight:700; min-width:3.6em; text-align:right; font-variant-numeric:tabular-nums;}
+  input[type=range]{flex:1; -webkit-appearance:none; appearance:none; height:4px; border-radius:2px; background:var(--line); outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:1.1em; height:1.1em; border-radius:50%; background:var(--act); cursor:pointer; border:2px solid var(--surface);}
+  input[type=range]::-moz-range-thumb{width:1.1em; height:1.1em; border-radius:50%; background:var(--act); cursor:pointer; border:2px solid var(--surface);}
+  .grid2{display:grid; grid-template-columns:1fr; gap:1em;} @media(min-width:760px){ .grid2{grid-template-columns:1.05fr .95fr;} }
+  .twocol{display:grid; grid-template-columns:1fr; gap:.9em; align-items:center;} @media(min-width:720px){ .twocol{grid-template-columns:.9fr 1.1fr;} }
+  .eq{background:var(--surface2); border-radius:10px; padding:.6em .8em; font-size:var(--fs-eq); margin:.55em 0; line-height:1.85;}
+  .eq.big{font-size:var(--fs-eq-lg);}
+  .steps{font-size:var(--fs-body); line-height:1.95; margin:.4em 0;} .steps .lead2{color:var(--mut); font-size:.85em;}
+  .ex{font-size:var(--fs-body); color:var(--mut); background:var(--surface2); border-left:3px solid var(--act); border-radius:0 8px 8px 0; padding:.5em .75em; margin:.55em 0;}
+  .note{font-size:var(--fs-note); color:var(--mut); margin-top:.7em; line-height:1.65;}
+  .re{color:var(--re); font-weight:700;} .im{color:var(--im); font-weight:700;}
+  .deftbl{width:100%; border-collapse:collapse; font-size:var(--fs-table); margin:.5em 0;}
+  .deftbl th,.deftbl td{border:1px solid var(--line); padding:.4em .65em; text-align:left;} .deftbl th{background:var(--surface2); font-weight:700; white-space:nowrap;}
+  .figbox{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:.8em; text-align:center;}
+  .figcap{font-size:var(--fs-micro); color:var(--mut); margin-top:.4em;}
+  .fig{display:block; width:100%; max-width:20em; height:auto; margin:0 auto;}
+  /* スケジュール表（表紙の次に置く sl-schedule 用。SCHEDULE データを JS で描画） */
+  .schnote{color:var(--act); font-size:var(--fs-note); margin:.3em 0 .7em;}
+  .sched{display:grid; grid-template-columns:1fr; gap:.3em 2.6em; max-width:56em; margin:.3em auto 0;}
+  @media(min-width:680px){ .sched{grid-template-columns:1fr 1fr;} }
+  .schcol{display:flex; flex-direction:column;}
+  .schrow{display:grid; grid-template-columns:2em 7.2em 1fr; gap:.5em; align-items:baseline; font-size:var(--fs-table); padding:.32em .5em; border-radius:6px;}
+  .schrow .sn{color:var(--mut); text-align:right;} .schrow .sd{font-variant-numeric:tabular-nums; color:var(--mut);}
+  .schrow.cur{background:var(--surface2); font-weight:700; box-shadow:inset 0 0 0 1.5px var(--act);}
+  .schrow.exam{color:var(--act); font-weight:600;}
+  .fig .w{fill:none; stroke:var(--ink); stroke-width:2; stroke-linecap:round; stroke-linejoin:round;}
+  .fig .cur{fill:none; stroke:var(--ref); stroke-width:2.4;} .fig .curf{fill:var(--ref); stroke:none;}
+  .fig text{fill:var(--ink); font-family:Georgia,serif; font-style:italic; font-size:15px;}
+  .seg{display:inline-flex; border:1px solid var(--line); border-radius:9px; overflow:hidden; margin:.4em 0;}
+  .seg button{border:none; background:transparent; color:var(--mut); font-size:var(--fs-ui); padding:.45em .9em; cursor:pointer;} .seg button.on{background:var(--act); color:#fff;}
+  .legend{display:flex; gap:1em; flex-wrap:wrap; font-size:var(--fs-ui); color:var(--mut); margin:.5em 0 0;}
+  .sw{display:inline-block; width:.8em; height:.8em; border-radius:3px; vertical-align:-1px; margin-right:.3em;}
+  .btn{border:1px solid var(--line); background:transparent; color:var(--ink); border-radius:9px; padding:.5em .9em; font-size:var(--fs-ui); cursor:pointer;} .btn:hover{background:var(--surface2);}
+  .reveal{margin-top:.7em; padding:.7em .9em; border-radius:10px; background:var(--surface2); font-size:var(--fs-body); display:none; line-height:1.85;} .reveal.show{display:block;}
+  ul.lead{font-size:var(--fs-body); padding-left:1.2em; margin:.3em 0;} ul.lead li{margin:.4em 0;}
+  .hero{justify-content:center;}
+  .back{display:inline-block; font-size:var(--fs-micro); color:var(--mut); text-decoration:none; margin-bottom:.6em;} .back:hover{color:var(--ink);}
+  .confirm{margin-top:.7em; padding-top:.6em; border-top:1px dashed var(--line);} .confirm .lab{font-size:var(--fs-micro); font-weight:700; color:var(--act); letter-spacing:.04em;}
+  /* 採点つき練習 */
+  .prfields{display:flex; flex-direction:column; gap:.5em; margin:.7em 0;}
+  .prf{display:flex; align-items:center; gap:.6em; font-size:var(--fs-note);} .prf>span:first-child{min-width:9.5em; color:var(--mut);}
+  .prf input{width:8.5em; height:2.1em; font-size:1em; border:1px solid var(--line); border-radius:8px; background:var(--surface); color:var(--ink); padding:0 .55em;} .prf input:focus{outline:none; border-color:var(--act);}
+  .prmark{font-weight:700; font-size:1.3em; min-width:1em;} .prmark.good{color:var(--thr);} .prmark.bad{color:var(--act);}
+  .prbtns{display:flex; gap:.5em; flex-wrap:wrap; margin:.8em 0 .3em;}
+  .pr-primary{background:var(--act); color:#fff; border-color:var(--act); font-weight:700;}
+  .prresult{font-weight:700; font-size:var(--fs-note); min-height:1.5em; margin:.3em 0;} .prresult.good{color:var(--thr);} .prresult.bad{color:var(--act);}
+  /* nav / 解説ボタン */
+  .nav{position:fixed; left:0; right:0; bottom:0; height:52px; background:var(--surface); border-top:1px solid var(--line); display:flex; align-items:center; gap:10px; padding:0 12px; z-index:20;}
+  .nav button.arw{width:38px; height:34px; border:1px solid var(--line); background:transparent; color:var(--ink); border-radius:8px; cursor:pointer; font-size:15px;} .nav button.arw:hover{background:var(--surface2);} .nav button.arw:disabled{opacity:.35; cursor:default;}
+  .nav select{flex:1; min-width:0; height:34px; border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:8px; padding:0 10px; font-size:13px;}
+  .nav .count{font-size:12.5px; color:var(--mut); font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .prog{position:fixed; left:0; bottom:52px; height:3px; background:var(--act); width:0; z-index:21; transition:width .2s;}
+  .narrbtn{position:fixed; top:max(10px,1.4vh); right:max(12px,1.2vw); z-index:25; display:inline-flex; align-items:center; gap:.4em;
+    border:1px solid var(--act); background:var(--surface); color:var(--act); border-radius:999px; padding:.4em .9em; font-size:clamp(13px,1.7vh,22px); font-weight:700; cursor:pointer; box-shadow:0 1px 5px rgba(0,0,0,.10);} .narrbtn:hover{background:var(--surface2);} .narrbtn.playing{background:var(--act); color:#fff;}
+</style>
+</head>
+<body>
+
+<div class="prog" id="prog"></div>
+<div class="deck" id="deck">
+  <!-- SLIDES:START -->
+<section class="slide" id="sl-title" data-title="摩擦・摩擦角・転がり摩擦">
+  <div class="inner hero">
+    <p class="kicker">基礎力学Ⅰ 第10回</p>
+    <h1 class="tt" style="font-size:var(--fs-display);">摩擦・摩擦角・転がり摩擦</h1>
+    <p class="desc">静摩擦・動摩擦／摩擦角／斜面の釣合い／転がり摩擦／ベルトの摩擦</p>
+    <canvas id="cv-l10-title" class="titlewave"></canvas>
+    <p class="note">→／Space で進みます。右上の <strong>🔊 解説</strong> で各ページの音声解説、右下 ⛶ で全画面。</p>
+  </div>
+</section>
+
+<section class="slide" id="sl-schedule" data-title="スケジュール">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">スケジュール</p>
+    <h1 class="tt">基礎力学Ⅰ 全15回（<span id="l10-sch-year"></span>年度）</h1>
+    <p class="schnote" id="l10-sch-note"></p>
+    <div class="sched" id="l10-sched"></div>
+    <p class="note">本日は第10回（枠で表示）。<span style="color:var(--act)">赤</span>は試験。日程は進捗に合わせて変更する可能性があります。</p>
+  </div>
+</section>
+
+<section class="slide" id="sl-agenda" data-title="本日の内容">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">本日の内容</p>
+    <h1 class="tt">第10回 摩擦・摩擦角・転がり摩擦</h1>
+    <ul class="lead">
+      <li>摩擦力入門 ― なぜ摩擦を学ぶのか</li>
+      <li>静摩擦・動摩擦・摩擦力の図</li>
+      <li>摩擦角</li>
+      <li>斜面上の摩擦と釣合い</li>
+      <li>転がり摩擦</li>
+      <li>機械の摩擦（ベルト・軸受）</li>
+      <li>演習問題</li>
+      <li>まとめ</li>
+    </ul>
+    <p class="ex">教科書 第4章（§4.1〜4.5）に対応。</p>
+  </div>
+</section>
+
+<section class="slide" id="sl-why" data-title="なぜ摩擦を学ぶのか">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">摩擦力入門</p>
+    <h1 class="tt">なぜ摩擦を学ぶのか</h1>
+    <div class="twocol">
+      <div>
+        <p class="steps" style="font-weight:700;color:var(--ref);">摩擦がないと困る</p>
+        <ul class="lead">
+          <li>人も歩けない</li>
+          <li>車も電車も走れない</li>
+          <li>紙に字も書けない</li>
+        </ul>
+      </div>
+      <div>
+        <p class="steps" style="font-weight:700;color:var(--act);">摩擦があると困る</p>
+        <ul class="lead">
+          <li>不要なエネルギーを消費する</li>
+          <li>部品が摩耗する</li>
+          <li>発熱して効率が落ちる</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note">摩擦はないと困るものであり、同時にあっても困るもの。だからこそ、その性質を正しく理解する必要がある。</p>
+  </div>
+</section>
+
+<section class="slide" id="sl-friction-def" data-title="摩擦力とは">
+  <div class="inner">
+    <span class="tag2 tag-fig">図</span><span class="tag2 tag-ex">解説</span>
+    <p class="kicker">摩擦力入門</p>
+    <h1 class="tt">摩擦力とは</h1>
+    <div class="twocol">
+      <div class="figbox">
+        <svg class="fig" viewBox="0 0 320 220" role="img" aria-label="摩擦力の図：箱に働く垂直抗力R・重力mg・外力F・摩擦力f">
+          <line class="w" x1="30" y1="150" x2="290" y2="150"/>
+          <path class="w" style="stroke-width:1" d="M40 150 L30 160 M60 150 L50 160 M80 150 L70 160 M100 150 L90 160 M120 150 L110 160 M140 150 L130 160 M160 150 L150 160 M180 150 L170 160 M200 150 L190 160 M220 150 L210 160 M240 150 L230 160 M260 150 L250 160 M280 150 L270 160"/>
+          <rect class="w" x="130" y="112" width="70" height="38" fill="var(--surface2)"/>
+          <text x="158" y="136">m</text>
+          <line x1="165" y1="112" x2="165" y2="52" stroke="var(--ref)" stroke-width="2.6"/>
+          <polygon points="160,60 170,60 165,48" fill="var(--ref)"/>
+          <text x="171" y="58" style="fill:var(--ref)">R</text>
+          <line x1="165" y1="150" x2="165" y2="200" stroke="var(--act)" stroke-width="2.6"/>
+          <polygon points="160,192 170,192 165,204" fill="var(--act)"/>
+          <text x="171" y="196" style="fill:var(--act)">mg</text>
+          <line x1="200" y1="131" x2="272" y2="131" stroke="var(--act)" stroke-width="2.6"/>
+          <polygon points="264,126 264,136 276,131" fill="var(--act)"/>
+          <text x="278" y="135" style="fill:var(--act)">F</text>
+          <line x1="130" y1="131" x2="62" y2="131" stroke="var(--thr)" stroke-width="2.6"/>
+          <polygon points="70,126 70,136 58,131" fill="var(--thr)"/>
+          <text x="40" y="135" style="fill:var(--thr)">f</text>
+        </svg>
+        <div class="figcap">摩擦力 <i>f</i> は外力 <i>F</i> に逆らう向きに働く</div>
+      </div>
+      <div>
+        <ul class="lead">
+          <li>接触面に沿って滑り動かそうとする力に逆らって生じる抵抗</li>
+          <li>身近な例：歩行（靴と地面）、ブレーキ（タイヤと路面）、ねじ・ボルトの締結</li>
+          <li>摩擦がなければ歩くことも車を走らせることもできない</li>
+        </ul>
+        <p class="ex">教科書 §4.1 図4.1(a)</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="sl-classify" data-title="摩擦力の分類">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">摩擦力入門</p>
+    <h1 class="tt">摩擦力の分類</h1>
+    <div class="twocol">
+      <div class="figbox">
+        <svg class="fig" viewBox="0 0 320 200" role="img" aria-label="摩擦力の分類：静摩擦力と動摩擦力への分岐">
+          <rect class="w" x="112" y="18" width="96" height="40" rx="8" fill="var(--surface2)"/>
+          <text x="126" y="43" style="font-style:normal;font-family:inherit">摩擦力</text>
+          <path class="w" d="M160 58 V82 M72 82 H248 M72 82 V112 M248 82 V112"/>
+          <rect x="18" y="112" width="108" height="44" rx="8" fill="var(--surface2)" stroke="var(--thr)" stroke-width="2"/>
+          <text x="30" y="131" style="font-style:normal;font-family:inherit;fill:var(--thr);font-weight:700">静摩擦力</text>
+          <text x="44" y="149" style="font-style:italic">f</text><text x="52" y="152" style="font-size:11px">s</text>
+          <rect x="194" y="112" width="108" height="44" rx="8" fill="var(--surface2)" stroke="var(--act)" stroke-width="2"/>
+          <text x="206" y="131" style="font-style:normal;font-family:inherit;fill:var(--act);font-weight:700">動摩擦力</text>
+          <text x="220" y="149" style="font-style:italic">f</text><text x="228" y="152" style="font-size:11px">k</text>
+          <text x="30" y="176" style="font-style:normal;font-family:inherit;font-size:12px;fill:var(--mut)">静止中</text>
+          <text x="206" y="176" style="font-style:normal;font-family:inherit;font-size:12px;fill:var(--mut)">運動中</text>
+        </svg>
+        <div class="figcap">物体の状態で摩擦力を2つに分ける</div>
+      </div>
+      <div>
+        <ul class="lead">
+          <li><span style="color:var(--thr);font-weight:700;">静摩擦力 <i>f</i><sub>s</sub></span>：物体が静止しているときに働く（最大値まで外力と釣り合う）</li>
+          <li><span style="color:var(--act);font-weight:700;">動摩擦力 <i>f</i><sub>k</sub></span>：物体が滑っているときに働く（ほぼ一定）</li>
+        </ul>
+        <p class="note">同じ接触面でも、止まっているか滑っているかで、摩擦力の性質が変わる。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="sl-static" data-title="静摩擦とクーロンの法則"><div class="inner">
+  <span class="tag2 tag-ex">解説</span>
+  <p class="kicker">4.1 静摩擦</p>
+  <h1 class="tt">静摩擦とクーロンの法則</h1>
+  <p class="desc">物体が止まっている間、摩擦力は加えた力に応じて変わる。その上限が「最大静摩擦力」。</p>
+  <p class="steps">クーロンの法則（Coulomb's law。摩擦の経験則）によると、最大静摩擦力は次の式で表されます。</p>
+  <div class="eq big"><i>f<sub>s</sub></i> = μ<sub>s</sub> <i>R</i> <span style="float:right;color:var(--mut);font-size:.7em;">(4.1)</span></div>
+  <p class="note">μ<sub>s</sub>：静摩擦係数（無次元）、<i>R</i>：接触面からの反力（垂直抗力。面が物体を押し返す力）。</p>
+  <ul class="lead">
+    <li>外力が小さいうちは、摩擦力も同じ大きさで外力と釣り合う。</li>
+    <li>外力が最大静摩擦力 <i>f<sub>s</sub></i> = μ<sub>s</sub> <i>R</i> を超えると、物体は滑り出す。</li>
+    <li>この限界の状態を <strong>極限釣合いの状態</strong> という。</li>
+  </ul>
+  <p class="ex">教科書 §4.1（p.59〜60）</p>
+</div></section>
+
+<section class="slide" id="sl-kinetic" data-title="動摩擦力"><div class="inner">
+  <span class="tag2 tag-ex">解説</span>
+  <p class="kicker">4.2 動摩擦</p>
+  <h1 class="tt">動摩擦力</h1>
+  <p class="desc">いったん滑り出した後、物体に働く摩擦力は一定の大きさになる。</p>
+  <p class="steps">動摩擦力の法則。物体が滑っている間、摩擦力は次の一定値をとります。</p>
+  <div class="eq big"><i>f<sub>k</sub></i> = μ<sub>k</sub> <i>R</i> <span style="float:right;color:var(--mut);font-size:.7em;">(4.2)</span></div>
+  <p class="note">μ<sub>k</sub>：動摩擦係数、<i>R</i>：反力。滑る速さには（近似的に）依存せず、一定とみなせます。</p>
+  <div class="ex" style="border-left-color:var(--act);"><span class="eq big" style="display:inline-block;margin:0;background:none;padding:0;">μ<sub>k</sub> &lt; μ<sub>s</sub></span><br>同じ接触面では、動摩擦係数は静摩擦係数より小さい。だから一度滑り出すと、摩擦力はストンと減少する。</div>
+  <p class="ex">教科書 §4.2（p.61）</p>
+</div></section>
+
+<section class="slide" id="sl-fF" data-title="摩擦力と外力の関係"><div class="inner">
+  <span class="tag2 tag-fig">図</span>
+  <p class="kicker">摩擦力の応答</p>
+  <h1 class="tt">摩擦力と外力の関係</h1>
+  <div class="twocol">
+    <div><canvas id="cv-l10-fF" class="plot"></canvas>
+      <div class="legend"><span><span class="sw" style="background:var(--re);"></span>静摩擦（<i>f</i> = <i>F</i>）</span><span><span class="sw" style="background:var(--z1);"></span>動摩擦（<i>f<sub>k</sub></i> = μ<sub>k</sub> <i>R</i>）</span></div>
+    </div>
+    <div>
+      <ul class="lead">
+        <li>外力 <i>F</i> が増えるうちは <i>f</i> = <i>F</i> で釣り合う（赤の直線、傾き1）。</li>
+        <li>限界 <i>f<sub>s</sub></i> = μ<sub>s</sub> <i>R</i> を超えた瞬間に「滑り出し」。</li>
+        <li>滑り出すと摩擦力は <i>f<sub>k</sub></i> = μ<sub>k</sub> <i>R</i> へ落ちる（青緑の水平線）。</li>
+      </ul>
+    </div>
+  </div>
+  <p class="note">縦軸が摩擦力 <i>f</i>、横軸が外力 <i>F</i>。赤い斜め線の頂上が最大静摩擦力で、そこを境に青緑の動摩擦力へ落ちる。</p>
+</div></section>
+
+<section class="slide" id="sl-fF-do" data-title="外力を動かして摩擦力の応答を見る"><div class="inner">
+  <span class="tag2 tag-do">操作</span>
+  <p class="kicker">確認</p>
+  <h1 class="tt">外力を動かして摩擦力の応答を見る</h1>
+  <div class="confirm">
+    <span class="lab">スライダーで外力と静摩擦係数を変え、滑り出しを体感する</span>
+    <div class="grid2">
+      <div><canvas id="cv-l10-fFdo" class="plot"></canvas>
+        <div class="legend"><span><span class="sw" style="background:var(--re);"></span>静止（<i>f</i> = <i>F</i>）</span><span><span class="sw" style="background:var(--z1);"></span>滑り（<i>f<sub>k</sub></i> = μ<sub>k</sub> <i>R</i>）</span></div>
+      </div>
+      <div>
+        <div class="row"><label>外力 <i>F</i></label><input type="range" id="s-l10-extF" min="0" max="250" step="5" value="0"><span class="val" id="v-l10-extF">0 N</span></div>
+        <div class="row"><label>静摩擦係数 μ<sub>s</sub></label><input type="range" id="s-l10-mus" min="0.2" max="1.0" step="0.05" value="0.5"><span class="val" id="v-l10-mus">0.50</span></div>
+        <p class="note" style="margin:.3em 0;">質量 <i>m</i> = 20 kg、<i>g</i> = 9.8 m/s² → 反力 <i>R</i> = <i>mg</i> = 196 N（固定）。動摩擦係数は μ<sub>k</sub> = 0.7 μ<sub>s</sub> と連動。</p>
+        <div class="eq" id="eq-l10-fFdo"></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section class="slide" id="sl-mu-table" data-title="静摩擦係数と動摩擦係数の比較"><div class="inner">
+  <span class="tag2 tag-ex">解説</span>
+  <p class="kicker">4.2 摩擦係数</p>
+  <h1 class="tt">静摩擦係数と動摩擦係数の比較</h1>
+  <table class="deftbl">
+    <thead><tr><th>接触面</th><th>μ<sub>s</sub>（静摩擦係数）</th><th>μ<sub>k</sub>（動摩擦係数）</th></tr></thead>
+    <tbody>
+      <tr><td>ゴム － コンクリート</td><td>1.0</td><td>0.8</td></tr>
+      <tr><td>鋼 － 鋼</td><td>0.74</td><td>0.57</td></tr>
+      <tr><td>木 － 木</td><td>0.38</td><td>0.20</td></tr>
+      <tr><td>氷 － 氷</td><td>0.03</td><td>0.01</td></tr>
+    </tbody>
+  </table>
+  <ul class="lead">
+    <li>いずれの組み合わせでも μ<sub>k</sub> &lt; μ<sub>s</sub> が成り立つ。</li>
+    <li>摩擦係数は無次元量（単位を持たない数）で、接触面の材質・状態で決まる。</li>
+    <li>重い家具を押すとき、動き出した瞬間に軽くなるのは μ<sub>k</sub> &lt; μ<sub>s</sub> の体験。</li>
+  </ul>
+  <p class="ex">教科書 §4.2（p.61）</p>
+</div></section>
+
+<section class="slide" id="sl-fric-angle" data-title="摩擦角とは"><div class="inner">
+  <span class="tag2 tag-fig">図</span><span class="tag2 tag-ex">解説</span>
+  <p class="kicker">§4.3 摩擦角</p>
+  <h1 class="tt">摩擦角とは</h1>
+  <div class="twocol">
+    <div class="figbox">
+      <svg class="fig" viewBox="0 0 320 220" role="img" aria-label="傾斜角 φ0 の斜面上にある箱と、反力 R・摩擦力 f・重力 mg">
+        <defs>
+          <marker id="l10a-ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="context-stroke"/></marker>
+        </defs>
+        <path class="w" d="M40 190 H285 L40 70 Z"/>
+        <path d="M40 190 H285" stroke="var(--mut)" stroke-width="1"/>
+        <path d="M55 190 l8 12 M85 190 l8 12 M115 190 l8 12 M145 190 l8 12 M175 190 l8 12 M205 190 l8 12 M235 190 l8 12 M265 190 l8 12" stroke="var(--mut)" stroke-width="1"/>
+        <g transform="translate(150 132) rotate(-26)">
+          <rect x="-22" y="-30" width="44" height="30" rx="2" fill="var(--surface2)" stroke="var(--ink)" stroke-width="2"/>
+        </g>
+        <line x1="150" y1="118" x2="150" y2="196" stroke="var(--ink)" stroke-width="2.4" marker-end="url(#l10a-ar)"/>
+        <text x="156" y="190" fill="var(--ink)">mg</text>
+        <line x1="150" y1="118" x2="185" y2="47" stroke="var(--ref)" stroke-width="2.4" marker-end="url(#l10a-ar)"/>
+        <text x="189" y="50" fill="var(--ref)">R</text>
+        <line x1="150" y1="118" x2="88" y2="87" stroke="var(--thr)" stroke-width="2.4" marker-end="url(#l10a-ar)"/>
+        <text x="66" y="82" fill="var(--thr)">f</text>
+        <path d="M95 190 A55 55 0 0 0 73 165" fill="none" stroke="var(--act)" stroke-width="1.8"/>
+        <text x="100" y="178" fill="var(--act)" font-style="normal">φ₀</text>
+      </svg>
+      <div class="figcap">図4.7 斜面上の箱に働く力（傾斜角 φ₀）</div>
+    </div>
+    <div>
+      <p class="steps">斜面の傾斜角を少しずつ大きくしていくと、ある角度で箱が <em>滑り出す寸前</em>（極限釣合い）になります。その角度を摩擦角 φ₀ とすると、斜面方向の釣合いから</p>
+      <div class="eq"><i>mg</i> sin φ₀ = μ<sub>s</sub> <i>mg</i> cos φ₀</div>
+      <p class="steps"><i>mg</i> が両辺で消えて、</p>
+      <div class="eq big">μ<sub>s</sub> = tan φ₀ &nbsp;&nbsp;(4.3)</div>
+      <ul class="lead">
+        <li>φ₀：静摩擦角（静止が保てる限界の角度）</li>
+        <li>動摩擦角 φ<sub>k</sub>： μ<sub>k</sub> = tan φ<sub>k</sub> &nbsp;(4.4)</li>
+      </ul>
+      <p class="ex">教科書 §4.3 図4.7（p.63）</p>
+    </div>
+  </div>
+</div></section>
+
+<section class="slide" id="sl-incline-crit" data-title="斜面で滑り出す臨界角"><div class="inner">
+  <span class="tag2 tag-ex">解説</span>
+  <p class="kicker">§4.3 臨界角</p>
+  <h1 class="tt">斜面で滑り出す臨界角</h1>
+  <p class="steps">傾斜角 θ の斜面上で静止している物体に働く力を、<em>斜面方向</em>と<em>法線方向</em>に分けて考えます。静止しているあいだ、面に押しつける向きは釣り合っているので、垂直抗力は</p>
+  <div class="eq"><i>R</i> = <i>mg</i> cos θ</div>
+  <p class="steps">滑り出しの寸前（極限釣合い）では、斜面に沿って下ろうとする力と、最大静摩擦力がちょうど等しくなります。</p>
+  <div class="eq"><i>mg</i> sin θ = μ<sub>s</sub> <i>mg</i> cos θ</div>
+  <p class="steps">両辺の <i>mg</i> を消すと、滑り出しの臨界角 θ<sub>c</sub> が決まります。</p>
+  <div class="eq big">tan θ<sub>c</sub> = μ<sub>s</sub></div>
+  <ul class="lead">
+    <li>θ &lt; θ<sub>c</sub>：静止を維持（必要な摩擦力 <i>f</i><sub>s</sub> &lt; μ<sub>s</sub> <i>R</i> でまだ余裕がある）</li>
+    <li>θ = θ<sub>c</sub>：滑り出し寸前（極限釣合い、<i>f</i><sub>s</sub> = μ<sub>s</sub> <i>R</i>）</li>
+    <li>θ &gt; θ<sub>c</sub>：滑り落ちる（最大静摩擦力では支えきれず、動摩擦に移る）</li>
+  </ul>
+  <p class="ex">臨界角 θ<sub>c</sub> は摩擦角 φ₀ に等しい（tan θ<sub>c</sub> = tan φ₀ = μ<sub>s</sub>）。</p>
+</div></section>
+
+<section class="slide" id="sl-incline-do" data-title="斜面の角度を変えて滑り出しを体感"><div class="inner">
+  <span class="tag2 tag-do">操作</span>
+  <p class="kicker">確認</p>
+  <h1 class="tt">斜面の角度を変えて滑り出しを体感</h1>
+  <div class="confirm">
+    <span class="lab">斜面角 θ と摩擦角 φ₀ を見比べよう</span>
+    <div class="grid2">
+      <div>
+        <canvas id="cv-l10-incl" class="plane"></canvas>
+        <div class="legend">
+          <span><span class="sw" style="background:var(--ink)"></span>重力 mg</span>
+          <span><span class="sw" style="background:var(--ref)"></span>抗力 R</span>
+          <span><span class="sw" style="background:var(--act)"></span>mg sinθ</span>
+          <span><span class="sw" style="background:var(--thr)"></span>摩擦力 f</span>
+        </div>
+      </div>
+      <div>
+        <div class="row"><label>斜面角 θ</label><input type="range" id="s-l10-theta" min="0" max="60" step="1" value="15"><span class="val" id="v-l10-theta">15°</span></div>
+        <div class="row"><label>静摩擦係数 μ<sub>s</sub></label><input type="range" id="s-l10-incmu" min="0.1" max="1.0" step="0.05" value="0.36"><span class="val" id="v-l10-incmu">0.36</span></div>
+        <div class="eq" id="eq-l10-incl"></div>
+        <p class="note">m = 10 kg、g = 9.8 m/s²。θ を上げて、必要摩擦力 mg sinθ が最大静摩擦力 μ<sub>s</sub>R に追いつく瞬間を探そう。その θ が摩擦角 φ₀ と一致する。</p>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section class="slide" id="sl-incline-block" data-title="斜面上の物体と摩擦（力の分解）"><div class="inner">
+  <span class="tag2 tag-fig">図</span><span class="tag2 tag-ex">解説</span>
+  <p class="kicker">§4.3 力の分解</p>
+  <h1 class="tt">斜面上の物体と摩擦（力の分解）</h1>
+  <div class="twocol">
+    <div class="figbox">
+      <svg class="fig" viewBox="0 0 320 220" role="img" aria-label="傾斜角 θ の斜面上の箱に働く R, f, mg">
+        <defs>
+          <marker id="l10b-ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="context-stroke"/></marker>
+        </defs>
+        <path class="w" d="M40 190 H285 L40 78 Z"/>
+        <path d="M55 190 l8 12 M85 190 l8 12 M115 190 l8 12 M145 190 l8 12 M175 190 l8 12 M205 190 l8 12 M235 190 l8 12 M265 190 l8 12" stroke="var(--mut)" stroke-width="1"/>
+        <g transform="translate(148 138) rotate(-24)">
+          <rect x="-22" y="-30" width="44" height="30" rx="2" fill="var(--surface2)" stroke="var(--ink)" stroke-width="2"/>
+        </g>
+        <line x1="148" y1="123" x2="148" y2="198" stroke="var(--ink)" stroke-width="2.4" marker-end="url(#l10b-ar)"/>
+        <text x="154" y="192" fill="var(--ink)">mg</text>
+        <line x1="148" y1="123" x2="184" y2="52" stroke="var(--ref)" stroke-width="2.4" marker-end="url(#l10b-ar)"/>
+        <text x="188" y="54" fill="var(--ref)">R</text>
+        <line x1="148" y1="123" x2="88" y2="96" stroke="var(--thr)" stroke-width="2.4" marker-end="url(#l10b-ar)"/>
+        <text x="68" y="92" fill="var(--thr)">f</text>
+        <path d="M95 190 A55 55 0 0 0 75 168" fill="none" stroke="var(--act)" stroke-width="1.8"/>
+        <text x="100" y="180" fill="var(--act)" font-style="normal">θ</text>
+      </svg>
+      <div class="figcap">斜面上の箱に働く R・f・mg</div>
+    </div>
+    <div>
+      <ul class="lead">
+        <li>斜面方向の重力成分：<i>mg</i> sin θ（斜面に沿って下向き）</li>
+        <li>法線方向の重力成分：<i>mg</i> cos θ（面に垂直に押しつける）</li>
+        <li>反力：<i>R</i> = <i>mg</i> cos θ（法線方向は釣合い）</li>
+        <li>静止時の摩擦力：<i>f</i><sub>s</sub> = <i>mg</i> sin θ ≤ μ<sub>s</sub> <i>R</i></li>
+      </ul>
+      <p class="ex">教科書 §4.3</p>
+    </div>
+  </div>
+</div></section>
+
+<section class="slide" id="sl-ex43" data-title="例題4.3 摩擦角と静止できる力の範囲"><div class="inner"><span class="tag2 tag-fig">図</span><span class="tag2 tag-ex">解説</span>
+<p class="kicker">例題4.3（教科書 p.63）</p>
+<h1 class="tt">摩擦角で静止できる力の範囲を出す</h1>
+<div class="twocol">
+  <div class="figbox">
+    <svg class="fig" viewBox="0 0 320 210" role="img" aria-label="斜面上の物体と水平力F">
+      <path class="w" d="M40 180 H300"/>
+      <path class="w" d="M40 180 L260 100"/>
+      <path class="w" d="M95 180 a55 55 0 0 0 -8 -19" fill="none"/>
+      <rect class="w" x="150" y="108" width="46" height="30" transform="rotate(-20 173 123)"/>
+      <line class="cur" x1="196" y1="123" x2="258" y2="123"/>
+      <polygon class="curf" points="256,117 268,123 256,129"/>
+      <line class="w" x1="173" y1="123" x2="173" y2="168" stroke-dasharray="4 4"/>
+      <polygon class="w" points="169,164 177,164 173,174" fill="var(--ink)"/>
+      <text x="100" y="176">θ</text>
+      <text x="272" y="120">F</text>
+      <text x="178" y="165">mg</text>
+    </svg>
+    <div class="figcap">斜面 θ=20°、質量 m=100 kg、水平力 F、静摩擦角 φ₀=10°</div>
+  </div>
+  <div>
+    <p class="ex">水平とのなす角 θ=20° の斜面上に質量 m=100 kg の物体が水平力 <i>F</i> を受けて静止している。静摩擦角を φ₀=10° とするとき、静止状態を持続できる <i>F</i> の範囲を求めよ。</p>
+    <p class="steps">摩擦角を使うと、滑り落ちる寸前（下限）と押し上がる寸前（上限）が一気に書ける：</p>
+    <span class="eq big">sin(θ−φ₀)/cos(θ+φ₀) · <i>mg</i> ≤ <i>F</i> ≤ sin(θ+φ₀)/cos(θ−φ₀) · <i>mg</i></span>
+    <p class="steps"><i>mg</i> = 100×9.8 = 980 N を代入して</p>
+    <span class="eq big">173 N ≤ <i>F</i> ≤ 566 N</span>
+    <p class="note">摩擦角を使うと、力の分解を細かくやらずに上限・下限が一気に書ける。下限は滑り落ちる寸前、上限は押し上がる寸前。</p>
+  </div>
+</div></div></section>
+
+<section class="slide" id="sl-ex41" data-title="例題4.1 ブロックの引き出し"><div class="inner"><span class="tag2 tag-fig">図</span><span class="tag2 tag-ex">解説</span>
+<p class="kicker">例題4.1（教科書 p.60）</p>
+<h1 class="tt">2段重ねのブロックを引き出す</h1>
+<div class="twocol">
+  <div class="figbox">
+    <svg class="fig" viewBox="0 0 340 220" role="img" aria-label="壁にロープで固定されたブロックAとその下のブロックB">
+      <line class="w" x1="30" y1="20" x2="30" y2="200"/>
+      <path class="w" d="M30 20 l10 -8 M30 40 l10 -8 M30 60 l10 -8 M30 80 l10 -8 M30 100 l10 -8 M30 120 l10 -8 M30 140 l10 -8 M30 160 l10 -8 M30 180 l10 -8" stroke-width="1"/>
+      <line class="w" x1="30" y1="100" x2="120" y2="100"/>
+      <text x="55" y="94">T</text>
+      <rect class="w" x="120" y="88" width="120" height="34"/>
+      <text x="172" y="110" font-size="18">A</text>
+      <rect class="w" x="120" y="122" width="160" height="40"/>
+      <text x="190" y="148" font-size="18">B</text>
+      <line class="w" x1="90" y1="162" x2="320" y2="162" stroke-width="2.4"/>
+      <path class="w" d="M95 168 l-6 6 M110 168 l-6 6 M125 168 l-6 6 M140 168 l-6 6 M155 168 l-6 6 M170 168 l-6 6 M185 168 l-6 6 M200 168 l-6 6 M215 168 l-6 6 M230 168 l-6 6 M245 168 l-6 6 M260 168 l-6 6 M275 168 l-6 6 M290 168 l-6 6" stroke-width="1"/>
+      <line class="cur" x1="280" y1="142" x2="330" y2="142"/>
+      <polygon class="curf" points="328,136 340,142 328,148"/>
+      <text x="312" y="136">F</text>
+    </svg>
+    <div class="figcap">A は壁にロープ T で固定、B はその下で力 F により右へ引き出される</div>
+  </div>
+  <div>
+    <p class="ex">ブロック A は壁にロープで固定され、ブロック B は力 <i>F</i> で右に引き出される。A の重さ W<sub>A</sub>=200 N、B の重さ W<sub>B</sub>=500 N、すべての接触面の静摩擦係数 μ<sub>s</sub>=0.3。B を引き出すのに要する力 <i>F</i> とロープの張力 <i>T</i> を求めよ。</p>
+    <p class="steps">A は壁とロープで固定され、その下を B が右へ滑る。<br>接触面は <strong>A–B 間</strong>と <strong>B–床間</strong>の2つ。それぞれに垂直抗力と摩擦力がはたらく。</p>
+    <p class="note">まずは各ブロックの自由体線図を描き、はたらく力をもれなく書き出すのが第一歩。次のページで FBD を描いて解く。</p>
+  </div>
+</div></div></section>
+
+<section class="slide" id="sl-ex41-fbd" data-title="例題4.1 自由体線図と解答"><div class="inner"><span class="tag2 tag-fig">図</span><span class="tag2 tag-ex">解説</span>
+<p class="kicker">例題4.1 つづき</p>
+<h1 class="tt">自由体線図を描いて解く</h1>
+<div class="twocol">
+  <div class="figbox">
+    <svg class="fig" viewBox="0 0 320 250" role="img" aria-label="物体Aと物体Bの自由体線図">
+      <text x="6" y="16" font-style="normal" font-family="sans-serif" font-size="13" fill="var(--mut)">物体 A</text>
+      <rect class="w" x="60" y="36" width="60" height="40"/>
+      <text x="82" y="62" font-size="16">A</text>
+      <line class="cur" x1="90" y1="36" x2="90" y2="6"/><polygon class="curf" points="84,10 96,10 90,2"/><text x="96" y="16">R₁</text>
+      <line class="cur" x1="60" y1="56" x2="24" y2="56"/><polygon class="curf" points="28,50 28,62 20,56"/><text x="22" y="48">T</text>
+      <line class="cur" x1="120" y1="56" x2="156" y2="56"/><polygon class="curf" points="152,50 152,62 160,56"/><text x="140" y="48">f₁</text>
+      <line class="cur" x1="90" y1="76" x2="90" y2="106"/><polygon class="curf" points="84,102 96,102 90,110"/><text x="96" y="100">W_A</text>
+      <text x="6" y="150" font-style="normal" font-family="sans-serif" font-size="13" fill="var(--mut)">物体 B</text>
+      <rect class="w" x="60" y="168" width="80" height="44"/>
+      <text x="94" y="196" font-size="16">B</text>
+      <line class="cur" x1="82" y1="168" x2="82" y2="140"/><polygon class="curf" points="76,144 88,144 82,136"/><text x="60" y="150">R₁</text>
+      <line class="cur" x1="118" y1="212" x2="118" y2="242"/><polygon class="curf" points="112,238 124,238 118,246"/><text x="124" y="236">W_B</text>
+      <line class="cur" x1="100" y1="212" x2="100" y2="242" stroke="var(--thr)"/><polygon class="curf" points="94,222 106,222 100,214" fill="var(--thr)"/><text x="68" y="234" fill="var(--thr)">R₂</text>
+      <line class="cur" x1="60" y1="180" x2="24" y2="180"/><polygon class="curf" points="28,174 28,186 20,180"/><text x="20" y="172">f₁</text>
+      <line class="cur" x1="60" y1="200" x2="24" y2="200" stroke="var(--thr)"/><polygon class="curf" points="28,194 28,206 20,200" fill="var(--thr)"/><text x="20" y="216" fill="var(--thr)">f₂</text>
+      <line class="cur" x1="140" y1="190" x2="176" y2="190"/><polygon class="curf" points="172,184 172,196 180,190"/><text x="160" y="182">F</text>
+    </svg>
+    <div class="figcap">上：物体 A の FBD、下：物体 B の FBD（R₁ は反作用として B に下向き）</div>
+  </div>
+  <div>
+    <p class="steps"><strong>物体 A</strong>　鉛直：R₁ = W<sub>A</sub> = 200 N<br>水平：f₁ = T</p>
+    <p class="steps"><strong>物体 B</strong>　鉛直：R₂ = W<sub>A</sub> + W<sub>B</sub> = 700 N<br>水平：F = f₁ + f₂</p>
+    <p class="steps">極限釣合い（クーロンの法則）：<br>f₁ = μ<sub>s</sub>R₁ = 0.3×200 = 60 N<br>f₂ = μ<sub>s</sub>R₂ = 0.3×700 = 210 N</p>
+    <span class="eq big">∴ <i>F</i> = 60 + 210 = 270 N</span>
+    <span class="eq big">∴ <i>T</i> = f₁ = 60 N</span>
+    <p class="note">接触面が2つ（A–B 間と B–床間）ある点がポイント。各面の垂直抗力を求めてからクーロンの法則を当てはめる。</p>
+  </div>
+</div></div></section>
+
+<section class="slide" id="sl-rolling-def" data-title="転がり摩擦とは"><div class="inner">
+      <span class="tag2 tag-fig">図</span><span class="tag2 tag-ex">解説</span>
+      <p class="kicker">§4.4 転がり摩擦</p>
+      <h1 class="tt">転がり摩擦とは</h1>
+      <div class="twocol">
+        <div class="figbox">
+          <svg class="fig" viewBox="0 0 320 230" role="img" aria-label="面上を転がる円柱に働く力" style="max-width:24em;">
+            <defs>
+              <pattern id="l10-hatch" width="9" height="9" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+                <line x1="0" y1="0" x2="0" y2="9" stroke="var(--mut)" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <line x1="20" y1="160" x2="300" y2="160" stroke="var(--ink)" stroke-width="2"/>
+            <rect x="20" y="160" width="280" height="12" fill="url(#l10-hatch)"/>
+            <circle cx="160" cy="105" r="55" fill="none" stroke="var(--ink)" stroke-width="2"/>
+            <circle cx="160" cy="105" r="2.6" fill="var(--ink)"/>
+            <text x="150" y="100" font-style="italic">O</text>
+            <line x1="160" y1="105" x2="205" y2="73" stroke="var(--mut)" stroke-width="1.2" stroke-dasharray="4 3"/>
+            <text x="180" y="78" font-style="italic" fill="var(--mut)">r</text>
+            <circle cx="160" cy="160" r="2.6" fill="var(--mut)"/>
+            <text x="138" y="178" font-style="italic" fill="var(--mut)">P</text>
+            <text x="176" y="182" font-style="italic" fill="var(--mut)">N</text>
+            <line x1="160" y1="168" x2="176" y2="168" stroke="var(--ref)" stroke-width="1.2"/>
+            <text x="161" y="200" fill="var(--ref)">ρ</text>
+            <line x1="176" y1="160" x2="176" y2="96" stroke="var(--ref)" stroke-width="2.6"/>
+            <polygon points="171,102 181,102 176,90" fill="var(--ref)"/>
+            <text x="184" y="104" fill="var(--ref)" font-style="italic">R</text>
+            <line x1="160" y1="105" x2="244" y2="105" stroke="var(--act)" stroke-width="2.6"/>
+            <polygon points="240,100 240,110 252,105" fill="var(--act)"/>
+            <text x="224" y="98" fill="var(--act)" font-style="italic">F<tspan baseline-shift="sub" font-size="10">0</tspan></text>
+            <line x1="160" y1="105" x2="160" y2="150" stroke="var(--ink)" stroke-width="2.4"/>
+            <polygon points="155,146 165,146 160,158" fill="var(--ink)"/>
+            <text x="132" y="140" font-style="italic">mg</text>
+          </svg>
+          <div class="figcap">図4.12 面上を転がる円柱（反力 <i>R</i> の作用点が前方に ρ ずれる）</div>
+        </div>
+        <div>
+          <ul class="lead">
+            <li>剛体の円柱が面上を<strong>転がる</strong>ときに生じる抵抗が転がり摩擦。</li>
+            <li>理想的な剛体どうしなら接触は1点で、摩擦は<strong>ゼロ</strong>になる。</li>
+            <li>実際は接触部がわずかに<strong>弾性変形</strong>し、そこに抵抗が生まれる。</li>
+            <li>このため反力 <i>R</i> の作用点が進行方向の<strong>前方へ ρ ずれ</strong>、回転を妨げる向きのモーメントが働く。</li>
+            <li>大きさは<strong>すべり摩擦に比べて桁違いに小さい</strong>。</li>
+          </ul>
+          <p class="ex">教科書 §4.4 図4.12（p.66）</p>
+        </div>
+      </div>
+    </div></section>
+
+<section class="slide" id="sl-rolling-coef" data-title="転がり摩擦係数"><div class="inner">
+      <span class="tag2 tag-ex">解説</span>
+      <p class="kicker">§4.4 転がり摩擦</p>
+      <h1 class="tt">転がり摩擦係数</h1>
+      <p class="steps">接触点 P まわりのモーメントの釣合いを考える。反力 <i>R</i> の作用点 N は P から ρ だけ前方にあり（PN = ρ）、中心 O の真下からの距離は ON ≒ <i>r</i> とみなせる。駆動力 <i>F<sub>0</sub></i> による回転モーメントと、反力 <i>R</i>（= <i>mg</i>）のずれによる抵抗モーメントが釣合うと、転がり始める。</p>
+      <div class="eq"><i>F<sub>0</sub> r</i> − <i>mg</i> ρ = 0&nbsp;&nbsp;⟹&nbsp;&nbsp;<i>M<sub>0</sub></i> = ρ <i>mg</i>&nbsp;&nbsp;<span style="color:var(--mut);font-size:.8em;">(4.6)</span></div>
+      <p class="steps">これを <i>F<sub>0</sub></i> について解くと、転がすのに必要な力が得られる。</p>
+      <div class="eq big"><i>F<sub>0</sub></i> = (ρ / <i>r</i>) <i>mg</i>&nbsp;&nbsp;<span style="color:var(--mut);font-size:.55em;">(4.7)</span></div>
+      <p class="ex" style="border-left-color:var(--act);"><strong>次元に注意。</strong>すべり摩擦係数 μ<sub>s</sub> は<strong>無次元量</strong>だが、転がり摩擦係数 ρ は<strong>長さの次元</strong>をもつ（単位は mm など）。両者を直接くらべることはできない。半径 <i>r</i> で割った <strong>ρ / <i>r</i> が無次元</strong>となり、これがちょうど μ<sub>s</sub> に対応する量になる。</p>
+    </div></section>
+
+<section class="slide" id="sl-rolling-do" data-title="半径を変えて転がり抵抗を見る"><div class="inner">
+      <span class="tag2 tag-do">操作</span>
+      <p class="kicker">確認</p>
+      <h1 class="tt">半径を変えて転がり抵抗を見る</h1>
+      <div class="confirm">
+        <span class="lab">スライダーを動かす</span>
+        <div class="grid2">
+          <div><canvas id="cv-l10-roll" class="plot"></canvas></div>
+          <div>
+            <div class="row"><label>半径 <i>r</i> [mm]</label><input type="range" id="s-l10-radius" min="10" max="200" step="5" value="50"><span class="val" id="v-l10-radius">50</span></div>
+            <div class="row"><label>転がり摩擦係数 ρ [mm]</label><input type="range" id="s-l10-rho" min="0.01" max="0.5" step="0.01" value="0.05"><span class="val" id="v-l10-rho">0.05</span></div>
+            <p class="note" style="margin:.3em 0 .2em;">質量 <i>m</i> = 10 kg、<i>g</i> = 9.8 m/s² より <i>mg</i> = 98 N（固定）</p>
+            <div class="eq" id="eq-l10-roll"></div>
+          </div>
+        </div>
+      </div>
+    </div></section>
+
+<section class="slide" id="sl-ex44" data-title="例題4.4 斜面を転がる円柱"><div class="inner">
+      <span class="tag2 tag-ex">解説</span>
+      <p class="kicker">例題 4.4</p>
+      <h1 class="tt">斜面を転がる円柱</h1>
+      <p class="ex">斜面上を円柱が<strong>等速度</strong>で転がっている。転がり摩擦係数 ρ = 0.05 mm、半径 <i>r</i> = 50 mm のとき、この斜面の傾き角 θ を求めよ。<span style="display:block;color:var(--mut);font-size:.85em;margin-top:.3em;">（教科書 例題4.4, p.67）</span></p>
+      <p class="steps">等速度ということは、斜面に沿う方向の合力が <strong>0</strong>。斜面方向には、重力の斜面成分 <i>mg</i> sin θ が下向きに、転がり抵抗 <i>F<sub>0</sub></i> = (ρ/<i>r</i>) <i>mg</i> cos θ が上向き（運動を妨げる向き）に働く。ここで面に垂直な力は <i>mg</i> cos θ なので、転がり抵抗もこれを使う。釣合いより：</p>
+      <div class="eq">(ρ/<i>r</i>) <i>mg</i> cos θ − <i>mg</i> sin θ = 0&nbsp;&nbsp;⟹&nbsp;&nbsp;tan θ = ρ / <i>r</i></div>
+      <div class="eq big">θ = arctan(0.05 / 50) = arctan(0.001) ≒ 0.0573°</div>
+      <p class="note">転がり摩擦係数 ρ は<strong>長さの次元</strong>をもつので、半径 <i>r</i> と<strong>同じ単位（mm）</strong>で割って無次元の ρ/<i>r</i> にする点に注意。きわめて緩やかな傾きでも、円柱はひとりでに等速で転がり続けることが分かる。</p>
+    </div></section>
+
+<section class="slide" id="sl-belt" data-title="ベルトの摩擦・オイラーの式"><div class="inner">
+  <span class="tag2 tag-fig">図</span><span class="tag2 tag-ex">解説</span>
+  <p class="kicker">§4.5.1 ベルトの摩擦</p>
+  <h1 class="tt">ベルトの摩擦・オイラーの式</h1>
+  <div class="twocol">
+    <div class="figbox">
+      <svg class="fig" viewBox="0 0 320 230" role="img" aria-label="円柱に巻きついたベルトの張力" style="max-width:24em;">
+        <circle class="w" cx="160" cy="120" r="66"/>
+        <path d="M160 120 L226 120" stroke="var(--mut)" stroke-width="1.4" stroke-dasharray="4 4" fill="none"/>
+        <path d="M99 93 A66 66 0 0 1 219 89" fill="none" stroke="var(--act)" stroke-width="7" stroke-linecap="round"/>
+        <path d="M226 120 A38 38 0 0 0 199 84" fill="none" stroke="var(--ref)" stroke-width="1.6"/>
+        <text x="196" y="105" style="fill:var(--ref);font-style:italic;">θ₀</text>
+        <text x="196" y="132" style="fill:var(--mut);font-style:italic;">r</text>
+        <line x1="219" y1="89" x2="288" y2="58" stroke="var(--thr)" stroke-width="3"/>
+        <polygon points="288,58 277,58 285,69" fill="var(--thr)"/>
+        <text x="291" y="56" style="fill:var(--thr);font-style:italic;font-weight:bold;">T₁</text>
+        <line x1="99" y1="93" x2="30" y2="128" stroke="var(--re)" stroke-width="3"/>
+        <polygon points="30,128 41,123 38,135" fill="var(--re)"/>
+        <text x="12" y="126" style="fill:var(--re);font-style:italic;font-weight:bold;">T₂</text>
+        <text x="150" y="160" style="fill:var(--mut);font-style:italic;">O</text>
+      </svg>
+      <div class="figcap">図4.14 円柱に巻きついたベルト（T₂ &gt; T₁）</div>
+    </div>
+    <div>
+      <ul class="lead">
+        <li>曲面に巻きついたロープやベルトは大きな摩擦力を持つ</li>
+        <li>両端の張力 <i>T<sub>1</sub></i>, <i>T<sub>2</sub></i>（<i>T<sub>2</sub></i> &gt; <i>T<sub>1</sub></i>）</li>
+        <li>接触角 θ<sub>0</sub>、静摩擦係数 μ<sub>s</sub></li>
+        <li>微小部分の力の釣合いを積分すると、指数関数の関係が得られる</li>
+      </ul>
+      <div class="eq" style="text-align:center;"><span class="eq big"><i>T<sub>2</sub></i> = <i>T<sub>1</sub></i> e<sup>μ<sub>s</sub>θ<sub>0</sub></sup></span>　(4.15)</div>
+      <p class="ex">教科書 §4.5.1 図4.14（p.68）</p>
+    </div>
+  </div>
+</div></section>
+
+<section class="slide" id="sl-belt-do" data-title="巻き角を変えて張力比を見る"><div class="inner">
+  <span class="tag2 tag-do">操作</span>
+  <p class="kicker">確認</p>
+  <h1 class="tt">巻き角を変えて張力比を見る</h1>
+  <div class="confirm">
+    <span class="lab">スライダーで巻き角と摩擦係数を変える</span>
+    <div class="grid2">
+      <div><canvas id="cv-l10-belt" class="plot"></canvas></div>
+      <div>
+        <div class="row"><label>巻き角 θ<sub>0</sub></label><input type="range" id="s-l10-wrap" min="0" max="4" step="0.25" value="1"><span class="val" id="v-l10-wrap">1回</span></div>
+        <div class="row"><label>静摩擦 μ<sub>s</sub></label><input type="range" id="s-l10-beltmu" min="0.1" max="0.6" step="0.05" value="0.4"><span class="val" id="v-l10-beltmu">0.40</span></div>
+        <div class="eq" id="eq-l10-belt"></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section class="slide" id="sl-ex45" data-title="例題4.5 円柱に巻いたロープ"><div class="inner">
+  <span class="tag2 tag-ex">解説</span>
+  <p class="kicker">例題 4.5</p>
+  <h1 class="tt">例題4.5 円柱に巻いたロープ</h1>
+  <p class="ex">ロープを円柱に1回巻き、<i>T</i> = 500 N の張力を支えるには <i>T<sub>0</sub></i> の張力はどれほど必要か。ロープと円柱の静摩擦係数は μ<sub>s</sub> = 0.4 とする。（教科書 例題4.5, p.69）</p>
+  <p class="steps">1回巻きなので接触角 θ<sub>0</sub> = 2π。オイラーの式より：</p>
+  <div class="eq"><i>T<sub>0</sub></i> = <i>T</i> e<sup>−μ<sub>s</sub>θ<sub>0</sub></sup> = 500 × e<sup>−0.4×2π</sup> = 500 × 0.0809 = <span class="eq big">40.5 N</span></div>
+  <p class="note">ロープと円柱の摩擦を利用すると、1/10 以下の力で支えられる。これが「巻きつけて支える」仕組みの本質。</p>
+</div></section>
+
+<section class="slide" id="sl-machine" data-title="機械のいろいろな摩擦"><div class="inner">
+  <span class="tag2 tag-ex">解説</span>
+  <p class="kicker">§4.5.2〜4.5.4</p>
+  <h1 class="tt">機械のいろいろな摩擦</h1>
+  <p class="note" style="margin-top:.2em;">ベルトのほかにも、機械の各要素で摩擦が重要なはたらきをする。</p>
+  <table class="deftbl">
+    <thead><tr><th>要素</th><th>はたらき</th><th>おもな式</th></tr></thead>
+    <tbody>
+      <tr><td>くさび</td><td>小さな力で重量物を持上げ・固定</td><td><i>F</i> = <i>P</i> tan(θ + 2φ<sub>0</sub>) 型</td></tr>
+      <tr><td>角ねじ</td><td>回転を直線推力に変換（ジャッキ）</td><td><i>F</i> = <i>P</i> tan(θ + φ<sub>0</sub>)　(4.16)</td></tr>
+      <tr><td>ラジアル軸受</td><td>軸を半径方向に支える</td><td><i>M<sub>0</sub></i> = πμrP / 2　(4.23)</td></tr>
+      <tr><td>スラスト軸受</td><td>軸を軸方向に支える</td><td><i>M<sub>0</sub></i> = (2/3) μPR　(4.25)</td></tr>
+    </tbody>
+  </table>
+  <ul class="lead">
+    <li>くさび・角ねじは<b>セルフロック（自己保持）</b>が重要（角ねじでは φ<sub>0</sub> &gt; θ）</li>
+    <li>軸受の摩擦は動力損失の原因 → 潤滑・転がり軸受で低減</li>
+  </ul>
+  <p class="ex">教科書 §4.5.2〜4.5.4（p.69〜75）</p>
+</div></section>
+
+<section class="slide" id="sl-practice" data-title="演習問題（採点つき）"><div class="inner">
+  <span class="tag2 tag-do">操作</span>
+  <p class="kicker">確認・採点つき練習</p>
+  <h1 class="tt">演習問題（採点つき）</h1>
+  <div class="seg" id="seg-l10">
+    <button class="on" data-p="l10-pr-p1">課題1 水平面</button>
+    <button data-p="l10-pr-p2">課題2 斜面</button>
+    <button data-p="l10-pr-p3">課題3 ベルト</button>
+  </div>
+
+  <div id="l10-pr-p1" class="pr-panel">
+    <p class="ex">質量 20 kg の箱を水平面で引く。μ<sub>s</sub> = 0.35, μ<sub>k</sub> = 0.25。g = 9.80 m/s²。<br>(a) 滑り出すのに必要な最小の水平力 <i>F</i><sub>min</sub>［N］（小数1位）<br>(b) 80 N で引くときの加速度 <i>a</i>［m/s²］（小数2位）</p>
+    <div class="prfields">
+      <div class="prf"><span>(a) <i>F</i><sub>min</sub>［N］</span><input type="number" id="pr-l10-q1a" step="any"><span class="prmark" id="mk-l10-q1a"></span></div>
+      <div class="prf"><span>(b) <i>a</i>［m/s²］</span><input type="number" id="pr-l10-q1b" step="any"><span class="prmark" id="mk-l10-q1b"></span></div>
+    </div>
+    <div class="prbtns">
+      <button class="btn pr-primary" data-grade="1">採点</button>
+      <button class="btn" data-reveal="1">答えを見る</button>
+      <button class="btn" data-reset="1">やり直す</button>
+    </div>
+    <div class="prresult" id="res-l10-p1"></div>
+    <div class="reveal" id="rev-l10-p1">反力 <i>R</i> = mg = 20×9.80 = 196 N。<br>(a) <i>F</i><sub>min</sub> = μ<sub>s</sub>R = 0.35×196 = <b>68.6 N</b>。<br>(b) <i>a</i> = (80 − μ<sub>k</sub>R)/m = (80 − 0.25×196)/20 = (80 − 49)/20 = <b>1.55 m/s²</b>。</div>
+  </div>
+
+  <div id="l10-pr-p2" class="pr-panel" style="display:none;">
+    <p class="ex">傾斜角 θ の斜面に質量 m の物体。μ<sub>s</sub> = 0.40。g = 9.80 m/s²。<br>(a) 滑り出す臨界角 θ<sub>c</sub>［度］（小数1位）<br>(b) θ = 30°, μ<sub>k</sub> = 0.30 で滑り落ちるときの加速度 <i>a</i>［m/s²］（小数2位）</p>
+    <div class="prfields">
+      <div class="prf"><span>(a) θ<sub>c</sub>［度］</span><input type="number" id="pr-l10-q2a" step="any"><span class="prmark" id="mk-l10-q2a"></span></div>
+      <div class="prf"><span>(b) <i>a</i>［m/s²］</span><input type="number" id="pr-l10-q2b" step="any"><span class="prmark" id="mk-l10-q2b"></span></div>
+    </div>
+    <div class="prbtns">
+      <button class="btn pr-primary" data-grade="2">採点</button>
+      <button class="btn" data-reveal="2">答えを見る</button>
+      <button class="btn" data-reset="2">やり直す</button>
+    </div>
+    <div class="prresult" id="res-l10-p2"></div>
+    <div class="reveal" id="rev-l10-p2">(a) θ<sub>c</sub> = arctan(μ<sub>s</sub>) = arctan(0.40) = <b>21.8°</b>。<br>(b) <i>a</i> = g(sin θ − μ<sub>k</sub> cos θ) = 9.80×(sin30° − 0.30 cos30°) = 9.80×(0.5 − 0.2598) = <b>2.36 m/s²</b>。</div>
+  </div>
+
+  <div id="l10-pr-p3" class="pr-panel" style="display:none;">
+    <p class="ex">ロープを円柱に1回巻き（θ<sub>0</sub> = 2π）、μ<sub>s</sub> = 0.4。大きい側 <i>T<sub>2</sub></i> = 600 N を支えるのに必要な小さい側 <i>T<sub>1</sub></i> は？［N］（小数1位）</p>
+    <div class="prfields">
+      <div class="prf"><span><i>T<sub>1</sub></i>［N］</span><input type="number" id="pr-l10-q3" step="any"><span class="prmark" id="mk-l10-q3"></span></div>
+    </div>
+    <div class="prbtns">
+      <button class="btn pr-primary" data-grade="3">採点</button>
+      <button class="btn" data-reveal="3">答えを見る</button>
+      <button class="btn" data-reset="3">やり直す</button>
+    </div>
+    <div class="prresult" id="res-l10-p3"></div>
+    <div class="reveal" id="rev-l10-p3"><i>T<sub>1</sub></i> = <i>T<sub>2</sub></i> e<sup>−μ<sub>s</sub>θ<sub>0</sub></sup> = 600 × e<sup>−0.4×2π</sup> = 600 × 0.0809 = <b>48.5 N</b>。</div>
+  </div>
+</div></section>
+
+<section class="slide" id="sl-summary" data-title="本日のまとめ"><div class="inner">
+  <span class="tag2 tag-ex">解説</span>
+  <p class="kicker">第10回 摩擦</p>
+  <h1 class="tt">本日のまとめ</h1>
+  <div class="eq" style="margin-bottom:.7em;">
+    <b>すべり摩擦・摩擦角</b><br>
+    <i>f<sub>s</sub></i> = μ<sub>s</sub> <i>R</i> (4.1)　　<i>f<sub>k</sub></i> = μ<sub>k</sub> <i>R</i> (4.2)　　μ<sub>s</sub> = tan φ<sub>0</sub> (4.3)<br>
+    <span class="note" style="display:block;margin-top:.3em;">μ<sub>k</sub> &lt; μ<sub>s</sub>。斜面の臨界角 θ<sub>c</sub> は摩擦角 φ<sub>0</sub> に等しい。</span>
+  </div>
+  <div class="eq">
+    <b>転がり摩擦・機械の摩擦</b><br>
+    <i>M<sub>0</sub></i> = ρ <i>mg</i> (4.6)　　<i>T<sub>2</sub></i> = <i>T<sub>1</sub></i> e<sup>μ<sub>s</sub>θ<sub>0</sub></sup> (4.15)<br>
+    <span class="note" style="display:block;margin-top:.3em;">転がり摩擦係数 ρ は長さの次元。ベルトは巻きつけ角に対して張力比が指数関数的に増える。</span>
+  </div>
+</div></section>
+
+<section class="slide" id="sl-next" data-title="次回の予告"><div class="inner">
+  <span class="tag2 tag-ex">解説</span>
+  <p class="kicker">次回の予告</p>
+  <h1 class="tt">次回の予告</h1>
+  <div class="eq" style="margin-bottom:.7em;">
+    <b>第11回：並進運動の基礎（6月29日）</b>
+    <ul class="lead" style="margin:.4em 0 0;">
+      <li>直線運動と曲線運動、距離と変位</li>
+      <li>速さと速度、加速度</li>
+      <li>一般の運動・接線加速度と法線加速度</li>
+    </ul>
+    <p class="note" style="margin-top:.4em;">教科書 §5.1 を予習してください。</p>
+  </div>
+  <div class="ex" style="border-left-color:var(--act);">
+    <b style="color:var(--act);">第11回はオンデマンド回です</b><br>
+    第11回（6/29）は対面授業を行いません。配信教材で学習し、当日中のクイズ提出を出席として扱います。提出を忘れないようにしてください。
+  </div>
+</div></section>
+  <!-- SLIDES:END -->
+</div>
+
+<audio id="narr" preload="none"></audio>
+<button id="narrbtn" class="narrbtn" aria-label="解説音声" style="display:none;">🔊 解説</button>
+
+<nav class="nav">
+  <button class="arw" id="prev" aria-label="前へ">◀</button>
+  <select id="jump" aria-label="スライド選択"></select>
+  <span class="count" id="count">1 / 1</span>
+  <button class="arw" id="fs" aria-label="全画面" title="全画面">⛶</button>
+  <button class="arw" id="next" aria-label="次へ">▶</button>
+</nav>
+
+<script>
+(function(){
+  "use strict";
+  var TAU=Math.PI*2;
+  function $(s,r){return (r||document).querySelector(s);}
+  function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+  function fmt(v,d){d=d==null?2:d; return (Math.round(v*Math.pow(10,d))/Math.pow(10,d)).toFixed(d);}
+  function clamp(v,a,b){return v<a?a:(v>b?b:v);}
+  function roundTo(v,dp){var f=Math.pow(10,dp); return Math.round(v*f)/f;}            // 採点: 四捨五入
+  function decimals(s){s=String(s).trim(); if(s.indexOf('.')<0)return 0; s=s.replace(/0+$/,''); var i=s.indexOf('.'); return i<0?0:(s.length-i-1);} // 採点: 小数桁
+  function vbnd(pl){var m=14/pl.s; return {x:(pl.W/2)/pl.s-m, y:(pl.H/2)/pl.s-m};}    // ドラッグ可動域（表示端まで）
+
+  // ---- スライドエンジン ----
+  var slides=[].slice.call(document.querySelectorAll('.slide')), N=slides.length, cur=0;
+  var hooks=slides.map(function(){return {};});
+  function idx(id){for(var i=0;i<slides.length;i++){if(slides[i].id===id)return i;} return -1;}
+  function reg(id,h){var i=idx(id); if(i>=0)hooks[i]=h;}
+  function goId(id){go(idx(id));}
+  var jump=$('#jump');
+  slides.forEach(function(s,i){var o=document.createElement('option'); o.value=i; o.textContent=(i+1)+'. '+(s.getAttribute('data-title')||s.id); jump.appendChild(o);});
+  $('#count').textContent='1 / '+N;
+  function go(i){
+    i=clamp(i,0,N-1); if(i===cur && slides[cur].classList.contains('active'))return;
+    if(hooks[cur].hide)hooks[cur].hide();
+    stopNarr();
+    slides[cur].classList.remove('active'); cur=i; slides[cur].classList.add('active');
+    jump.value=cur; $('#count').textContent=(cur+1)+' / '+N;
+    $('#prev').disabled=cur===0; $('#next').disabled=cur===N-1;
+    $('#prog').style.width=(cur/(N-1||1)*100)+'%'; slides[cur].scrollTop=0;
+    try{history.replaceState(null,'','#'+(cur+1));}catch(e){}
+    if(hooks[cur].show)hooks[cur].show();
+    syncNarrBtn();
+  }
+  $('#prev').onclick=function(){go(cur-1);}; $('#next').onclick=function(){go(cur+1);};
+  jump.onchange=function(){go(+jump.value);};
+  $('#fs').onclick=function(){ if(!document.fullscreenElement){ if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen(); } else { if(document.exitFullscreen)document.exitFullscreen(); } };
+  document.addEventListener('keydown',function(e){
+    if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT')return;
+    if(e.target.tagName==='BUTTON'&&(e.key===' '||e.key==='Enter'))return;
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){go(cur+1);e.preventDefault();}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){go(cur-1);e.preventDefault();}
+    else if(e.key==='Home'){go(0);} else if(e.key==='End'){go(N-1);}
+    else if(e.key==='f'||e.key==='F'){$('#fs').click();}
+  });
+  window.addEventListener('resize',function(){var h=hooks[cur]; if(h&&h.redraw)h.redraw();});
+
+  function anim(draw){var run=false;function loop(){if(!run)return;draw();requestAnimationFrame(loop);}return{start:function(){if(!run){run=true;loop();}},stop:function(){run=false;}};}
+
+  // ---- 解説ナレーション音声（単一プレーヤを使い回す） ----
+  var NARR_DIR='audio/';
+  var NARR=new Set(slides.map(function(s){return s.id;}));
+  var _audio=$('#narr'), _narrBtn=$('#narrbtn'), _playing=null;
+  function syncNarrBtn(){ var id=slides[cur].id, on=(_playing===id && !_audio.paused);
+    if(NARR.has(id)){ _narrBtn.style.display='inline-flex'; _narrBtn.textContent=on?'⏸ 停止':'🔊 解説'; _narrBtn.classList.toggle('playing',on);} else _narrBtn.style.display='none'; }
+  function stopNarr(){ try{_audio.pause(); _audio.currentTime=0;}catch(e){} _playing=null; }
+  function playNarr(id){ if(!NARR.has(id))return; stopNarr(); _audio.src=NARR_DIR+id+'.mp3'; _playing=id;
+    var p=_audio.play(); if(p&&p.catch)p.catch(function(){ NARR.delete(id); _playing=null; syncNarrBtn(); }); syncNarrBtn(); }
+  _narrBtn.onclick=function(e){ e.stopPropagation(); this.blur(); var id=slides[cur].id; if(_playing===id&&!_audio.paused){stopNarr();}else{playNarr(id);} syncNarrBtn(); };
+  _audio.addEventListener('ended',function(){_playing=null;syncNarrBtn();});
+  _audio.addEventListener('pause',function(){syncNarrBtn();});
+
+  // ---- 複素平面ヘルパー ----
+  function makePlane(cv, spanX, spanY){
+    var ctx=cv.getContext('2d'), dpr=window.devicePixelRatio||1, W=0,H=0,s=1,cx=0,cy=0, sx=spanX, sy=spanY;
+    function setSpan(a,b){sx=a; sy=(b==null?a:b);}
+    function fit(){var w=cv.clientWidth,h=cv.clientHeight; cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); W=w;H=h; s=Math.min(w/sx,h/sy); cx=w/2; cy=h/2;}
+    function PX(x,y){return [cx+x*s, cy-y*s];} function UN(px,py){return [(px-cx)/s,(cy-py)/s];}
+    function clear(){ctx.clearRect(0,0,W,H);}
+    function axes(opt){opt=opt||{}; var xr=(W/2)/s, yr=(H/2)/s, i,p;
+      ctx.strokeStyle=cssv('--grd'); ctx.lineWidth=1; ctx.font='11px sans-serif'; ctx.fillStyle=cssv('--mut');
+      for(i=Math.ceil(-xr);i<=xr;i++){if(i===0)continue; p=PX(i,0); ctx.globalAlpha=.55; ctx.beginPath(); ctx.moveTo(p[0],0); ctx.lineTo(p[0],H); ctx.stroke();}
+      for(i=Math.ceil(-yr);i<=yr;i++){if(i===0)continue; p=PX(0,i); ctx.globalAlpha=.55; ctx.beginPath(); ctx.moveTo(0,p[1]); ctx.lineTo(W,p[1]); ctx.stroke();}
+      ctx.globalAlpha=1; ctx.strokeStyle=cssv('--ax'); ctx.lineWidth=1.5; var o=PX(0,0);
+      ctx.beginPath(); ctx.moveTo(0,o[1]); ctx.lineTo(W,o[1]); ctx.stroke(); ctx.beginPath(); ctx.moveTo(o[0],H); ctx.lineTo(o[0],0); ctx.stroke();
+      ctx.fillStyle=cssv('--mut'); ctx.fillText(opt.reLabel||'Re', W-26, o[1]-7); ctx.fillText(opt.imLabel||'Im', o[0]+7, 14);}
+    function head(x1,y1,x2,y2,color,L){L=L||10; var a=Math.atan2(y2-y1,x2-x1); ctx.fillStyle=color; ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-L*Math.cos(a-.42),y2-L*Math.sin(a-.42)); ctx.lineTo(x2-L*Math.cos(a+.42),y2-L*Math.sin(a+.42)); ctx.closePath(); ctx.fill();}
+    function arrow(ux1,uy1,ux2,uy2,color,w){var a=PX(ux1,uy1),b=PX(ux2,uy2); ctx.strokeStyle=color; ctx.lineWidth=w||3; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke(); head(a[0],a[1],b[0],b[1],color);}
+    function vec(x,y,color,opt){opt=opt||{}; arrow(0,0,x,y,color,opt.w||3.2);
+      if(opt.proj){var t=PX(x,y),ax=PX(x,0),ay=PX(0,y); ctx.save(); ctx.strokeStyle=color; ctx.globalAlpha=.5; ctx.setLineDash([4,4]); ctx.lineWidth=1.2;
+        ctx.beginPath(); ctx.moveTo(t[0],t[1]); ctx.lineTo(ax[0],ax[1]); ctx.stroke(); ctx.beginPath(); ctx.moveTo(t[0],t[1]); ctx.lineTo(ay[0],ay[1]); ctx.stroke(); ctx.restore();}
+      if(opt.label){var t2=PX(x,y); ctx.fillStyle=color; ctx.font='bold 14px Georgia,serif'; ctx.fillText(opt.label, t2[0]+8, t2[1]-6);}}
+    function dot(x,y,color,r){var p=PX(x,y); ctx.fillStyle=color; ctx.beginPath(); ctx.arc(p[0],p[1],r||4,0,TAU); ctx.fill();}
+    function handle(x,y,color){var p=PX(x,y); ctx.save(); ctx.globalAlpha=.16; ctx.fillStyle=color;
+      ctx.beginPath(); ctx.arc(p[0],p[1],17,0,TAU); ctx.arc(p[0],p[1],11,0,TAU,true); ctx.fill(); ctx.globalAlpha=1;
+      ctx.strokeStyle=color; ctx.lineWidth=1.6; ctx.setLineDash([3.5,3.5]); ctx.beginPath(); ctx.arc(p[0],p[1],15,0,TAU); ctx.stroke(); ctx.restore();}
+    return {ctx:ctx, fit:fit, setSpan:setSpan, PX:PX, UN:UN, clear:clear, axes:axes, arrow:arrow, vec:vec, dot:dot, handle:handle, get s(){return s;}, get W(){return W;}, get H(){return H;}};
+  }
+  function dragger(cv, plane, getPts, onMove){
+    var ix=-1;
+    function rel(e){var r=cv.getBoundingClientRect(); return plane.UN(e.clientX-r.left, e.clientY-r.top);}
+    function pick(u){var pts=getPts(),best=-1,bd=1e9; for(var i=0;i<pts.length;i++){var a=plane.PX(pts[i].x,pts[i].y),b=plane.PX(u[0],u[1]); var d=Math.hypot(a[0]-b[0],a[1]-b[1]); if(d<bd){bd=d;best=i;}} return bd<34?best:-1;}
+    cv.style.touchAction='none';
+    cv.addEventListener('pointerdown',function(e){var u=rel(e); ix=pick(u); if(ix>=0){cv.setPointerCapture(e.pointerId); onMove(ix,u[0],u[1]); e.preventDefault();}});
+    cv.addEventListener('pointermove',function(e){if(ix<0)return; var u=rel(e); onMove(ix,u[0],u[1]); e.preventDefault();});
+    function end(){ix=-1;} cv.addEventListener('pointerup',end); cv.addEventListener('pointercancel',end);
+  }
+
+  // ---- 時間波形ヘルパー ----
+  function timeCtx(cv){var ctx=cv.getContext('2d'),dpr=window.devicePixelRatio||1,W=0,H=0;
+    function fit(){var w=cv.clientWidth,h=cv.clientHeight;cv.width=w*dpr;cv.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);W=w;H=h;}
+    return {ctx:ctx,fit:fit,get W(){return W;},get H(){return H;}};}
+  function drawTimeAxes(c,ymax){var ctx=c.ctx,W=c.W,H=c.H,padL=34,padB=20,padT=10,padR=10;
+    function X(t){return padL+t/c._tmax*(W-padL-padR);} function Y(v){return padT+(ymax-v)/(2*ymax)*(H-padT-padB);}
+    ctx.clearRect(0,0,W,H); ctx.strokeStyle=cssv('--grd'); ctx.fillStyle=cssv('--mut'); ctx.font='10px sans-serif'; ctx.lineWidth=1;
+    for(var g=-ymax;g<=ymax+1e-9;g+=ymax/2){ctx.globalAlpha=g===0?.85:.4; ctx.beginPath(); ctx.moveTo(padL,Y(g)); ctx.lineTo(W-padR,Y(g)); ctx.stroke(); ctx.globalAlpha=1; ctx.fillText(fmt(g,g%1?1:0),4,Y(g)+3);}
+    return {X:X,Y:Y};}
+  function plotFn(c,m,fn,color,w){var ctx=c.ctx,W=c.W; ctx.strokeStyle=color; ctx.lineWidth=w||2.4; ctx.lineJoin='round'; ctx.beginPath(); var first=true;
+    for(var px=34;px<=W-10;px+=2){var t=(px-34)/(W-44)*c._tmax; var y=fn(t); var X=m.X(t),Y=m.Y(y); if(first){ctx.moveTo(X,Y);first=false;}else ctx.lineTo(X,Y);} ctx.stroke();}
+
+  /* HOOKS:START */
+(function(){var cv=$('#cv-l10-title'); if(!cv)return; var c=timeCtx(cv); c._tmax=4*Math.PI;
+  var A=anim(function(){c.fit(); var ctx=c.ctx,W=c.W,H=c.H; ctx.clearRect(0,0,W,H);
+    var ph=performance.now()/900;
+    var x0=W*0.10, y0=H*0.84, x1=W*0.90, y1=H*0.30;
+    ctx.strokeStyle=cssv('--ax'); ctx.lineWidth=2; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.lineTo(x1,y0); ctx.closePath(); ctx.stroke();
+    ctx.strokeStyle=cssv('--grd'); ctx.lineWidth=1;
+    for(var hx=x0+10;hx<x1;hx+=14){var t=(hx-x0)/(x1-x0); var hy=y0+(y1-y0)*t; ctx.beginPath(); ctx.moveTo(hx,hy); ctx.lineTo(hx-8,hy+8); ctx.stroke();}
+    var u=0.5+0.34*Math.sin(ph); var bx=x0+(x1-x0)*u, by=y0+(y1-y0)*u;
+    var ang=Math.atan2(y1-y0,x1-x0); var nx=Math.sin(ang), ny=-Math.cos(ang);
+    var bw=W*0.085, bh=W*0.05, cxp=bx+nx*bh*0.5, cyp=by+ny*bh*0.5;
+    ctx.save(); ctx.translate(cxp,cyp); ctx.rotate(ang);
+    ctx.fillStyle=cssv('--surface2'); ctx.strokeStyle=cssv('--ink'); ctx.lineWidth=2;
+    ctx.beginPath(); ctx.rect(-bw/2,-bh/2,bw,bh); ctx.fill(); ctx.stroke(); ctx.restore();
+    function arr(ax,ay,bx2,by2,col){ctx.strokeStyle=col; ctx.lineWidth=2.4; ctx.beginPath(); ctx.moveTo(ax,ay); ctx.lineTo(bx2,by2); ctx.stroke(); var a=Math.atan2(by2-ay,bx2-ax); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(bx2,by2); ctx.lineTo(bx2-9*Math.cos(a-.4),by2-9*Math.sin(a-.4)); ctx.lineTo(bx2-9*Math.cos(a+.4),by2-9*Math.sin(a+.4)); ctx.closePath(); ctx.fill();}
+    arr(cxp,cyp,cxp,cyp+H*0.20,cssv('--act'));
+    arr(cxp,cyp,cxp+Math.cos(ang)*(-W*0.12),cyp+Math.sin(ang)*(-W*0.12),cssv('--thr'));
+  });
+  reg('sl-title',{show:A.start,hide:A.stop});})();
+
+(function(){var host=$('#l10-sched'); if(!host)return;
+  var SCHEDULE={year:2026, note:'スケジュールは進捗に合わせて変更する可能性があります', current:10,
+    rows:[[1,'4/13（月）','力とベクトル'],[2,'4/20（月）','力の合成と分解'],[3,'4/27（月）','釣合い・モーメント'],[4,'5/11（月）','着力点の異なる力・偶力'],[5,'5/18（月）','力の置換え・釣合い'],[6,'5/25（月）','トラス'],[7,'6/3（水）','重心'],[8,'6/8（月）','中間試験','exam'],[9,'6/15（月）','中間試験返却・解説'],[10,'6/22（月）','摩擦・摩擦角・転がり摩擦'],[11,'6/29（月）','並進運動の基礎'],[12,'7/6（月）','一般の運動・放物運動'],[13,'7/13（月）','回転・円運動・相対運動'],[14,'7/23（木）','期末試験','exam'],[15,'7/27（月）','期末試験返却・解説']]};
+  function draw(){
+    var ye=$('#l10-sch-year'); if(ye)ye.textContent=SCHEDULE.year;
+    var ne=$('#l10-sch-note'); if(ne)ne.textContent=SCHEDULE.note;
+    host.innerHTML='';
+    var rows=SCHEDULE.rows, half=Math.ceil(rows.length/2);
+    var cols=[document.createElement('div'),document.createElement('div')];
+    cols[0].className='schcol'; cols[1].className='schcol';
+    rows.forEach(function(r,i){
+      var div=document.createElement('div'); div.className='schrow';
+      if(r[0]===SCHEDULE.current)div.className+=' cur';
+      if(r[3]==='exam')div.className+=' exam';
+      div.innerHTML='<span class="sn">'+r[0]+'</span><span class="sd">'+r[1]+'</span><span class="st">'+r[2]+'</span>';
+      cols[i<half?0:1].appendChild(div);
+    });
+    host.appendChild(cols[0]); host.appendChild(cols[1]);
+  }
+  reg('sl-schedule',{show:draw,redraw:draw});
+})();
+
+(function(){var cv=$('#cv-l10-fF'); if(!cv)return; var ctx=cv.getContext('2d'),dpr=window.devicePixelRatio||1;
+  function draw(){var w=cv.clientWidth,h=cv.clientHeight; cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    var padL=44,padB=30,padT=16,padR=20, x0=padL, y0=h-padB, plw=w-padL-padR, plh=h-padT-padB;
+    ctx.clearRect(0,0,w,h);
+    var Fmax=10, fmax=10; var fsmax=6, fkv=4;
+    function X(F){return x0+F/Fmax*plw;} function Y(f){return y0-f/fmax*plh;}
+    ctx.strokeStyle=cssv('--ax'); ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(x0,padT); ctx.lineTo(x0,y0); ctx.lineTo(w-padR,y0); ctx.stroke();
+    ctx.setLineDash([5,4]); ctx.lineWidth=1.2;
+    ctx.strokeStyle=cssv('--re'); ctx.beginPath(); ctx.moveTo(x0,Y(fsmax)); ctx.lineTo(w-padR,Y(fsmax)); ctx.stroke();
+    ctx.strokeStyle=cssv('--z1'); ctx.beginPath(); ctx.moveTo(x0,Y(fkv)); ctx.lineTo(w-padR,Y(fkv)); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.strokeStyle=cssv('--re'); ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(X(0),Y(0)); ctx.lineTo(X(fsmax),Y(fsmax)); ctx.stroke();
+    ctx.strokeStyle=cssv('--z1'); ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(X(fsmax),Y(fkv)); ctx.lineTo(X(Fmax),Y(fkv)); ctx.stroke();
+    ctx.strokeStyle=cssv('--act'); ctx.setLineDash([3,3]); ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(X(fsmax),Y(fsmax)); ctx.lineTo(X(fsmax),Y(fkv)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle=cssv('--re'); ctx.beginPath(); ctx.arc(X(fsmax),Y(fsmax),5,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=cssv('--mut'); ctx.font='12px sans-serif';
+    ctx.fillText('外力 F', w-padR-46, y0+20);
+    ctx.save(); ctx.translate(14,padT+plh/2); ctx.rotate(-Math.PI/2); ctx.fillText('摩擦力 f',0,0); ctx.restore();
+    ctx.fillStyle=cssv('--re'); ctx.fillText('fs = μs R', x0+6, Y(fsmax)-6);
+    ctx.fillStyle=cssv('--z1'); ctx.fillText('fk = μk R', x0+6, Y(fkv)+16);
+    ctx.fillStyle=cssv('--act'); ctx.font='bold 12px sans-serif';
+    var ax=X(fsmax)+10, ay=Y((fsmax+fkv)/2);
+    ctx.fillText('滑り出し', ax+8, ay+4);
+    ctx.strokeStyle=cssv('--act'); ctx.lineWidth=1.6; ctx.beginPath(); ctx.moveTo(ax+4,ay); ctx.lineTo(X(fsmax)+2,ay); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(X(fsmax)+2,ay); ctx.lineTo(X(fsmax)+9,ay-4); ctx.lineTo(X(fsmax)+9,ay+4); ctx.closePath(); ctx.fill();
+  }
+  reg('sl-fF',{show:draw,redraw:draw});})();
+
+(function(){var cv=$('#cv-l10-fFdo'); if(!cv)return; var ctx=cv.getContext('2d'),dpr=window.devicePixelRatio||1;
+  var m=20, g=9.8, R=m*g;
+  var F=0, mus=0.5;
+  var sF=$('#s-l10-extF'), oF=$('#v-l10-extF'), sM=$('#s-l10-mus'), oM=$('#v-l10-mus'), eq=$('#eq-l10-fFdo');
+  function state(){var muk=0.7*mus, fsmax=mus*R, fk=muk*R; var sliding=F>fsmax+1e-9; var f=sliding?fk:F;
+    return {muk:muk, fsmax:fsmax, fk:fk, sliding:sliding, f:f};}
+  function draw(){var w=cv.clientWidth,h=cv.clientHeight; cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    var st=state();
+    var padL=46,padB=30,padT=16,padR=18, x0=padL, y0=h-padB, plw=w-padL-padR, plh=h-padT-padB;
+    var Fmax=250, fmax=250;
+    function X(v){return x0+v/Fmax*plw;} function Y(v){return y0-v/fmax*plh;}
+    ctx.clearRect(0,0,w,h);
+    ctx.strokeStyle=cssv('--ax'); ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(x0,padT); ctx.lineTo(x0,y0); ctx.lineTo(w-padR,y0); ctx.stroke();
+    ctx.setLineDash([5,4]); ctx.lineWidth=1.2;
+    ctx.strokeStyle=cssv('--re'); ctx.beginPath(); ctx.moveTo(x0,Y(st.fsmax)); ctx.lineTo(w-padR,Y(st.fsmax)); ctx.stroke();
+    ctx.strokeStyle=cssv('--z1'); ctx.beginPath(); ctx.moveTo(x0,Y(st.fk)); ctx.lineTo(w-padR,Y(st.fk)); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.strokeStyle=cssv('--re'); ctx.lineWidth=2.6; ctx.beginPath(); ctx.moveTo(X(0),Y(0)); ctx.lineTo(X(st.fsmax),Y(st.fsmax)); ctx.stroke();
+    ctx.strokeStyle=cssv('--z1'); ctx.lineWidth=2.6; ctx.beginPath(); ctx.moveTo(X(st.fsmax),Y(st.fk)); ctx.lineTo(X(Fmax),Y(st.fk)); ctx.stroke();
+    var col=st.sliding?cssv('--z1'):cssv('--re');
+    ctx.fillStyle=col; ctx.beginPath(); ctx.arc(X(F),Y(st.f),7,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle=cssv('--surface'); ctx.lineWidth=2; ctx.stroke();
+    ctx.fillStyle=cssv('--mut'); ctx.font='12px sans-serif';
+    ctx.fillText('外力 F', w-padR-46, y0+20);
+    ctx.save(); ctx.translate(14,padT+plh/2); ctx.rotate(-Math.PI/2); ctx.fillText('摩擦力 f',0,0); ctx.restore();
+    ctx.fillStyle=cssv('--re'); ctx.fillText('fs = '+fmt(st.fsmax,0)+'N', x0+6, Y(st.fsmax)-6);
+    ctx.fillStyle=cssv('--z1'); ctx.fillText('fk = '+fmt(st.fk,0)+'N', x0+6, Y(st.fk)+15);
+    if(st.sliding){
+      eq.innerHTML='<span class="big" style="color:var(--act);">滑り出し！</span><br><i>f</i> = <i>f<sub>k</sub></i> = μ<sub>k</sub> <i>R</i> = '+fmt(st.muk,2)+' × '+fmt(R,0)+' = <strong>'+fmt(st.fk,0)+' N</strong>'+'<br><span style="color:var(--mut);font-size:.85em;">R = '+fmt(R,0)+' N、 fs(max) = '+fmt(st.fsmax,0)+' N、 μk = '+fmt(st.muk,2)+'</span>';
+    } else {
+      eq.innerHTML='<span class="big" style="color:var(--re);">静止</span><br><i>f</i> = <i>F</i> = <strong>'+fmt(F,0)+' N</strong>'+'<br><span style="color:var(--mut);font-size:.85em;">R = '+fmt(R,0)+' N、 fs(max) = μs R = '+fmt(st.fsmax,0)+' N、 fk = '+fmt(st.fk,0)+' N</span>';
+    }
+  }
+  if(sF)sF.addEventListener('input',function(){F=parseFloat(sF.value); oF.textContent=fmt(F,0)+' N'; draw();});
+  if(sM)sM.addEventListener('input',function(){mus=parseFloat(sM.value); oM.textContent=fmt(mus,2); draw();});
+  reg('sl-fF-do',{show:draw,redraw:draw});})();
+
+(function(){
+  var cv=$('#cv-l10-incl'); if(!cv)return;
+  var ctx=cv.getContext('2d'), dpr=window.devicePixelRatio||1, W=0, H=0;
+  var theta=15, mu=0.36, m=10, g=9.8;
+  var sT=$('#s-l10-theta'), vT=$('#v-l10-theta'), sM=$('#s-l10-incmu'), vM=$('#v-l10-incmu');
+  function fit(){ var w=cv.clientWidth, h=cv.clientHeight; cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); W=w; H=h; }
+  function arrow(x1,y1,x2,y2,color,wd){ var a=Math.atan2(y2-y1,x2-x1), L=9; ctx.strokeStyle=color; ctx.fillStyle=color; ctx.lineWidth=wd||2.6; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-L*Math.cos(a-0.42),y2-L*Math.sin(a-0.42)); ctx.lineTo(x2-L*Math.cos(a+0.42),y2-L*Math.sin(a+0.42)); ctx.closePath(); ctx.fill(); }
+  function label(x,y,txt,color){ ctx.fillStyle=color; ctx.font='bold 13px Georgia,serif'; ctx.fillText(txt,x,y); }
+  function draw(){
+    fit(); ctx.clearRect(0,0,W,H);
+    var th=theta*Math.PI/180;
+    var phi=Math.atan(mu);
+    var phiDeg=phi*180/Math.PI;
+    var slipping=(th>phi+1e-9);
+    var ox=42, oy=H-40;
+    var base=Math.min(W-90, (H-90)/Math.max(0.05,Math.tan(th)) );
+    if(base<120) base=120;
+    var bx=ox+base, by=oy;
+    var topx=bx, topy=oy-base*Math.tan(th);
+    if(topy<24){ var sc=(oy-24)/(base*Math.tan(th)); base*=sc; bx=ox+base; topy=oy-base*Math.tan(th); topx=bx; }
+    var slopeCol=slipping?cssv('--act'):cssv('--mut');
+    ctx.save();
+    ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(bx,by); ctx.lineTo(topx,topy); ctx.closePath();
+    ctx.fillStyle=slipping?'rgba(216,90,48,0.10)':cssv('--surface2'); ctx.fill();
+    ctx.strokeStyle=slopeCol; ctx.lineWidth=2; ctx.stroke();
+    ctx.restore();
+    ctx.strokeStyle=cssv('--mut'); ctx.lineWidth=1;
+    for(var hx=ox+8; hx<bx; hx+=18){ ctx.beginPath(); ctx.moveTo(hx,oy); ctx.lineTo(hx-8,oy+10); ctx.stroke(); }
+    ctx.strokeStyle=cssv('--ink'); ctx.lineWidth=1.4;
+    ctx.beginPath(); ctx.arc(ox,oy,34,-th,0); ctx.stroke();
+    ctx.fillStyle=cssv('--ink'); ctx.font='13px sans-serif'; ctx.fillText('θ='+theta+'°', ox+40, oy-8);
+    var ux=Math.cos(th), uy=-Math.sin(th);
+    var nx=-Math.sin(th), ny=-Math.cos(th);
+    var t=0.5; var cxp=ox+(bx-ox)*t, cyp=oy+(topy-oy)*t;
+    cyp-=2;
+    var bw=46, bh=30;
+    ctx.save();
+    ctx.translate(cxp,cyp); ctx.rotate(-th);
+    ctx.beginPath(); ctx.rect(-bw/2,-bh,bw,bh);
+    ctx.fillStyle=slipping?'rgba(216,90,48,0.16)':cssv('--surface'); ctx.fill();
+    ctx.strokeStyle=slipping?cssv('--act'):cssv('--ink'); ctx.lineWidth=2; ctx.stroke();
+    ctx.restore();
+    var px=cxp+nx*bh*0.5, py=cyp+ny*bh*0.5;
+    var mg=m*g, Rn=mg*Math.cos(th), comp=mg*Math.sin(th), fmax=mu*Rn;
+    var fval=slipping?fmax:comp;
+    var k=42/mg;
+    arrow(px,py, px, py+mg*k, cssv('--ink'), 2.8); label(px+6, py+mg*k, 'mg', cssv('--ink'));
+    arrow(px,py, px+nx*Rn*k, py+ny*Rn*k, cssv('--ref'), 2.8); label(px+nx*Rn*k-2, py+ny*Rn*k-4, 'R', cssv('--ref'));
+    arrow(px,py, px-ux*comp*k, py-uy*comp*k, cssv('--act'), 2.8); label(px-ux*comp*k-2, py-uy*comp*k+14, 'mg sinθ', cssv('--act'));
+    arrow(px,py, px+ux*fval*k, py+uy*fval*k, cssv('--thr'), 2.8); label(px+ux*fval*k+4, py+uy*fval*k-2, 'f', cssv('--thr'));
+    ctx.font='bold 14px sans-serif';
+    if(slipping){ ctx.fillStyle=cssv('--act'); ctx.fillText('滑り出し！ θ > φ₀', ox+4, 22); }
+    else { ctx.fillStyle=cssv('--thr'); ctx.fillText('静止（θ ≦ φ₀）', ox+4, 22); }
+    var verdict = slipping ? '<span style="color:var(--act);font-weight:700">滑り出し</span>' : '<span style="color:var(--thr);font-weight:700">静止</span>';
+    $('#eq-l10-incl').innerHTML =
+      '<div>θ = '+theta+'°　摩擦角 φ₀ = atan μ<sub>s</sub> = '+fmt(phiDeg,1)+'°</div>'+
+      '<div>R = mg cosθ = '+fmt(Rn,1)+' N</div>'+
+      '<div>必要摩擦力 mg sinθ = '+fmt(comp,1)+' N</div>'+
+      '<div>最大静摩擦力 μ<sub>s</sub>R = '+fmt(fmax,1)+' N</div>'+
+      '<div>判定：'+verdict+'（'+ (slipping?'mg sinθ > μ<sub>s</sub>R':'mg sinθ ≦ μ<sub>s</sub>R') +'）</div>';
+  }
+  if(sT) sT.addEventListener('input',function(){ theta=parseInt(sT.value,10); vT.textContent=theta+'°'; draw(); });
+  if(sM) sM.addEventListener('input',function(){ mu=parseFloat(sM.value); vM.textContent=fmt(mu,2); draw(); });
+  reg('sl-incline-do',{show:draw,redraw:draw});
+})();
+
+(function(){
+  var cv=document.querySelector('#cv-l10-roll'); if(!cv)return;
+  var ctx=cv.getContext('2d'), dpr=window.devicePixelRatio||1;
+  var mg=98, R_MIN=10, R_MAX=200;
+  var sR=document.querySelector('#s-l10-radius'), vR=document.querySelector('#v-l10-radius');
+  var sP=document.querySelector('#s-l10-rho'), vP=document.querySelector('#v-l10-rho');
+  function F0(r,rho){return (rho/r)*mg;}
+  function draw(){
+    var r=parseFloat(sR.value), rho=parseFloat(sP.value);
+    if(vR)vR.textContent=r.toFixed(0);
+    if(vP)vP.textContent=rho.toFixed(2);
+    var w=cv.clientWidth, h=cv.clientHeight;
+    cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,w,h);
+    var padL=46, padR=14, padT=14, padB=30;
+    var x0=padL, x1=w-padR, y0=h-padB, y1=padT;
+    var ymax=F0(R_MIN,rho)*1.08; if(ymax<0.02)ymax=0.02;
+    function X(rr){return x0+(rr-R_MIN)/(R_MAX-R_MIN)*(x1-x0);}
+    function Y(f){return y0-(f/ymax)*(y0-y1);}
+    var ink=getComputedStyle(document.documentElement).getPropertyValue('--ink').trim();
+    var mut=getComputedStyle(document.documentElement).getPropertyValue('--mut').trim();
+    var grd=getComputedStyle(document.documentElement).getPropertyValue('--grd').trim();
+    var act=getComputedStyle(document.documentElement).getPropertyValue('--act').trim();
+    var ref=getComputedStyle(document.documentElement).getPropertyValue('--ref').trim();
+    ctx.strokeStyle=grd; ctx.lineWidth=1; ctx.font='10px sans-serif'; ctx.fillStyle=mut;
+    var gi;
+    for(gi=0;gi<=4;gi++){var gx=x0+(x1-x0)*gi/4; ctx.beginPath(); ctx.moveTo(gx,y0); ctx.lineTo(gx,y1); ctx.globalAlpha=.4; ctx.stroke(); ctx.globalAlpha=1;
+      var rv=R_MIN+(R_MAX-R_MIN)*gi/4; ctx.textAlign='center'; ctx.fillText(rv.toFixed(0),gx,y0+13);}
+    for(gi=0;gi<=4;gi++){var gy=y0-(y0-y1)*gi/4; ctx.beginPath(); ctx.moveTo(x0,gy); ctx.lineTo(x1,gy); ctx.globalAlpha=.4; ctx.stroke(); ctx.globalAlpha=1;
+      ctx.textAlign='right'; ctx.fillText((ymax*gi/4).toFixed(2),x0-5,gy+3);}
+    ctx.strokeStyle=ink; ctx.lineWidth=1.4;
+    ctx.beginPath(); ctx.moveTo(x0,y1); ctx.lineTo(x0,y0); ctx.lineTo(x1,y0); ctx.stroke();
+    ctx.fillStyle=mut; ctx.textAlign='center'; ctx.fillText('半径 r [mm]',(x0+x1)/2,h-3);
+    ctx.save(); ctx.translate(11,(y0+y1)/2); ctx.rotate(-Math.PI/2); ctx.fillText('F0 [N]',0,0); ctx.restore();
+    ctx.strokeStyle=act; ctx.lineWidth=2.6; ctx.lineJoin='round'; ctx.beginPath();
+    var first=true, rr;
+    for(rr=R_MIN; rr<=R_MAX+0.01; rr+=1){var px=X(rr), py=Y(F0(rr,rho)); if(first){ctx.moveTo(px,py);first=false;}else ctx.lineTo(px,py);}
+    ctx.stroke();
+    var fnow=F0(r,rho), px=X(r), py=Y(fnow);
+    ctx.fillStyle=act; ctx.beginPath(); ctx.arc(px,py,5.5,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle=act; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(px,y0); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(x0,py); ctx.stroke(); ctx.setLineDash([]);
+    void ref;
+    var ratio=rho/r;
+    var slide=0.3*mg;
+    document.querySelector('#eq-l10-roll').innerHTML=
+      '<div><i>r</i> = '+r.toFixed(0)+' mm　　ρ = '+rho.toFixed(2)+' mm</div>'+
+      '<div>ρ / <i>r</i> = '+ratio.toExponential(2)+'（無次元）</div>'+
+      '<div class="big" style="color:var(--act);"><i>F<sub>0</sub></i> = (ρ/<i>r</i>)<i>mg</i> = '+fnow.toFixed(3)+' N</div>'+
+      '<div style="color:var(--ref);margin-top:.2em;">参考：すべり摩擦 μ<sub>s</sub>=0.3 なら μ<sub>s</sub><i>mg</i> = '+slide.toFixed(1)+' N</div>'+
+      '<div style="color:var(--mut);font-size:.78em;">→ 転がりはすべりの約 '+Math.round(slide/fnow)+' 分の1。桁違いに小さい。</div>';
+  }
+  if(sR)sR.addEventListener('input',draw);
+  if(sP)sP.addEventListener('input',draw);
+  reg('sl-rolling-do',{show:draw,redraw:draw});
+})();
+
+(function(){var cv=$('#cv-l10-belt'); if(!cv)return; var dpr=window.devicePixelRatio||1, ctx=cv.getContext('2d');
+  var wrap=1, mu=0.4; var TAU2=Math.PI*2; var WMAX=4*TAU2;
+  var sW=$('#s-l10-wrap'),oW=$('#v-l10-wrap'),sM=$('#s-l10-beltmu'),oM=$('#v-l10-beltmu');
+  function draw(){
+    var w=cv.clientWidth,h=cv.clientHeight; cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    var padL=46,padR=14,padT=14,padB=26; ctx.clearRect(0,0,w,h);
+    var th0=wrap*TAU2; var ratioMax=Math.exp(mu*WMAX);
+    function X(rad){return padL+rad/WMAX*(w-padL-padR);}
+    function Y(rt){return padT+(ratioMax-rt)/(ratioMax-1)*(h-padT-padB);}
+    ctx.strokeStyle=cssv('--grd'); ctx.fillStyle=cssv('--mut'); ctx.font='10px sans-serif'; ctx.lineWidth=1;
+    for(var k=0;k<=4;k++){var rd=k*TAU2; ctx.globalAlpha=.5; ctx.beginPath(); ctx.moveTo(X(rd),padT); ctx.lineTo(X(rd),h-padB); ctx.stroke(); ctx.globalAlpha=1; ctx.fillText(k+'回',X(rd)-7,h-10);}
+    ctx.strokeStyle=cssv('--ax'); ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(padL,padT); ctx.lineTo(padL,h-padB); ctx.lineTo(w-padR,h-padB); ctx.stroke();
+    ctx.fillStyle=cssv('--mut'); ctx.fillText('T₂/T₁',6,padT+8); ctx.fillText('1',padL-14,Y(1)+3);
+    ctx.strokeStyle=cssv('--act'); ctx.lineWidth=2.6; ctx.lineJoin='round'; ctx.beginPath(); var first=true;
+    for(var px=padL;px<=w-padR;px+=2){var rad=(px-padL)/(w-padL-padR)*WMAX; var rt=Math.exp(mu*rad); var yy=Y(rt); if(first){ctx.moveTo(px,yy);first=false;}else ctx.lineTo(px,yy);} ctx.stroke();
+    var ratio=Math.exp(mu*th0); var cx=X(th0),cy=Y(ratio);
+    ctx.strokeStyle=cssv('--ref'); ctx.setLineDash([4,4]); ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(cx,h-padB); ctx.lineTo(cx,cy); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle=cssv('--act'); ctx.beginPath(); ctx.arc(cx,cy,6,0,TAU2); ctx.fill();
+    var deg=wrap*360;
+    var t2for500=500*ratio;
+    $('#eq-l10-belt').innerHTML='巻き角 θ₀ = '+fmt(wrap,2)+' 回 = '+fmt(deg,0)+'° = '+fmt(th0,2)+' rad<br>μ<sub>s</sub> = '+fmt(mu,2)+'<br>張力比 <i>T<sub>2</sub>/T<sub>1</sub></i> = e<sup>μ<sub>s</sub>θ₀</sup> = <b>'+fmt(ratio,2)+'</b><br>T₁ = 500 N を支えるのに必要な T₂ = 500×'+fmt(ratio,2)+' = <b>'+fmt(t2for500,0)+' N</b>';
+  }
+  if(sW)sW.addEventListener('input',function(){wrap=parseFloat(sW.value); oW.textContent=fmt(wrap,2)+'回'; draw();});
+  if(sM)sM.addEventListener('input',function(){mu=parseFloat(sM.value); oM.textContent=fmt(mu,2); draw();});
+  reg('sl-belt-do',{show:draw,redraw:draw});})();
+
+(function(){
+  var root=document; var seg=$('#seg-l10'); if(!seg)return;
+  var panels={'1':'l10-pr-p1','2':'l10-pr-p2','3':'l10-pr-p3'};
+  [].slice.call(seg.querySelectorAll('button')).forEach(function(b){
+    b.addEventListener('click',function(){
+      [].slice.call(seg.querySelectorAll('button')).forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      var p=b.getAttribute('data-p');
+      for(var key in panels){ var el=$('#'+panels[key]); if(el)el.style.display=(panels[key]===p?'block':'none'); }
+    });
+  });
+  function mark(id,ok){var mm=$('#'+id); if(!mm)return; mm.textContent=ok?'○':'✕'; mm.classList.remove('good','bad'); mm.classList.add(ok?'good':'bad');}
+  function check(inputId,markId,ans,dp){
+    var el=$('#'+inputId); var v=el.value.trim();
+    if(v===''){mark(markId,false); return false;}
+    var num=parseFloat(v); if(isNaN(num)){mark(markId,false); return false;}
+    var ok=(roundTo(num,dp)===roundTo(ans,dp));
+    mark(markId,ok); return ok;
+  }
+  function setRes(id,n,tot){var r=$('#'+id); if(!r)return; r.classList.remove('good','bad');
+    if(n===tot){r.textContent='全問正解！ '+n+'/'+tot; r.classList.add('good');}
+    else{r.textContent=n+'/'+tot+' 正解。もう一度見直そう。'; r.classList.add('bad');}}
+  [].slice.call(root.querySelectorAll('[data-grade]')).forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var g=btn.getAttribute('data-grade');
+      if(g==='1'){var a=check('pr-l10-q1a','mk-l10-q1a',68.6,1); var b=check('pr-l10-q1b','mk-l10-q1b',1.55,2); setRes('res-l10-p1',(a?1:0)+(b?1:0),2);}
+      else if(g==='2'){var a2=check('pr-l10-q2a','mk-l10-q2a',21.8,1); var b2=check('pr-l10-q2b','mk-l10-q2b',2.36,2); setRes('res-l10-p2',(a2?1:0)+(b2?1:0),2);}
+      else if(g==='3'){var a3=check('pr-l10-q3','mk-l10-q3',48.5,1); setRes('res-l10-p3',a3?1:0,1);}
+    });
+  });
+  [].slice.call(root.querySelectorAll('[data-reveal]')).forEach(function(btn){
+    btn.addEventListener('click',function(){var p=btn.getAttribute('data-reveal'); var rv=$('#rev-l10-p'+p); if(rv)rv.classList.toggle('show');});
+  });
+  var resetMap={'1':{ins:['pr-l10-q1a','pr-l10-q1b'],mks:['mk-l10-q1a','mk-l10-q1b'],res:'res-l10-p1',rev:'rev-l10-p1'},
+               '2':{ins:['pr-l10-q2a','pr-l10-q2b'],mks:['mk-l10-q2a','mk-l10-q2b'],res:'res-l10-p2',rev:'rev-l10-p2'},
+               '3':{ins:['pr-l10-q3'],mks:['mk-l10-q3'],res:'res-l10-p3',rev:'rev-l10-p3'}};
+  [].slice.call(root.querySelectorAll('[data-reset]')).forEach(function(btn){
+    btn.addEventListener('click',function(){var c=resetMap[btn.getAttribute('data-reset')]; if(!c)return;
+      c.ins.forEach(function(i){var e=$('#'+i); if(e)e.value='';});
+      c.mks.forEach(function(mn){var e=$('#'+mn); if(e){e.textContent=''; e.classList.remove('good','bad');}});
+      var r=$('#'+c.res); if(r){r.textContent=''; r.classList.remove('good','bad');}
+      var rv=$('#'+c.rev); if(rv)rv.classList.remove('show');
+    });
+  });
+})();
+  /* HOOKS:END */
+
+  // ---- 起動 ----
+  var start=0, h=parseInt((location.hash||'').replace('#',''),10); if(h>=1&&h<=N)start=h-1;
+  go(start);
+})();
+</script>
+</body>
+</html>
