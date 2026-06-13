@@ -281,6 +281,43 @@
   </div>
 </section>
 
+<section class="slide" id="sl11-displacement-b" data-title="行程と距離が食い違う例">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">§5.1.2</p>
+    <h1 class="tt">行程と距離が食い違う例</h1>
+    <div class="desc">同じ運動でも、行程と距離が大きく食い違うことがあります。</div>
+    <div class="twocol">
+      <div class="figbox">
+        <svg class="fig" viewBox="0 0 320 150" role="img" aria-label="5m先まで歩いて出発点に戻る往復">
+          <line class="w" x1="40" y1="80" x2="280" y2="80"/>
+          <circle cx="40" cy="80" r="5" style="fill:var(--act);"/>
+          <text x="34" y="105" style="fill:var(--act);font-style:normal;">P＝Q</text>
+          <circle cx="280" cy="80" r="4" style="fill:var(--ref);"/>
+          <text x="262" y="105" style="fill:var(--ref);font-style:normal;">5 m先</text>
+          <path class="cur" d="M48 66 Q160 30 272 66"/>
+          <polygon class="curf" points="272,66 256,58 262,72"/>
+          <text x="150" y="34" style="fill:var(--ref);font-style:normal;">行き 5 m</text>
+          <path class="cur" d="M272 94 Q160 130 48 94" style="stroke:var(--act);"/>
+          <polygon class="curf" points="48,94 64,86 58,100" style="fill:var(--act);"/>
+          <text x="140" y="126" style="fill:var(--act);font-style:normal;">帰り 5 m</text>
+        </svg>
+        <div class="figcap">5 m 先まで歩いて出発点へ戻る往復</div>
+      </div>
+      <div>
+        <ul class="lead">
+          <li>始点 P と終点 Q が<strong>同じ点</strong>に戻る</li>
+          <li>変位 Δ<i>r</i> = <i>r</i><sub>Q</sub> − <i>r</i><sub>P</sub> = <strong style="color:var(--act);">0</strong> ⟹ 距離 |Δ<i>r</i>| = <strong style="color:var(--act);">0</strong></li>
+          <li>行程 <i>s</i> ＝ 行き 5 m ＋ 帰り 5 m = <strong style="color:var(--ref);">10 m</strong></li>
+        </ul>
+        <div class="eq" style="border-left:3px solid var(--act);background:var(--surface2);font-size:var(--fs-note);line-height:1.7;">
+          同じ運動でも <strong style="color:var(--ref);">行程 <i>s</i> = 10 m</strong>、<strong style="color:var(--act);">距離 |Δ<i>r</i>| = 0</strong> と食い違う。だから三つの言葉を分けて覚える。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="slide" id="sl11-disp-vec" data-title="変位ベクトルを動かす">
   <div class="inner">
     <span class="tag2 tag-do">操作</span>
@@ -431,7 +468,9 @@
   </div>
 </section>
 
-<section class="slide" id="sl11-uniform-accel" data-title="等加速度運動の公式"><div class="inner"><span class="tag2 tag-ex">解説</span><div class="kicker">§5.1.4</div><h1 class="tt">等加速度運動の公式（§5.1.4）</h1><div class="desc">加速度の大きさ <i>a</i> が一定（<i>a</i> = <i>a</i>₀）のとき、式5.14 d<i>v</i>/d<i>t</i> = <i>a</i>₀ を順次積分するだけで運動が決まります。</div><div class="steps"><div><b>① 加速度を時間で積分</b>（初期条件 <i>v</i>(0) = <i>v</i>₀）<div class="eq"><i>v</i> = <i>a</i>₀<i>t</i> + <i>v</i>₀<span style="color:var(--mut);margin-left:.6em;">（式5.15）</span></div></div><div><b>② さらに積分</b>（初期条件 <i>s</i>(0) = <i>s</i>₀）<div class="eq"><i>s</i> = ½<i>a</i>₀<i>t</i>² + <i>v</i>₀<i>t</i> + <i>s</i>₀<span style="color:var(--mut);margin-left:.6em;">（式5.16）</span></div></div><div><b>③ 式5.15と式5.16（<i>s</i>₀=0）から <i>t</i> を消去</b><div class="eq"><i>v</i>² − <i>v</i>₀² = 2<i>a</i><i>s</i><span style="color:var(--mut);margin-left:.6em;">（式5.17）</span></div></div></div><div class="note">※ これら3式は等加速度運動の<b style="color:var(--act);">基本公式</b>（教科書 p.82〜83）。</div></div></section>
+<section class="slide" id="sl11-uniform-accel" data-title="等加速度運動：積分でv,sを得る"><div class="inner"><span class="tag2 tag-ex">解説</span><div class="kicker">§5.1.4</div><h1 class="tt">等加速度運動：積分で <i>v</i>・<i>s</i> を得る（§5.1.4）</h1><div class="desc">加速度の大きさ <i>a</i> が一定（<i>a</i> = <i>a</i>₀）のとき、式5.14 d<i>v</i>/d<i>t</i> = <i>a</i>₀ を順次積分するだけで運動が決まります。</div><div class="steps"><div><b>① 加速度を時間で積分</b>（初期条件 <i>v</i>(0) = <i>v</i>₀）<div class="eq"><i>v</i> = <i>a</i>₀<i>t</i> + <i>v</i>₀<span style="color:var(--mut);margin-left:.6em;">（式5.15）</span></div></div><div><b>② さらに積分</b>（初期条件 <i>s</i>(0) = <i>s</i>₀）<div class="eq"><i>s</i> = ½<i>a</i>₀<i>t</i>² + <i>v</i>₀<i>t</i> + <i>s</i>₀<span style="color:var(--mut);margin-left:.6em;">（式5.16）</span></div></div></div><div class="note">※ 積分定数として現れる <i>v</i>₀・<i>s</i>₀ は、時刻 <i>t</i>=0 での速度と位置、すなわち<b style="color:var(--act);">初期条件</b>です（教科書 p.82〜83）。</div></div></section>
+
+<section class="slide" id="sl11-uniform-accel-b" data-title="等加速度運動：tを消去してv²−v₀²=2as"><div class="inner"><span class="tag2 tag-ex">解説</span><div class="kicker">§5.1.4</div><h1 class="tt">等加速度運動：<i>t</i> を消去する（§5.1.4）</h1><div class="desc">前のページで得た速度の式5.15 と位置の式5.16 から、時間 <i>t</i> を消去すると、時間を含まない関係式が得られます。</div><div class="steps"><div><b>③ 式5.15と式5.16（<i>s</i>₀=0）から <i>t</i> を消去</b><div class="eq big"><i>v</i>² − <i>v</i>₀² = 2<i>a</i><i>s</i><span style="color:var(--mut);margin-left:.6em;font-size:.6em;">（式5.17）</span></div></div></div><div class="eq" style="border-left:3px solid var(--act);background:var(--surface2);font-size:var(--fs-note);line-height:1.7;">この式は<strong style="color:var(--act);">時間 <i>t</i> を含まない</strong>のが特長。時間が分からない問題（到達速度・制動距離など）で役に立ちます。</div><div class="note">※ 式5.15・5.16・5.17 の3式が、等加速度運動の<b style="color:var(--act);">基本公式</b>です。</div></div></section>
 
 <section class="slide" id="sl11-formula-table" data-title="等加速度の公式一覧"><div class="inner"><span class="tag2 tag-ex">解説</span><h1 class="tt">等加速度運動の公式一覧</h1><div class="desc">4つの公式を「含む量」と「含まない量」で整理すると、問題ごとに最適な式が選べます。</div><table class="deftbl"><thead><tr><th>公式</th><th>含む量</th><th>含まない量</th></tr></thead><tbody><tr><td><i>v</i> = <i>a</i>₀<i>t</i> + <i>v</i>₀</td><td><i>v</i>, <i>v</i>₀, <i>a</i>₀, <i>t</i></td><td><i>s</i></td></tr><tr><td><i>s</i> = ½<i>a</i>₀<i>t</i>² + <i>v</i>₀<i>t</i> + <i>s</i>₀</td><td><i>s</i>, <i>s</i>₀, <i>v</i>₀, <i>a</i>₀, <i>t</i></td><td><i>v</i></td></tr><tr><td><i>v</i>² − <i>v</i>₀² = 2<i>a</i><i>s</i></td><td><i>v</i>, <i>v</i>₀, <i>a</i>, <i>s</i></td><td><i>t</i></td></tr><tr><td><i>s</i> = (<i>v</i>₀ + <i>v</i>)/2 · <i>t</i></td><td><i>s</i>, <i>v</i>₀, <i>v</i>, <i>t</i></td><td><i>a</i></td></tr></tbody></table><div class="note">問題で<strong style="color:var(--act);">与えられた量</strong>と<strong style="color:var(--act);">求めたい量</strong>を見て、<strong>含まない量で消去できる公式</strong>を選ぶ。</div></div></section>
 

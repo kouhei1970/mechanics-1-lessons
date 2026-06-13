@@ -100,9 +100,14 @@
     "duration": 72.89
   },
   {
+    "id": "sl-envelope-intro",
+    "file": "audio/sl-envelope-intro.mp3",
+    "duration": 70.97
+  },
+  {
     "id": "sl-envelope",
     "file": "audio/sl-envelope.mp3",
-    "duration": 74.18
+    "duration": 37.44
   },
   {
     "id": "sl-ex1-q",
@@ -120,9 +125,14 @@
     "duration": 69.1
   },
   {
+    "id": "sl-ex3-intro",
+    "file": "audio/sl-ex3-intro.mp3",
+    "duration": 55.85
+  },
+  {
     "id": "sl-ex3",
     "file": "audio/sl-ex3.mp3",
-    "duration": 78.0
+    "duration": 38.45
   },
   {
     "id": "sl-practice",

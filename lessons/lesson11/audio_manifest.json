@@ -32,7 +32,12 @@
   {
     "id": "sl11-displacement",
     "file": "audio/sl11-displacement.mp3",
-    "duration": 84.72
+    "duration": 63.41
+  },
+  {
+    "id": "sl11-displacement-b",
+    "file": "audio/sl11-displacement-b.mp3",
+    "duration": 41.4
   },
   {
     "id": "sl11-disp-vec",
@@ -77,7 +82,12 @@
   {
     "id": "sl11-uniform-accel",
     "file": "audio/sl11-uniform-accel.mp3",
-    "duration": 77.57
+    "duration": 59.45
+  },
+  {
+    "id": "sl11-uniform-accel-b",
+    "file": "audio/sl11-uniform-accel-b.mp3",
+    "duration": 47.33
   },
   {
     "id": "sl11-formula-table",

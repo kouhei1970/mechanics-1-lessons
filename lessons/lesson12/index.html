@@ -516,6 +516,23 @@
   </div>
 </section>
 
+<section class="slide" id="sl-envelope-intro" data-title="到達限界（包絡線）：定義と式">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">到達限界</p>
+    <h1 class="tt">到達限界（放物運動の包絡線）とは</h1>
+    <p class="steps"><strong>包絡線</strong>とは、たくさんの曲線の<strong>いちばん外側</strong>をなぞるように接していく曲線のこと。</p>
+    <p class="steps" style="margin:.4em 0 .3em;">同じ初速 <i>v</i>₀ のまま、投射角 &theta; をいろいろ変えた軌道をすべて重ねると、その包絡線は次の放物線になる：</p>
+    <div class="eq big" style="text-align:center;"><i>y</i>₀ = <i>v</i>₀²/(2<i>g</i>) − <i>g</i>/(2<i>v</i>₀²) <i>x</i>₀² &nbsp;<span style="color:var(--mut);font-size:.7em;">式 (5.38)</span></div>
+    <ul class="lead" style="font-size:var(--fs-note);">
+      <li>頂点の高さ <i>v</i>₀²/(2<i>g</i>)：真上に投げたときの最高到達点</li>
+      <li>どの角度で投げても、ボールはこの線の<strong>内側</strong>にしか届かない</li>
+      <li>包絡線の内側が「その初速で到達できる領域のすべて」</li>
+    </ul>
+    <p class="note">防空や噴水の設計で、「ここまでは届くがその先には届かない」という限界を表すのがこの包絡線。</p>
+  </div>
+</section>
+
 <section class="slide" id="sl-envelope" data-title="到達限界（包絡線）">
   <div class="inner">
     <span class="tag2 tag-do">操作</span>
@@ -524,10 +541,9 @@
     <div class="grid2">
       <div><canvas id="cv-env" class="plane"></canvas></div>
       <div>
-        <p class="steps" style="margin:0 0 .3em;">すべての投射角 &theta; の軌道の<strong>包絡線</strong>は放物線：</p>
-        <div class="eq" style="margin:0 0 .5em;"><i>y</i>₀ = <i>v</i>₀²/(2<i>g</i>) − <i>g</i>/(2<i>v</i>₀²) <i>x</i>₀² &nbsp;<span style="color:var(--mut);font-size:.75em;">式 (5.38)</span></div>
+        <p class="steps" style="margin:0 0 .3em;">スライダーで<strong>表示する角度</strong>を選ぶと、その軌道だけが青く強調されます。</p>
         <div class="row"><label>表示する角度</label><input type="range" id="s-env" min="15" max="85" step="5" value="45"><span class="val" id="v-env">45°</span></div>
-        <p class="note">赤い太線が包絡線。どの軌道もこの線の<strong>内側</strong>にしか届きません。包絡線の内側が到達可能な領域で、最大飛距離は θ = 45° で <i>v</i>₀²/<i>g</i> です。</p>
+        <p class="note">赤い太線が<strong>包絡線</strong>。どの軌道もこの線の<strong>内側</strong>にしか届きません。角度を動かして、すべての軌道がこの赤い線に接していることを確かめましょう。最大飛距離は θ = 45° で <i>v</i>₀²/<i>g</i> です。</p>
       </div>
     </div>
   </div>
@@ -586,6 +602,36 @@
   </div>
 </section>
 
+<section class="slide" id="sl-ex3-intro" data-title="落下ボールへの投石：状況と直感">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">教科書 例題5.7（p.90）</p>
+    <h1 class="tt">落下ボールへの投石（モンキーハンティング）</h1>
+    <div class="twocol">
+      <div class="figbox">
+        <svg class="fig" viewBox="0 0 300 200" role="img" aria-label="落下ボールへの投石の状況設定">
+          <line class="w" x1="20" y1="170" x2="285" y2="170"/>
+          <line x1="235" y1="170" x2="235" y2="60" stroke="var(--mut)" stroke-width="2"/>
+          <line x1="40" y1="170" x2="235" y2="60" stroke="var(--ref)" stroke-width="1.6" stroke-dasharray="5 4"/>
+          <path d="M40 158 A18 18 0 0 0 56 164" fill="none" stroke="var(--ink)" stroke-width="1.4"/>
+          <text x="58" y="160" font-size="13">&#952;</text>
+          <circle cx="235" cy="60" r="6" fill="var(--ref)"/>
+          <circle cx="40" cy="170" r="5" fill="var(--act)"/>
+          <text x="244" y="56" fill="var(--ref)" font-size="13">ボール</text>
+          <text x="6" y="186" fill="var(--act)" font-size="13">石</text>
+          <text x="238" y="120" font-size="13">h</text>
+          <text x="130" y="186" font-size="13">s</text>
+        </svg>
+      </div>
+      <div>
+        <p class="steps" style="margin:0 0 .3em;">高さ <i>h</i> のビル屋上からボールを<strong>自由落下</strong>させると同時に、水平距離 <i>s</i> の地点から石を仰角 &theta; で投げる。石がボールに命中する仰角は？</p>
+        <div class="ex"><strong>直感の落とし穴</strong><br>ボールが落ちる分を見越して、少し<strong>下</strong>を狙いたくなる。しかし答えは意外。</div>
+        <p class="note"><strong>無重力の思考実験：</strong>もし重力がなければ、石はまっすぐ飛び、ボールは屋上に留まる。だから石を<strong>最初にボールがあった点</strong>へまっすぐ向ければ必ず当たる。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="slide" id="sl-ex3" data-title="教科書例題5.7：落下ボールへの投石">
   <div class="inner">
     <span class="tag2 tag-do">操作</span>
@@ -594,10 +640,10 @@
     <div class="grid2">
       <div><canvas id="cv-monkey" class="plane"></canvas></div>
       <div>
-        <p class="steps" style="margin:0 0 .3em;">高さ <i>h</i> のビル屋上からボールを自由落下させると同時に、水平距離 <i>s</i> の地点から石を仰角 &theta; で投げる。石がボールに命中する仰角は？</p>
+        <p class="steps" style="margin:0 0 .3em;">命中する仰角は、初めボールがあった点を狙う向き：</p>
         <div class="eq big" style="text-align:center; margin:.3em 0;">tan&theta; = <i>h</i> / <i>s</i></div>
         <button class="btn pr-primary" id="btn-monkey">▶ 同時に放す</button>
-        <p class="note">重力は石とボールを<strong>同じだけ</strong >引き下げる。重力を除くと石はまっすぐ飛び、ボールは屋上に留まる。だから石は<strong>初めボールがあった点</strong>を狙えば必ず当たる。相対運動は直線的になる。</p>
+        <p class="note"><strong>同時に放す</strong>ボタンを押して、青いボールと赤い石が空中で<strong>ぴたりと出会う</strong>様子を確かめましょう。石とボールは同じ時間だけ下に引き下げられるので、落ちる分はちょうど打ち消し合います。</p>
       </div>
     </div>
   </div>

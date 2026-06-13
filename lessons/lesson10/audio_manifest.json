@@ -65,9 +65,14 @@
     "duration": 66.62
   },
   {
+    "id": "sl-incline-do-exp",
+    "file": "audio/sl-incline-do-exp.mp3",
+    "duration": 62.5
+  },
+  {
     "id": "sl-incline-do",
     "file": "audio/sl-incline-do.mp3",
-    "duration": 75.77
+    "duration": 62.02
   },
   {
     "id": "sl-incline-block",
