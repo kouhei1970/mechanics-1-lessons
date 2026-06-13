@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>一般の運動と放物運動</title>
+<!-- interactive-lecture deck template — assemble.py が SLIDES と HOOKS の差し込み口に中身を挿入する。
+     外部依存ゼロ・単一HTML。詳細は reference/framework.md。 -->
+<style>
+  :root{
+    --bg:#faf9f5; --surface:#ffffff; --surface2:#f1efe8; --panel:#ece9e0;
+    --ink:#1f1e1c; --mut:#6b6a64; --grd:rgba(0,0,0,0.10); --line:rgba(0,0,0,0.14);
+    --ref:#378ADD; --act:#D85A30; --thr:#639922;
+    --sin:#7E57C2; --cos:#2E9E6B; --z1:#3FA34D; --z2:#D85A30; --zr:#7E57C2; --ax:#46443e;
+    --re:#C0392B; --im:#2E6FB0;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#1a1915; --surface:#23221d; --surface2:#2b2a24; --panel:#201f1a;
+      --ink:#ecebe4; --mut:#a3a299; --grd:rgba(255,255,255,0.12); --line:rgba(255,255,255,0.16);
+      --ref:#85B7EB; --act:#F0997B; --thr:#97C459;
+      --sin:#B39DDB; --cos:#7BD0A3; --z1:#7BD0A3; --z2:#F0997B; --zr:#B39DDB; --ax:#c9c7bd;
+      --re:#F08A7A; --im:#7FB2E8;
+    }
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%; overflow:hidden;}
+  body{margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Hiragino Sans","Yu Gothic UI",sans-serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased;}
+  i{font-family:Georgia,"Times New Roman",serif;}
+  .deck{position:fixed; inset:0; bottom:52px;}
+  .slide{position:absolute; inset:0; display:flex; flex-direction:column; justify-content:safe center;
+    overflow-y:auto; padding:2vh clamp(16px,4vw,70px); opacity:0; visibility:hidden; transition:opacity .2s;}
+  .slide.active{opacity:1; visibility:visible;}
+  /* master scale + 型スケール（フォント共通ルール）。全体拡縮は .inner、相対比は --fs-* を変更 */
+  .inner{ font-size:clamp(16px, 2.05vh, 32px); width:100%; max-width:62em; margin:0 auto; line-height:1.6;}
+  :root{
+    --fs-display:2.4em; --fs-h1:1.5em; --fs-lead:1.22em; --fs-body:1.32em; --fs-eq:1.38em; --fs-eq-lg:1.7em;
+    --fs-note:1.13em; --fs-table:1.15em; --fs-ui:.85em; --fs-label:.68em; --fs-tag:.6em; --fs-micro:.72em;
+  }
+  .tag2{display:inline-block; font-size:var(--fs-tag); font-weight:700; letter-spacing:.04em; padding:.15em .6em; border-radius:999px; margin:0 .3em .5em 0;}
+  .tag-ex{color:var(--thr); border:1px solid var(--thr);} .tag-do{color:var(--act); border:1px solid var(--act);} .tag-fig{color:var(--ref); border:1px solid var(--ref);}
+  .kicker{font-size:var(--fs-label); letter-spacing:.06em; color:var(--act); font-weight:700; margin:0 0 .25em;}
+  h1.tt{font-size:var(--fs-h1); font-weight:700; margin:0 0 .15em; line-height:1.2;}
+  .desc{font-size:var(--fs-lead); color:var(--mut); margin:.35em 0 .8em;}
+  canvas{width:100%; display:block; background:var(--surface); border:1px solid var(--line); border-radius:12px;}
+  .plot{height:clamp(150px,33vh,330px);} .plane{height:clamp(180px,42vh,400px);} .figc{height:clamp(150px,32vh,300px);}
+  .titlewave{height:clamp(96px,16vh,180px)!important;} .confirm .plane{height:clamp(150px,30vh,290px);}
+  .row{display:flex; align-items:center; gap:.7em; margin:.5em 0;}
+  .row label{font-size:var(--fs-ui); color:var(--mut); width:7.4em; flex:none;}
+  .row .val{font-size:var(--fs-ui); font-weight:700; min-width:3.6em; text-align:right; font-variant-numeric:tabular-nums;}
+  input[type=range]{flex:1; -webkit-appearance:none; appearance:none; height:4px; border-radius:2px; background:var(--line); outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:1.1em; height:1.1em; border-radius:50%; background:var(--act); cursor:pointer; border:2px solid var(--surface);}
+  input[type=range]::-moz-range-thumb{width:1.1em; height:1.1em; border-radius:50%; background:var(--act); cursor:pointer; border:2px solid var(--surface);}
+  .grid2{display:grid; grid-template-columns:1fr; gap:1em;} @media(min-width:760px){ .grid2{grid-template-columns:1.05fr .95fr;} }
+  .twocol{display:grid; grid-template-columns:1fr; gap:.9em; align-items:center;} @media(min-width:720px){ .twocol{grid-template-columns:.9fr 1.1fr;} }
+  .eq{background:var(--surface2); border-radius:10px; padding:.6em .8em; font-size:var(--fs-eq); margin:.55em 0; line-height:1.85;}
+  .eq.big{font-size:var(--fs-eq-lg);}
+  .steps{font-size:var(--fs-body); line-height:1.95; margin:.4em 0;} .steps .lead2{color:var(--mut); font-size:.85em;}
+  .ex{font-size:var(--fs-body); color:var(--mut); background:var(--surface2); border-left:3px solid var(--act); border-radius:0 8px 8px 0; padding:.5em .75em; margin:.55em 0;}
+  .note{font-size:var(--fs-note); color:var(--mut); margin-top:.7em; line-height:1.65;}
+  .re{color:var(--re); font-weight:700;} .im{color:var(--im); font-weight:700;}
+  .deftbl{width:100%; border-collapse:collapse; font-size:var(--fs-table); margin:.5em 0;}
+  .deftbl th,.deftbl td{border:1px solid var(--line); padding:.4em .65em; text-align:left;} .deftbl th{background:var(--surface2); font-weight:700; white-space:nowrap;}
+  .figbox{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:.8em; text-align:center;}
+  .figcap{font-size:var(--fs-micro); color:var(--mut); margin-top:.4em;}
+  .fig{display:block; width:100%; max-width:20em; height:auto; margin:0 auto;}
+  /* スケジュール表（表紙の次に置く sl-schedule 用。SCHEDULE データを JS で描画） */
+  .schnote{color:var(--act); font-size:var(--fs-note); margin:.3em 0 .7em;}
+  .sched{display:grid; grid-template-columns:1fr; gap:.3em 2.6em; max-width:56em; margin:.3em auto 0;}
+  @media(min-width:680px){ .sched{grid-template-columns:1fr 1fr;} }
+  .schcol{display:flex; flex-direction:column;}
+  .schrow{display:grid; grid-template-columns:2em 7.2em 1fr; gap:.5em; align-items:baseline; font-size:var(--fs-table); padding:.32em .5em; border-radius:6px;}
+  .schrow .sn{color:var(--mut); text-align:right;} .schrow .sd{font-variant-numeric:tabular-nums; color:var(--mut);}
+  .schrow.cur{background:var(--surface2); font-weight:700; box-shadow:inset 0 0 0 1.5px var(--act);}
+  .schrow.exam{color:var(--act); font-weight:600;}
+  .fig .w{fill:none; stroke:var(--ink); stroke-width:2; stroke-linecap:round; stroke-linejoin:round;}
+  .fig .cur{fill:none; stroke:var(--ref); stroke-width:2.4;} .fig .curf{fill:var(--ref); stroke:none;}
+  .fig text{fill:var(--ink); font-family:Georgia,serif; font-style:italic; font-size:15px;}
+  .seg{display:inline-flex; border:1px solid var(--line); border-radius:9px; overflow:hidden; margin:.4em 0;}
+  .seg button{border:none; background:transparent; color:var(--mut); font-size:var(--fs-ui); padding:.45em .9em; cursor:pointer;} .seg button.on{background:var(--act); color:#fff;}
+  .legend{display:flex; gap:1em; flex-wrap:wrap; font-size:var(--fs-ui); color:var(--mut); margin:.5em 0 0;}
+  .sw{display:inline-block; width:.8em; height:.8em; border-radius:3px; vertical-align:-1px; margin-right:.3em;}
+  .btn{border:1px solid var(--line); background:transparent; color:var(--ink); border-radius:9px; padding:.5em .9em; font-size:var(--fs-ui); cursor:pointer;} .btn:hover{background:var(--surface2);}
+  .reveal{margin-top:.7em; padding:.7em .9em; border-radius:10px; background:var(--surface2); font-size:var(--fs-body); display:none; line-height:1.85;} .reveal.show{display:block;}
+  ul.lead{font-size:var(--fs-body); padding-left:1.2em; margin:.3em 0;} ul.lead li{margin:.4em 0;}
+  .hero{justify-content:center;}
+  .back{display:inline-block; font-size:var(--fs-micro); color:var(--mut); text-decoration:none; margin-bottom:.6em;} .back:hover{color:var(--ink);}
+  .confirm{margin-top:.7em; padding-top:.6em; border-top:1px dashed var(--line);} .confirm .lab{font-size:var(--fs-micro); font-weight:700; color:var(--act); letter-spacing:.04em;}
+  /* 採点つき練習 */
+  .prfields{display:flex; flex-direction:column; gap:.5em; margin:.7em 0;}
+  .prf{display:flex; align-items:center; gap:.6em; font-size:var(--fs-note);} .prf>span:first-child{min-width:9.5em; color:var(--mut);}
+  .prf input{width:8.5em; height:2.1em; font-size:1em; border:1px solid var(--line); border-radius:8px; background:var(--surface); color:var(--ink); padding:0 .55em;} .prf input:focus{outline:none; border-color:var(--act);}
+  .prmark{font-weight:700; font-size:1.3em; min-width:1em;} .prmark.good{color:var(--thr);} .prmark.bad{color:var(--act);}
+  .prbtns{display:flex; gap:.5em; flex-wrap:wrap; margin:.8em 0 .3em;}
+  .pr-primary{background:var(--act); color:#fff; border-color:var(--act); font-weight:700;}
+  .prresult{font-weight:700; font-size:var(--fs-note); min-height:1.5em; margin:.3em 0;} .prresult.good{color:var(--thr);} .prresult.bad{color:var(--act);}
+  /* nav / 解説ボタン */
+  .nav{position:fixed; left:0; right:0; bottom:0; height:52px; background:var(--surface); border-top:1px solid var(--line); display:flex; align-items:center; gap:10px; padding:0 12px; z-index:20;}
+  .nav button.arw{width:38px; height:34px; border:1px solid var(--line); background:transparent; color:var(--ink); border-radius:8px; cursor:pointer; font-size:15px;} .nav button.arw:hover{background:var(--surface2);} .nav button.arw:disabled{opacity:.35; cursor:default;}
+  .nav select{flex:1; min-width:0; height:34px; border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:8px; padding:0 10px; font-size:13px;}
+  .nav .count{font-size:12.5px; color:var(--mut); font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .prog{position:fixed; left:0; bottom:52px; height:3px; background:var(--act); width:0; z-index:21; transition:width .2s;}
+  .narrbtn{position:fixed; top:max(10px,1.4vh); right:max(12px,1.2vw); z-index:25; display:inline-flex; align-items:center; gap:.4em;
+    border:1px solid var(--act); background:var(--surface); color:var(--act); border-radius:999px; padding:.4em .9em; font-size:clamp(13px,1.7vh,22px); font-weight:700; cursor:pointer; box-shadow:0 1px 5px rgba(0,0,0,.10);} .narrbtn:hover{background:var(--surface2);} .narrbtn.playing{background:var(--act); color:#fff;}
+</style>
+</head>
+<body>
+
+<div class="prog" id="prog"></div>
+<div class="deck" id="deck">
+  <!-- SLIDES:START -->
+<section class="slide" id="sl-title" data-title="一般の運動と放物運動">
+  <div class="inner hero">
+    <p class="kicker">基礎力学Ⅰ 第12回</p>
+    <h1 class="tt" style="font-size:var(--fs-display);">一般の運動と放物運動</h1>
+    <p class="desc" style="font-size:.95em;">2次元の運動・接線/法線加速度・放物運動（教科書 §5.1.6–5.1.7）</p>
+    <canvas id="cv-title" class="titlewave"></canvas>
+    <p class="note">→／Space で進みます。右上の <strong>🔊 解説</strong> で各ページの音声解説、右下の ⛶ で全画面。</p>
+  </div>
+</section>
+
+<section class="slide" id="sl-schedule" data-title="スケジュール">
+  <div class="inner">
+    <p class="kicker">基礎力学Ⅰ 全15回</p>
+    <h1 class="tt">スケジュール</h1>
+    <p class="schnote">スケジュールは進捗に合わせて変更する可能性があります</p>
+    <div class="sched" id="sched"></div>
+    <p class="note">★＝オンデマンド回。第12回（枠）が本日です。第14回（木）が期末試験。</p>
+  </div>
+</section>
+
+<section class="slide" id="sl-agenda" data-title="本日の内容">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">本日の流れ</p>
+    <h1 class="tt">本日の内容</h1>
+    <ul class="lead">
+      <li>① 前回の復習（並進運動の基礎）</li>
+      <li>② 一般の運動（2次元の位置・速度・加速度）</li>
+      <li>③ 接線加速度と法線加速度（速さを変える／向きを変える）</li>
+      <li>④ 放物運動（重力だけが働く2次元運動）</li>
+      <li>⑤ 例題（最高点・到達距離・飛行時間）</li>
+      <li>⑥ まとめ</li>
+    </ul>
+    <p class="note">教科書 第5章 並進運動（§5.1.6–5.1.7、p.85–91）に対応。</p>
+  </div>
+</section>
+
+<section class="slide" id="sl-review" data-title="前回の復習：並進運動">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">前回の復習</p>
+    <h1 class="tt">並進運動の基礎</h1>
+    <p class="steps"><strong>運動の記述</strong>（速度は位置の時間微分、加速度は速度の時間微分）：</p>
+    <div class="eq"><i>v</i> = d<i>s</i>/d<i>t</i> &nbsp;&nbsp; <strong>v</strong> = d<strong>r</strong>/d<i>t</i> &nbsp;&nbsp; <strong>a</strong> = d<strong>v</strong>/d<i>t</i> = d²<strong>r</strong>/d<i>t</i>²</div>
+    <p class="note">行程（経路の全長・スカラー）と変位（ベクトル）を区別する。</p>
+    <p class="steps"><strong>等加速度運動・自由落下</strong>：</p>
+    <div class="eq"><i>v</i> = <i>a</i>₀<i>t</i> + <i>v</i>₀ &nbsp;&nbsp; <i>s</i> = ½<i>a</i>₀<i>t</i>² + <i>v</i>₀<i>t</i> + <i>s</i>₀ &nbsp;&nbsp; <i>v</i>² − <i>v</i>₀² = 2<i>as</i></div>
+    <p class="note">自由落下は <i>a</i> = <i>g</i> = 9.80 m/s² の特別な場合。<strong>前回はすべて直線運動。今日はこれを2次元へ拡張する。</strong></p>
+  </div>
+</section>
+
+<section class="slide" id="sl-posvec" data-title="2次元の位置ベクトル">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">一般の運動（2次元）</p>
+    <h1 class="tt">2次元の位置ベクトル</h1>
+    <div class="twocol">
+      <div class="figbox">
+        <svg class="fig" viewBox="0 0 320 220" role="img" aria-label="2次元の位置ベクトル">
+          <line class="w" x1="30" y1="190" x2="300" y2="190"/><polygon points="300,185 300,195 312,190" fill="var(--ink)"/>
+          <line class="w" x1="30" y1="190" x2="30" y2="18"/><polygon points="25,18 35,18 30,6" fill="var(--ink)"/>
+          <line x1="30" y1="190" x2="222" y2="68" stroke="var(--act)" stroke-width="2.6"/>
+          <polygon points="214,62 225,68 211,74" fill="var(--act)"/>
+          <line x1="222" y1="190" x2="222" y2="68" stroke="var(--ref)" stroke-width="1.4" stroke-dasharray="4 4"/>
+          <line x1="30" y1="68" x2="222" y2="68" stroke="var(--ref)" stroke-width="1.4" stroke-dasharray="4 4"/>
+          <circle cx="222" cy="68" r="4" fill="var(--act)"/>
+          <text x="296" y="208">x</text><text x="40" y="20">y</text>
+          <text x="228" y="60" fill="var(--act)">r(t)</text>
+          <text x="118" y="206">x(t)</text><text x="2" y="135">y(t)</text>
+        </svg>
+      </div>
+      <div>
+        <p class="steps">質点の位置を時間の関数として表す：</p>
+        <div class="eq big"><strong>r</strong>(<i>t</i>) = <i>x</i>(<i>t</i>) <strong>e</strong><sub>x</sub> + <i>y</i>(<i>t</i>) <strong>e</strong><sub>y</sub></div>
+        <ul class="lead" style="font-size:var(--fs-note);">
+          <li><i>x</i>(<i>t</i>)：<i>x</i> 方向の座標成分</li>
+          <li><i>y</i>(<i>t</i>)：<i>y</i> 方向の座標成分</li>
+          <li><strong>e</strong><sub>x</sub>, <strong>e</strong><sub>y</sub>：単位ベクトル</li>
+        </ul>
+        <p class="note"><strong>運動は各成分ごとに独立に解析できる。</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="sl-velvec" data-title="速度ベクトルと速さ">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">一般の運動（2次元）</p>
+    <h1 class="tt">速度ベクトルと速さ</h1>
+    <p class="steps">位置ベクトルの時間微分：</p>
+    <div class="eq"><strong>v</strong>(<i>t</i>) = d<strong>r</strong>/d<i>t</i> = (d<i>x</i>/d<i>t</i>) <strong>e</strong><sub>x</sub> + (d<i>y</i>/d<i>t</i>) <strong>e</strong><sub>y</sub> = <i>v</i><sub>x</sub> <strong>e</strong><sub>x</sub> + <i>v</i><sub>y</sub> <strong>e</strong><sub>y</sub></div>
+    <div class="grid2" style="margin-top:.6em;">
+      <div>
+        <p class="steps" style="margin:0;">速さ（速度の大きさ）：</p>
+        <div class="eq big">| <strong>v</strong> | = √( <i>v</i><sub>x</sub>² + <i>v</i><sub>y</sub>² )</div>
+      </div>
+      <div>
+        <p class="steps" style="margin:0;">速度の向き（経路の接線方向）：</p>
+        <div class="eq big">tan&alpha; = <i>v</i><sub>y</sub> / <i>v</i><sub>x</sub></div>
+      </div>
+    </div>
+    <p class="note">速度ベクトルは、いつでも経路に<strong>接する向き</strong>を指す。これが「接線方向」の意味。</p>
+  </div>
+</section>
+
+<section class="slide" id="sl-accvec" data-title="加速度ベクトル">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">一般の運動（2次元）</p>
+    <h1 class="tt">加速度ベクトル</h1>
+    <p class="steps">速度ベクトルの時間微分：</p>
+    <div class="eq big"><strong>a</strong>(<i>t</i>) = d<strong>v</strong>/d<i>t</i> = d²<strong>r</strong>/d<i>t</i>² = <i>a</i><sub>x</sub> <strong>e</strong><sub>x</sub> + <i>a</i><sub>y</sub> <strong>e</strong><sub>y</sub></div>
+    <div class="ex"><strong>ポイント</strong><br>加速度は速度の変化を表す。<br><strong>速さの変化だけでなく、向きの変化も加速度に含まれる。</strong></div>
+    <p class="note">→ 速さが一定の等速円運動でも、向きが変わり続けるので、加速度はゼロではない！</p>
+  </div>
+</section>
+
+<section class="slide" id="sl-decomp" data-title="加速度の分解：接線と法線">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">接線加速度と法線加速度</p>
+    <h1 class="tt">加速度の分解</h1>
+    <p class="steps">曲線運動では、加速度を2つの成分に分解すると便利：</p>
+    <div class="grid2">
+      <div class="figbox" style="border-left:3px solid var(--act);">
+        <strong style="color:var(--act);">接線加速度 <i>a</i><sub>t</sub></strong>
+        <ul class="lead" style="font-size:var(--fs-note); text-align:left;">
+          <li>経路の接線方向</li>
+          <li><strong>速さを変える</strong></li>
+        </ul>
+        <div class="eq big" style="margin:.3em 0;"><i>a</i><sub>t</sub> = d<i>v</i>/d<i>t</i></div>
+        <div class="figcap">式 (5.22)</div>
+      </div>
+      <div class="figbox" style="border-left:3px solid var(--thr);">
+        <strong style="color:var(--thr);">法線加速度 <i>a</i><sub>n</sub></strong>
+        <ul class="lead" style="font-size:var(--fs-note); text-align:left;">
+          <li>経路の法線方向（内向き）</li>
+          <li><strong>向きを変える</strong></li>
+        </ul>
+        <div class="eq big" style="margin:.3em 0;"><i>a</i><sub>n</sub> = <i>v</i>² / &rho;</div>
+        <div class="figcap">式 (5.23)</div>
+      </div>
+    </div>
+    <p class="steps" style="text-align:center; margin-top:.4em;">全加速度の大きさ： <span class="eq" style="display:inline-block;"><i>a</i> = √( <i>a</i><sub>t</sub>² + <i>a</i><sub>n</sub>² )</span> &nbsp; 式 (5.24)</p>
+  </div>
+</section>
+
+<section class="slide" id="sl-tangent" data-title="接線加速度の意味">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">接線加速度と法線加速度</p>
+    <h1 class="tt">接線加速度の意味</h1>
+    <div class="eq big" style="text-align:center;"><i>a</i><sub>t</sub> = d<i>v</i>/d<i>t</i> = d| <strong>v</strong> |/d<i>t</i></div>
+    <ul class="lead">
+      <li><i>a</i><sub>t</sub> &gt; 0：質点は<strong>加速</strong>（速さが増える）</li>
+      <li><i>a</i><sub>t</sub> &lt; 0：質点は<strong>減速</strong>（速さが減る）</li>
+      <li><i>a</i><sub>t</sub> = 0：<strong>速さ一定</strong>（等速運動）</li>
+    </ul>
+    <div class="ex"><strong>例：等速円運動</strong><br>速さが一定 → <i>a</i><sub>t</sub> = 0、しかし向きは変化 → <i>a</i><sub>n</sub> ≠ 0</div>
+  </div>
+</section>
+
+<section class="slide" id="sl-normal" data-title="法線加速度と曲率半径">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">接線加速度と法線加速度</p>
+    <h1 class="tt">法線加速度と曲率半径</h1>
+    <div class="grid2">
+      <div>
+        <div class="eq big"><i>a</i><sub>n</sub> = <i>v</i>² / &rho;</div>
+        <ul class="lead" style="font-size:var(--fs-note);">
+          <li>&rho;（ロー）：曲率半径（経路の曲がり具合、教科書では <i>r</i> と表記）</li>
+          <li><i>a</i><sub>n</sub> はつねに曲率中心を向く（内向き）</li>
+          <li>&rho; → ∞（直線）ならば <i>a</i><sub>n</sub> → 0</li>
+        </ul>
+      </div>
+      <div>
+        <p class="steps" style="margin:0;">経路 <i>y</i> = <i>f</i>(<i>x</i>) の曲率半径：</p>
+        <div class="eq">&rho; = [ 1 + (d<i>y</i>/d<i>x</i>)² ]<sup>3/2</sup> / | d²<i>y</i>/d<i>x</i>² |</div>
+        <ul class="lead" style="font-size:var(--fs-note);">
+          <li>円運動：&rho; = <i>r</i>（一定）</li>
+          <li>曲がりが急なほど &rho; は小さい</li>
+        </ul>
+      </div>
+    </div>
+    <div class="ex"><strong>注意</strong>　法線加速度は速さを変えない。<strong>向きのみを変化させる。</strong></div>
+  </div>
+</section>
+
+<section class="slide" id="sl-tn-do" data-title="接線・法線加速度を分解してみる">
+  <div class="inner">
+    <span class="tag2 tag-do">操作</span>
+    <p class="kicker">確認</p>
+    <h1 class="tt">接線・法線加速度を分解してみる</h1>
+    <div class="grid2">
+      <div><canvas id="cv-tn" class="plane"></canvas></div>
+      <div>
+        <div class="confirm" style="border:none; padding:0; margin:0;">
+          <p class="note" style="margin:.1em 0 .5em;">放物運動の経路（青）の上で、<strong>赤い点（質点）をドラッグ</strong>すると、その点での加速度（下向き重力 <i>g</i>）が、緑の<strong>接線方向</strong>と橙の<strong>法線方向</strong>に分かれて表示されます。</p>
+        </div>
+        <div class="eq" id="eq-tn"></div>
+        <div class="legend">
+          <span><span class="sw" style="background:var(--ref);"></span>経路</span>
+          <span><span class="sw" style="background:var(--act);"></span>加速度 <i>g</i>（下向き）</span>
+          <span><span class="sw" style="background:var(--thr);"></span>接線成分 <i>a</i><sub>t</sub></span>
+          <span><span class="sw" style="background:var(--sin);"></span>法線成分 <i>a</i><sub>n</sub></span>
+        </div>
+        <p class="note">上り坂では <i>a</i><sub>t</sub> が負（減速）、最高点で <i>a</i><sub>t</sub> = 0、下り坂では正（加速）。法線成分はつねに経路の内側（下向き）を向く。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="sl-tn-summary" data-title="接線・法線分解のまとめ">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">接線加速度と法線加速度</p>
+    <h1 class="tt">接線・法線分解のまとめ</h1>
+    <div class="eq big" style="text-align:center;"><strong>a</strong> = <i>a</i><sub>t</sub> <strong>e</strong><sub>t</sub> + <i>a</i><sub>n</sub> <strong>e</strong><sub>n</sub></div>
+    <table class="deftbl">
+      <tr><th></th><th>接線成分 <i>a</i><sub>t</sub></th><th>法線成分 <i>a</i><sub>n</sub></th></tr>
+      <tr><th>式</th><td>d<i>v</i>/d<i>t</i></td><td><i>v</i>² / &rho;</td></tr>
+      <tr><th>方向</th><td>経路の接線方向</td><td>曲率中心向き（内向き）</td></tr>
+      <tr><th>役割</th><td>速さを変える</td><td>向きを変える</td></tr>
+    </table>
+    <div class="ex"><strong>特別な場合</strong><br>
+      ・直線運動：<i>a</i><sub>n</sub> = 0（&rho; → ∞）<br>
+      ・等速円運動：<i>a</i><sub>t</sub> = 0、<i>a</i><sub>n</sub> = <i>v</i>²/<i>r</i><br>
+      ・等速直線運動：<i>a</i><sub>t</sub> = 0、<i>a</i><sub>n</sub> = 0</div>
+  </div>
+</section>
+
+<section class="slide" id="sl-proj-def" data-title="放物運動とは">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">放物運動</p>
+    <h1 class="tt">放物運動とは</h1>
+    <p class="steps"><strong>放物運動</strong>：重力のみが作用する2次元運動。</p>
+    <div class="twocol">
+      <div class="figbox">
+        <svg class="fig" viewBox="0 0 300 200" role="img" aria-label="初速度の成分分解">
+          <line class="w" x1="30" y1="170" x2="280" y2="170"/>
+          <line class="w" x1="30" y1="170" x2="30" y2="20"/>
+          <line x1="30" y1="170" x2="170" y2="70" stroke="var(--act)" stroke-width="2.8"/>
+          <polygon points="162,64 173,70 159,76" fill="var(--act)"/>
+          <line x1="30" y1="170" x2="170" y2="170" stroke="var(--ref)" stroke-width="2.2" stroke-dasharray="5 4"/>
+          <line x1="170" y1="170" x2="170" y2="70" stroke="var(--thr)" stroke-width="2.2" stroke-dasharray="5 4"/>
+          <path d="M30 158 A12 12 0 0 0 42 165" fill="none" stroke="var(--ink)" stroke-width="1.4"/>
+          <text x="46" y="162" font-size="13">&#952;</text>
+          <text x="108" y="108" fill="var(--act)">v&#8320;</text>
+          <text x="92" y="188" fill="var(--ref)">v&#8339;&#8320;</text>
+          <text x="176" y="125" fill="var(--thr)">v&#7527;&#8320;</text>
+        </svg>
+      </div>
+      <div>
+        <p class="steps" style="margin:0;">初期条件（<i>t</i> = 0）：</p>
+        <ul class="lead" style="font-size:var(--fs-note);">
+          <li>初速度の大きさ：<i>v</i>₀</li>
+          <li>投射角：&theta;（水平面からの角度）</li>
+          <li>初期位置：原点 (0, 0)</li>
+        </ul>
+        <p class="steps" style="margin:.3em 0 0;">初速度の成分：</p>
+        <div class="eq"><i>v</i><sub>x0</sub> = <i>v</i>₀ cos&theta;,&nbsp; <i>v</i><sub>y0</sub> = <i>v</i>₀ sin&theta;</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="sl-proj-eom" data-title="放物運動の運動方程式">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">放物運動</p>
+    <h1 class="tt">放物運動の運動方程式</h1>
+    <p class="steps">空気抵抗を無視すると、各成分の加速度は：</p>
+    <div class="eq"><i>a</i><sub>x</sub> = 0 &nbsp;(5.25),&nbsp;&nbsp; <i>a</i><sub>y</sub> = −<i>g</i> &nbsp;(5.26)</div>
+    <div class="grid2" style="margin-top:.4em;">
+      <div class="figbox" style="border-left:3px solid var(--ref);">
+        <strong style="color:var(--ref);">水平方向（等速運動）</strong>
+        <div class="eq" style="margin:.4em 0;"><i>v</i><sub>x</sub>(<i>t</i>) = <i>v</i>₀ cos&theta; <span style="color:var(--mut);font-size:.8em;">(5.27)</span></div>
+        <div class="eq" style="margin:0;"><i>x</i>(<i>t</i>) = (<i>v</i>₀ cos&theta;) <i>t</i> <span style="color:var(--mut);font-size:.8em;">(5.29)</span></div>
+      </div>
+      <div class="figbox" style="border-left:3px solid var(--thr);">
+        <strong style="color:var(--thr);">鉛直方向（等加速度運動）</strong>
+        <div class="eq" style="margin:.4em 0;"><i>v</i><sub>y</sub>(<i>t</i>) = <i>v</i>₀ sin&theta; − <i>gt</i> <span style="color:var(--mut);font-size:.8em;">(5.28)</span></div>
+        <div class="eq" style="margin:0;"><i>y</i>(<i>t</i>) = −½<i>gt</i>² + (<i>v</i>₀ sin&theta;) <i>t</i> <span style="color:var(--mut);font-size:.8em;">(5.30)</span></div>
+      </div>
+    </div>
+    <p class="note">水平は速さ一定、鉛直は自由落下と同じ。<strong>二つの直線運動の重ね合わせ。</strong></p>
+  </div>
+</section>
+
+<section class="slide" id="sl-trajectory" data-title="軌道の方程式">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">放物運動</p>
+    <h1 class="tt">軌道の方程式</h1>
+    <p class="steps"><i>x</i>(<i>t</i>) から時間 <i>t</i> を消去：&nbsp; <span class="eq" style="display:inline-block;"><i>t</i> = <i>x</i> / (<i>v</i>₀ cos&theta;)</span></p>
+    <p class="steps"><i>y</i>(<i>t</i>) に代入すると：</p>
+    <div class="eq big" style="text-align:center;"><i>y</i> = − <i>g</i> / (2<i>v</i>₀² cos²&theta;) · <i>x</i>² + (tan&theta;) <i>x</i> &nbsp;&nbsp;<span style="color:var(--mut);font-size:.7em;">式 (5.31)</span></div>
+    <ul class="lead">
+      <li><i>x</i> の2次関数 → <strong>放物線</strong>（parabola）</li>
+      <li>名前の由来：放物運動 ＝ 放物線を描く運動</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide" id="sl-proj-do" data-title="初速と投射角で軌道が変わる">
+  <div class="inner">
+    <span class="tag2 tag-do">操作</span>
+    <p class="kicker">確認</p>
+    <h1 class="tt">初速 <i>v</i>₀ と投射角 &theta; で軌道が変わる</h1>
+    <div class="grid2">
+      <div><canvas id="cv-proj" class="plane"></canvas></div>
+      <div>
+        <div class="row"><label>初速 <i>v</i>₀</label><input type="range" id="s-v0" min="5" max="30" step="1" value="20"><span class="val" id="v-v0">20 m/s</span></div>
+        <div class="row"><label>投射角 &theta;</label><input type="range" id="s-th" min="5" max="85" step="1" value="45"><span class="val" id="v-th">45°</span></div>
+        <div class="eq" id="eq-proj"></div>
+        <div class="legend">
+          <span><span class="sw" style="background:var(--ref);"></span>軌道</span>
+          <span><span class="sw" style="background:var(--act);"></span>最高点 <i>H</i></span>
+          <span><span class="sw" style="background:var(--thr);"></span>到達距離 <i>R</i></span>
+        </div>
+        <p class="note">θ を 45° に合わせると、同じ初速で最も遠くまで飛びます。スライダーを動かして確かめましょう。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="sl-ymax" data-title="最高点の高さ">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">放物運動</p>
+    <h1 class="tt">最高点の高さ</h1>
+    <p class="steps">最高点では鉛直方向の速度がゼロ：<i>v</i><sub>y</sub> = 0</p>
+    <div class="eq"><i>v</i>₀ sin&theta; − <i>g t</i>₁ = 0 &nbsp; ⟹ &nbsp; <i>t</i>₁ = <i>v</i>₀ sin&theta; / <i>g</i> &nbsp;<span style="color:var(--mut);font-size:.8em;">(5.32)</span></div>
+    <p class="steps"><i>t</i>₁ を <i>y</i>(<i>t</i>) に代入：</p>
+    <div class="eq big" style="text-align:center;"><i>y</i><sub>max</sub> = (<i>v</i>₀ sin&theta;)² / (2<i>g</i>) &nbsp;<span style="color:var(--mut);font-size:.7em;">式 (5.33)</span></div>
+    <ul class="lead" style="font-size:var(--fs-note);">
+      <li>&theta; = 90°（真上）のとき <i>y</i><sub>max</sub> は最大（鉛直投げ上げ）</li>
+      <li><i>y</i><sub>max</sub> は <i>v</i>₀² に比例</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide" id="sl-range" data-title="水平到達距離">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">放物運動</p>
+    <h1 class="tt">水平到達距離</h1>
+    <p class="steps">着地条件：<i>y</i> = 0（<i>t</i> &gt; 0）</p>
+    <div class="eq"><i>v</i>₀ sin&theta; · <i>t</i> − ½<i>g t</i>² = 0 &nbsp; ⟹ &nbsp; <i>t</i>₂ = 2<i>v</i>₀ sin&theta; / <i>g</i> &nbsp;<span style="color:var(--mut);font-size:.8em;">(5.34)</span></div>
+    <p class="steps"><i>t</i>₂ を <i>x</i>(<i>t</i>) に代入：</p>
+    <div class="eq big" style="text-align:center;"><i>x</i><sub>max</sub> = <i>v</i>₀² sin2&theta; / <i>g</i> &nbsp;<span style="color:var(--mut);font-size:.7em;">式 (5.35)</span></div>
+    <ul class="lead" style="font-size:var(--fs-note);">
+      <li>sin2&theta; が最大 → 2&theta; = 90° → &theta; = 45°</li>
+      <li>飛行時間：<i>t</i>₂ = 2<i>t</i>₁（対称性）</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide" id="sl-optangle" data-title="最大飛距離と最適角度">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">最適角度</p>
+    <h1 class="tt">最大飛距離と最適角度</h1>
+    <div class="twocol">
+      <div>
+        <p class="steps" style="margin:0;"><span class="eq" style="display:inline-block;"><i>R</i> = <i>v</i>₀² sin2&theta; / <i>g</i></span> において sin2&theta; = 1 のとき最大：</p>
+        <div class="eq big" style="text-align:center; border:2px solid var(--act); background:var(--surface);">&theta; = 45° ⟹ <i>R</i><sub>max</sub> = <i>v</i>₀² / <i>g</i></div>
+        <p class="note">右のグラフは到達距離 <i>R</i> を投射角 &theta; の関数として描いたもの。45° で頂点（最大）になる。</p>
+      </div>
+      <div><canvas id="cv-rtheta" class="plot"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="sl-comp-do" data-title="補角で飛距離が等しいことを確かめる">
+  <div class="inner">
+    <span class="tag2 tag-do">操作</span>
+    <p class="kicker">確認</p>
+    <h1 class="tt">補角で飛距離が等しいことを確かめる</h1>
+    <div class="grid2">
+      <div><canvas id="cv-comp" class="plane"></canvas></div>
+      <div>
+        <p class="steps" style="margin:0 0 .3em;">sin2&theta; = sin2(90°−&theta;) より：</p>
+        <div class="eq" style="margin:0 0 .5em;">投射角 &theta; と 90°−&theta; の飛距離は等しい</div>
+        <div class="row"><label>角度 &theta;</label><input type="range" id="s-comp" min="10" max="80" step="1" value="30"><span class="val" id="v-comp">30°</span></div>
+        <div class="eq" id="eq-comp"></div>
+        <div class="legend">
+          <span><span class="sw" style="background:var(--ref);"></span>角度 &theta;</span>
+          <span><span class="sw" style="background:var(--act);"></span>補角 90°−&theta;</span>
+        </div>
+        <p class="note">θ を 30° にすると補角は 60°。2本の軌道は形がちがっても、到達距離 <i>R</i> は同じ。低い方が飛行時間も短い。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="sl-envelope" data-title="到達限界（包絡線）">
+  <div class="inner">
+    <span class="tag2 tag-do">操作</span>
+    <p class="kicker">到達限界</p>
+    <h1 class="tt">到達限界（放物運動の包絡線）</h1>
+    <div class="grid2">
+      <div><canvas id="cv-env" class="plane"></canvas></div>
+      <div>
+        <p class="steps" style="margin:0 0 .3em;">すべての投射角 &theta; の軌道の<strong>包絡線</strong>は放物線：</p>
+        <div class="eq" style="margin:0 0 .5em;"><i>y</i>₀ = <i>v</i>₀²/(2<i>g</i>) − <i>g</i>/(2<i>v</i>₀²) <i>x</i>₀² &nbsp;<span style="color:var(--mut);font-size:.75em;">式 (5.38)</span></div>
+        <div class="row"><label>表示する角度</label><input type="range" id="s-env" min="15" max="85" step="5" value="45"><span class="val" id="v-env">45°</span></div>
+        <p class="note">赤い太線が包絡線。どの軌道もこの線の<strong>内側</strong>にしか届きません。包絡線の内側が到達可能な領域で、最大飛距離は θ = 45° で <i>v</i>₀²/<i>g</i> です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="sl-ex1-q" data-title="例題12.1：放物運動の基本">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">例題</p>
+    <h1 class="tt">例題12.1：放物運動の基本</h1>
+    <div class="figbox" style="border-left:3px solid var(--thr); text-align:left;">
+      <strong style="color:var(--thr);">問題</strong>
+      <p class="steps" style="margin:.4em 0;">初速 <i>v</i>₀ = 20 m/s、投射角 &theta; = 30° で水平面から物体を投げた。空気抵抗は無視する。（<i>g</i> = 9.80 m/s²）</p>
+      <ul class="lead" style="font-size:var(--fs-note);">
+        <li>① 最高点の高さ <i>H</i> を求めよ。</li>
+        <li>② 水平到達距離 <i>R</i> を求めよ。</li>
+        <li>③ 飛行時間 <i>t</i>₂ を求めよ。</li>
+      </ul>
+    </div>
+    <p class="note">次のページで解いてみましょう。まずは自分で式を立ててみてください。</p>
+  </div>
+</section>
+
+<section class="slide" id="sl-ex1-a" data-title="例題12.1：解答">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">例題</p>
+    <h1 class="tt">例題12.1：解答</h1>
+    <p class="note" style="margin:.1em 0 .4em;"><i>v</i>₀ = 20 m/s、&theta; = 30°、<i>g</i> = 9.80 m/s²</p>
+    <div class="steps" style="line-height:1.7;">
+      <div><strong>(1) 最高点の高さ：</strong> <i>H</i> = <i>v</i>₀² sin²&theta; / 2<i>g</i> = (20² × 0.25) / 19.60 = 400×0.25/19.60 ≈ <strong style="color:var(--act);">5.10 m</strong></div>
+      <div style="margin-top:.4em;"><strong>(2) 水平到達距離：</strong> <i>R</i> = <i>v</i>₀² sin2&theta; / <i>g</i> = (400 × sin60°)/9.80 = 400×0.866/9.80 ≈ <strong style="color:var(--act);">35.3 m</strong></div>
+      <div style="margin-top:.4em;"><strong>(3) 飛行時間：</strong> <i>t</i>₂ = 2<i>v</i>₀ sin&theta; / <i>g</i> = (2×20×0.5)/9.80 ≈ <strong style="color:var(--act);">2.04 s</strong></div>
+    </div>
+    <p class="note">sin30° = 0.5、sin60° = 0.866 を使う。最高点が約 5 m、約 35 m 先に、約 2 秒で着地する。</p>
+  </div>
+</section>
+
+<section class="slide" id="sl-ex2" data-title="例題12.2：最高点の接線・法線加速度">
+  <div class="inner">
+    <span class="tag2 tag-ex">解説</span>
+    <p class="kicker">例題</p>
+    <h1 class="tt">例題12.2：最高点の接線・法線加速度</h1>
+    <div class="figbox" style="border-left:3px solid var(--thr); text-align:left; margin-bottom:.5em;">
+      <strong style="color:var(--thr);">問題</strong>　放物運動の最高点における接線加速度と法線加速度を求めよ。
+    </div>
+    <div class="steps" style="line-height:1.7;">
+      <div><strong>解答</strong>：最高点では <i>v</i><sub>y</sub> = 0、<i>v</i><sub>x</sub> = <i>v</i>₀ cos&theta;</div>
+      <ul class="lead" style="font-size:var(--fs-note); margin:.2em 0;">
+        <li>速度は水平方向のみ → 接線方向 ＝ 水平方向</li>
+        <li>重力 <i>g</i> は鉛直下向き → 接線方向に対して垂直</li>
+      </ul>
+      <div class="eq" style="text-align:center;"><i>a</i><sub>t</sub> = 0,&nbsp;&nbsp; <i>a</i><sub>n</sub> = <i>g</i></div>
+      <div style="margin-top:.3em;">最高点での曲率半径：<span class="eq" style="display:inline-block;"><i>a</i><sub>n</sub> = <i>v</i>²/&rho; = <i>g</i> ⟹ &rho; = <i>v</i>₀² cos²&theta; / <i>g</i></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="sl-ex3" data-title="教科書例題5.7：落下ボールへの投石">
+  <div class="inner">
+    <span class="tag2 tag-do">操作</span>
+    <p class="kicker">教科書 例題5.7（p.90）</p>
+    <h1 class="tt">落下ボールへの投石</h1>
+    <div class="grid2">
+      <div><canvas id="cv-monkey" class="plane"></canvas></div>
+      <div>
+        <p class="steps" style="margin:0 0 .3em;">高さ <i>h</i> のビル屋上からボールを自由落下させると同時に、水平距離 <i>s</i> の地点から石を仰角 &theta; で投げる。石がボールに命中する仰角は？</p>
+        <div class="eq big" style="text-align:center; margin:.3em 0;">tan&theta; = <i>h</i> / <i>s</i></div>
+        <button class="btn pr-primary" id="btn-monkey">▶ 同時に放す</button>
+        <p class="note">重力は石とボールを<strong>同じだけ</strong >引き下げる。重力を除くと石はまっすぐ飛び、ボールは屋上に留まる。だから石は<strong>初めボールがあった点</strong>を狙えば必ず当たる。相対運動は直線的になる。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="sl-practice" data-title="演習問題（採点つき）">
+  <div class="inner">
+    <span class="tag2 tag-do">操作</span>
+    <p class="kicker">演習（採点つき）</p>
+    <h1 class="tt">演習問題</h1>
+    <p class="steps" style="margin:.1em 0 .4em;">初速 <i>v</i>₀ = 14 m/s、投射角 &theta; = 45° で投げた。<i>g</i> = 9.8 m/s²。各値を計算して入力（小数第1位まで）。</p>
+    <div class="prfields">
+      <div class="prf"><span>① 最高点の高さ <i>H</i> [m]</span><input type="number" id="pr-H" step="any"><span class="prmark" id="m-H"></span></div>
+      <div class="prf"><span>② 到達距離 <i>R</i> [m]</span><input type="number" id="pr-R" step="any"><span class="prmark" id="m-R"></span></div>
+      <div class="prf"><span>③ 飛行時間 <i>t</i>₂ [s]</span><input type="number" id="pr-t" step="any"><span class="prmark" id="m-t"></span></div>
+    </div>
+    <div class="prbtns">
+      <button class="btn pr-primary" id="pr-grade">採点</button>
+      <button class="btn" id="pr-reveal">答えを見る</button>
+      <button class="btn" id="pr-reset">やり直す</button>
+    </div>
+    <div class="prresult" id="pr-res"></div>
+    <div class="reveal" id="pr-ans"></div>
+  </div>
+</section>
+
+<section class="slide" id="sl-summary" data-title="本日のまとめ">
+  <div class="inner">
+    <span class="tag2 tag-ex">まとめ</span>
+    <p class="kicker">本日のまとめ</p>
+    <h1 class="tt">本日のまとめ</h1>
+    <ul class="lead" style="font-size:var(--fs-note);">
+      <li>① 2次元の運動：<strong>r</strong>(<i>t</i>), <strong>v</strong>(<i>t</i>), <strong>a</strong>(<i>t</i>) を成分で表す</li>
+      <li>② 接線・法線分解：<i>a</i><sub>t</sub> = d<i>v</i>/d<i>t</i>（速さを変える）、<i>a</i><sub>n</sub> = <i>v</i>²/&rho;（向きを変える）</li>
+      <li>③ 放物運動：水平＝等速運動、鉛直＝等加速度運動（<i>a</i> = −<i>g</i>）、軌道は放物線</li>
+      <li>④ 重要公式：<i>y</i><sub>max</sub> = (<i>v</i>₀ sin&theta;)²/2<i>g</i>（5.33）、<i>x</i><sub>max</sub> = <i>v</i>₀² sin2&theta;/<i>g</i>（5.35）、最適角 45°</li>
+      <li>⑤ 到達限界（包絡線）：<i>y</i>₀ = <i>v</i>₀²/2<i>g</i> − <i>g</i>/(2<i>v</i>₀²) <i>x</i>₀²（5.38）</li>
+    </ul>
+    <p class="note">速さは接線が担当、向きは法線が担当。放物運動は二つの直線運動の重ね合わせ。</p>
+  </div>
+</section>
+
+<section class="slide" id="sl-next" data-title="次回予告">
+  <div class="inner">
+    <span class="tag2 tag-ex">次回予告</span>
+    <p class="kicker">次回予告</p>
+    <h1 class="tt">第13回（7月13日）：回転・円運動・相対運動</h1>
+    <ul class="lead">
+      <li>回転運動と角変位・角速度・角加速度</li>
+      <li>円運動と向心加速度</li>
+      <li>相対運動（観測者によって運動はどう見えるか）</li>
+    </ul>
+    <p class="note">教科書の予習範囲：§5.2 回転運動（p.92–）。<br>今日学んだ法線加速度 <i>v</i>²/&rho; は、次回の円運動の向心加速度につながります。</p>
+  </div>
+</section>
+  <!-- SLIDES:END -->
+</div>
+
+<audio id="narr" preload="none"></audio>
+<button id="narrbtn" class="narrbtn" aria-label="解説音声" style="display:none;">🔊 解説</button>
+
+<nav class="nav">
+  <button class="arw" id="prev" aria-label="前へ">◀</button>
+  <select id="jump" aria-label="スライド選択"></select>
+  <span class="count" id="count">1 / 1</span>
+  <button class="arw" id="fs" aria-label="全画面" title="全画面">⛶</button>
+  <button class="arw" id="next" aria-label="次へ">▶</button>
+</nav>
+
+<script>
+(function(){
+  "use strict";
+  var TAU=Math.PI*2;
+  function $(s,r){return (r||document).querySelector(s);}
+  function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+  function fmt(v,d){d=d==null?2:d; return (Math.round(v*Math.pow(10,d))/Math.pow(10,d)).toFixed(d);}
+  function clamp(v,a,b){return v<a?a:(v>b?b:v);}
+  function roundTo(v,dp){var f=Math.pow(10,dp); return Math.round(v*f)/f;}            // 採点: 四捨五入
+  function decimals(s){s=String(s).trim(); if(s.indexOf('.')<0)return 0; s=s.replace(/0+$/,''); var i=s.indexOf('.'); return i<0?0:(s.length-i-1);} // 採点: 小数桁
+  function vbnd(pl){var m=14/pl.s; return {x:(pl.W/2)/pl.s-m, y:(pl.H/2)/pl.s-m};}    // ドラッグ可動域（表示端まで）
+
+  // ---- スライドエンジン ----
+  var slides=[].slice.call(document.querySelectorAll('.slide')), N=slides.length, cur=0;
+  var hooks=slides.map(function(){return {};});
+  function idx(id){for(var i=0;i<slides.length;i++){if(slides[i].id===id)return i;} return -1;}
+  function reg(id,h){var i=idx(id); if(i>=0)hooks[i]=h;}
+  function goId(id){go(idx(id));}
+  var jump=$('#jump');
+  slides.forEach(function(s,i){var o=document.createElement('option'); o.value=i; o.textContent=(i+1)+'. '+(s.getAttribute('data-title')||s.id); jump.appendChild(o);});
+  $('#count').textContent='1 / '+N;
+  function go(i){
+    i=clamp(i,0,N-1); if(i===cur && slides[cur].classList.contains('active'))return;
+    if(hooks[cur].hide)hooks[cur].hide();
+    stopNarr();
+    slides[cur].classList.remove('active'); cur=i; slides[cur].classList.add('active');
+    jump.value=cur; $('#count').textContent=(cur+1)+' / '+N;
+    $('#prev').disabled=cur===0; $('#next').disabled=cur===N-1;
+    $('#prog').style.width=(cur/(N-1||1)*100)+'%'; slides[cur].scrollTop=0;
+    try{history.replaceState(null,'','#'+(cur+1));}catch(e){}
+    if(hooks[cur].show)hooks[cur].show();
+    syncNarrBtn();
+  }
+  $('#prev').onclick=function(){go(cur-1);}; $('#next').onclick=function(){go(cur+1);};
+  jump.onchange=function(){go(+jump.value);};
+  $('#fs').onclick=function(){ if(!document.fullscreenElement){ if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen(); } else { if(document.exitFullscreen)document.exitFullscreen(); } };
+  document.addEventListener('keydown',function(e){
+    if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT')return;
+    if(e.target.tagName==='BUTTON'&&(e.key===' '||e.key==='Enter'))return;
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){go(cur+1);e.preventDefault();}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){go(cur-1);e.preventDefault();}
+    else if(e.key==='Home'){go(0);} else if(e.key==='End'){go(N-1);}
+    else if(e.key==='f'||e.key==='F'){$('#fs').click();}
+  });
+  window.addEventListener('resize',function(){var h=hooks[cur]; if(h&&h.redraw)h.redraw();});
+
+  function anim(draw){var run=false;function loop(){if(!run)return;draw();requestAnimationFrame(loop);}return{start:function(){if(!run){run=true;loop();}},stop:function(){run=false;}};}
+
+  // ---- 解説ナレーション音声（単一プレーヤを使い回す） ----
+  var NARR_DIR='audio/';
+  var NARR=new Set(slides.map(function(s){return s.id;}));
+  var _audio=$('#narr'), _narrBtn=$('#narrbtn'), _playing=null;
+  function syncNarrBtn(){ var id=slides[cur].id, on=(_playing===id && !_audio.paused);
+    if(NARR.has(id)){ _narrBtn.style.display='inline-flex'; _narrBtn.textContent=on?'⏸ 停止':'🔊 解説'; _narrBtn.classList.toggle('playing',on);} else _narrBtn.style.display='none'; }
+  function stopNarr(){ try{_audio.pause(); _audio.currentTime=0;}catch(e){} _playing=null; }
+  function playNarr(id){ if(!NARR.has(id))return; stopNarr(); _audio.src=NARR_DIR+id+'.mp3'; _playing=id;
+    var p=_audio.play(); if(p&&p.catch)p.catch(function(){ NARR.delete(id); _playing=null; syncNarrBtn(); }); syncNarrBtn(); }
+  _narrBtn.onclick=function(e){ e.stopPropagation(); this.blur(); var id=slides[cur].id; if(_playing===id&&!_audio.paused){stopNarr();}else{playNarr(id);} syncNarrBtn(); };
+  _audio.addEventListener('ended',function(){_playing=null;syncNarrBtn();});
+  _audio.addEventListener('pause',function(){syncNarrBtn();});
+
+  // ---- 複素平面ヘルパー ----
+  function makePlane(cv, spanX, spanY){
+    var ctx=cv.getContext('2d'), dpr=window.devicePixelRatio||1, W=0,H=0,s=1,cx=0,cy=0, sx=spanX, sy=spanY;
+    function setSpan(a,b){sx=a; sy=(b==null?a:b);}
+    function fit(){var w=cv.clientWidth,h=cv.clientHeight; cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); W=w;H=h; s=Math.min(w/sx,h/sy); cx=w/2; cy=h/2;}
+    function PX(x,y){return [cx+x*s, cy-y*s];} function UN(px,py){return [(px-cx)/s,(cy-py)/s];}
+    function clear(){ctx.clearRect(0,0,W,H);}
+    function axes(opt){opt=opt||{}; var xr=(W/2)/s, yr=(H/2)/s, i,p;
+      ctx.strokeStyle=cssv('--grd'); ctx.lineWidth=1; ctx.font='11px sans-serif'; ctx.fillStyle=cssv('--mut');
+      for(i=Math.ceil(-xr);i<=xr;i++){if(i===0)continue; p=PX(i,0); ctx.globalAlpha=.55; ctx.beginPath(); ctx.moveTo(p[0],0); ctx.lineTo(p[0],H); ctx.stroke();}
+      for(i=Math.ceil(-yr);i<=yr;i++){if(i===0)continue; p=PX(0,i); ctx.globalAlpha=.55; ctx.beginPath(); ctx.moveTo(0,p[1]); ctx.lineTo(W,p[1]); ctx.stroke();}
+      ctx.globalAlpha=1; ctx.strokeStyle=cssv('--ax'); ctx.lineWidth=1.5; var o=PX(0,0);
+      ctx.beginPath(); ctx.moveTo(0,o[1]); ctx.lineTo(W,o[1]); ctx.stroke(); ctx.beginPath(); ctx.moveTo(o[0],H); ctx.lineTo(o[0],0); ctx.stroke();
+      ctx.fillStyle=cssv('--mut'); ctx.fillText(opt.reLabel||'Re', W-26, o[1]-7); ctx.fillText(opt.imLabel||'Im', o[0]+7, 14);}
+    function head(x1,y1,x2,y2,color,L){L=L||10; var a=Math.atan2(y2-y1,x2-x1); ctx.fillStyle=color; ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-L*Math.cos(a-.42),y2-L*Math.sin(a-.42)); ctx.lineTo(x2-L*Math.cos(a+.42),y2-L*Math.sin(a+.42)); ctx.closePath(); ctx.fill();}
+    function arrow(ux1,uy1,ux2,uy2,color,w){var a=PX(ux1,uy1),b=PX(ux2,uy2); ctx.strokeStyle=color; ctx.lineWidth=w||3; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke(); head(a[0],a[1],b[0],b[1],color);}
+    function vec(x,y,color,opt){opt=opt||{}; arrow(0,0,x,y,color,opt.w||3.2);
+      if(opt.proj){var t=PX(x,y),ax=PX(x,0),ay=PX(0,y); ctx.save(); ctx.strokeStyle=color; ctx.globalAlpha=.5; ctx.setLineDash([4,4]); ctx.lineWidth=1.2;
+        ctx.beginPath(); ctx.moveTo(t[0],t[1]); ctx.lineTo(ax[0],ax[1]); ctx.stroke(); ctx.beginPath(); ctx.moveTo(t[0],t[1]); ctx.lineTo(ay[0],ay[1]); ctx.stroke(); ctx.restore();}
+      if(opt.label){var t2=PX(x,y); ctx.fillStyle=color; ctx.font='bold 14px Georgia,serif'; ctx.fillText(opt.label, t2[0]+8, t2[1]-6);}}
+    function dot(x,y,color,r){var p=PX(x,y); ctx.fillStyle=color; ctx.beginPath(); ctx.arc(p[0],p[1],r||4,0,TAU); ctx.fill();}
+    function handle(x,y,color){var p=PX(x,y); ctx.save(); ctx.globalAlpha=.16; ctx.fillStyle=color;
+      ctx.beginPath(); ctx.arc(p[0],p[1],17,0,TAU); ctx.arc(p[0],p[1],11,0,TAU,true); ctx.fill(); ctx.globalAlpha=1;
+      ctx.strokeStyle=color; ctx.lineWidth=1.6; ctx.setLineDash([3.5,3.5]); ctx.beginPath(); ctx.arc(p[0],p[1],15,0,TAU); ctx.stroke(); ctx.restore();}
+    return {ctx:ctx, fit:fit, setSpan:setSpan, PX:PX, UN:UN, clear:clear, axes:axes, arrow:arrow, vec:vec, dot:dot, handle:handle, get s(){return s;}, get W(){return W;}, get H(){return H;}};
+  }
+  function dragger(cv, plane, getPts, onMove){
+    var ix=-1;
+    function rel(e){var r=cv.getBoundingClientRect(); return plane.UN(e.clientX-r.left, e.clientY-r.top);}
+    function pick(u){var pts=getPts(),best=-1,bd=1e9; for(var i=0;i<pts.length;i++){var a=plane.PX(pts[i].x,pts[i].y),b=plane.PX(u[0],u[1]); var d=Math.hypot(a[0]-b[0],a[1]-b[1]); if(d<bd){bd=d;best=i;}} return bd<34?best:-1;}
+    cv.style.touchAction='none';
+    cv.addEventListener('pointerdown',function(e){var u=rel(e); ix=pick(u); if(ix>=0){cv.setPointerCapture(e.pointerId); onMove(ix,u[0],u[1]); e.preventDefault();}});
+    cv.addEventListener('pointermove',function(e){if(ix<0)return; var u=rel(e); onMove(ix,u[0],u[1]); e.preventDefault();});
+    function end(){ix=-1;} cv.addEventListener('pointerup',end); cv.addEventListener('pointercancel',end);
+  }
+
+  // ---- 時間波形ヘルパー ----
+  function timeCtx(cv){var ctx=cv.getContext('2d'),dpr=window.devicePixelRatio||1,W=0,H=0;
+    function fit(){var w=cv.clientWidth,h=cv.clientHeight;cv.width=w*dpr;cv.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);W=w;H=h;}
+    return {ctx:ctx,fit:fit,get W(){return W;},get H(){return H;}};}
+  function drawTimeAxes(c,ymax){var ctx=c.ctx,W=c.W,H=c.H,padL=34,padB=20,padT=10,padR=10;
+    function X(t){return padL+t/c._tmax*(W-padL-padR);} function Y(v){return padT+(ymax-v)/(2*ymax)*(H-padT-padB);}
+    ctx.clearRect(0,0,W,H); ctx.strokeStyle=cssv('--grd'); ctx.fillStyle=cssv('--mut'); ctx.font='10px sans-serif'; ctx.lineWidth=1;
+    for(var g=-ymax;g<=ymax+1e-9;g+=ymax/2){ctx.globalAlpha=g===0?.85:.4; ctx.beginPath(); ctx.moveTo(padL,Y(g)); ctx.lineTo(W-padR,Y(g)); ctx.stroke(); ctx.globalAlpha=1; ctx.fillText(fmt(g,g%1?1:0),4,Y(g)+3);}
+    return {X:X,Y:Y};}
+  function plotFn(c,m,fn,color,w){var ctx=c.ctx,W=c.W; ctx.strokeStyle=color; ctx.lineWidth=w||2.4; ctx.lineJoin='round'; ctx.beginPath(); var first=true;
+    for(var px=34;px<=W-10;px+=2){var t=(px-34)/(W-44)*c._tmax; var y=fn(t); var X=m.X(t),Y=m.Y(y); if(first){ctx.moveTo(X,Y);first=false;}else ctx.lineTo(X,Y);} ctx.stroke();}
+
+  /* HOOKS:START */
+(function(){var cv=$('#cv-title'); if(!cv)return;
+  var ctx=cv.getContext('2d'),dpr=window.devicePixelRatio||1;
+  var A=anim(function(){
+    var w=cv.clientWidth,h=cv.clientHeight; cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,w,h);
+    var ph=(performance.now()/2200)%1, g=9.8, v0=1, th=Math.PI/4, T=2*v0*Math.sin(th)/g;
+    var pad=18, x0=pad, y0=h-14, R=v0*v0*Math.sin(2*th)/g, sc=(w-2*pad)/R, scy=sc*0.9;
+    ctx.strokeStyle=cssv('--ref'); ctx.lineWidth=2.4; ctx.lineJoin='round'; ctx.beginPath();
+    for(var i=0;i<=60;i++){var t=T*i/60, X=x0+(v0*Math.cos(th)*t)*sc, Y=y0-(v0*Math.sin(th)*t-0.5*g*t*t)*scy;
+      if(i===0)ctx.moveTo(X,Y); else ctx.lineTo(X,Y);} ctx.stroke();
+    var tb=T*ph, bx=x0+(v0*Math.cos(th)*tb)*sc, by=y0-(v0*Math.sin(th)*tb-0.5*g*tb*tb)*scy;
+    ctx.fillStyle=cssv('--act'); ctx.beginPath(); ctx.arc(bx,by,6,0,Math.PI*2); ctx.fill();
+  });
+  reg('sl-title',{show:A.start,hide:A.stop});})();
+
+(function(){
+  var SCHEDULE={current:12, rows:[
+    [1,'4/13(月)','力とベクトル'],[2,'4/20(月)','力の合成と分解'],
+    [3,'4/27(月)','釣合い・モーメント'],[4,'5/11(月)','着力点の異なる力・偶力'],
+    [5,'5/18(月)','力の置換え・釣合い'],[6,'5/25(月)','トラス'],
+    [7,'6/3(水)','重心'],[8,'6/8(月)','中間試験','exam'],
+    [9,'6/15(月)','中間試験返却・解説'],[10,'6/22(月)','摩擦・摩擦角・転がり摩擦'],
+    [11,'6/29(月)','並進運動の基礎★'],[12,'7/6(月)','一般の運動・放物運動'],
+    [13,'7/13(月)','回転・円運動・相対運動'],[14,'7/23(木)','期末試験','exam'],
+    [15,'7/27(月)','期末試験返却・解説']
+  ]};
+  var el=$('#sched'); if(!el)return; var half=Math.ceil(SCHEDULE.rows.length/2);
+  function col(rows){var h='<div class="schcol">'; rows.forEach(function(r){
+    var cls='schrow'+(r[0]===SCHEDULE.current?' cur':'')+(r[3]==='exam'?' exam':'');
+    h+='<div class="'+cls+'"><span class="sn">'+r[0]+'</span><span class="sd">'+r[1]+'</span><span>'+r[2]+'</span></div>';
+  }); return h+'</div>';}
+  el.innerHTML=col(SCHEDULE.rows.slice(0,half))+col(SCHEDULE.rows.slice(half));
+  reg('sl-schedule',{});})();
+
+(function(){var cv=$('#cv-tn'); if(!cv)return;
+  var ctx=cv.getContext('2d'),dpr=window.devicePixelRatio||1,W=0,H=0;
+  // 軌道: y = -k x^2 + m x （頂点中央）。s = 進行パラメータ 0..1（x方向）
+  var sP=0.30; // 質点の水平位置パラメータ 0..1
+  function fit(){var w=cv.clientWidth,h=cv.clientHeight; cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); W=w; H=h;}
+  // 経路 (画面座標) : x in [padL,W-padR], y は放物線
+  var padL=40,padR=30,padT=22,padB=40;
+  function PX(s){return padL+s*(W-padL-padR);}            // s:0..1
+  function topY(){return padT;} function botY(){return H-padB;}
+  function PY(s){ // 放物線: 中央(s=0.5)で最上、両端で最下
+    var u=(s-0.5); var yy=botY()-(botY()-topY())*(1-4*u*u); return yy;}
+  function slope(s){ // d(画面y)/d(画面x) を返す（画面座標）
+    var dx=0.001; return (PY(s+dx)-PY(s-dx))/((PX(s+dx)-PX(s-dx))||1e-9);}
+  function draw(){ fit(); ctx.clearRect(0,0,W,H);
+    // 経路
+    ctx.strokeStyle=cssv('--ref'); ctx.lineWidth=2.6; ctx.lineJoin='round'; ctx.beginPath();
+    for(var i=0;i<=80;i++){var s=i/80,X=PX(s),Y=PY(s); if(i===0)ctx.moveTo(X,Y); else ctx.lineTo(X,Y);} ctx.stroke();
+    var X=PX(sP),Y=PY(sP);
+    // 接線方向 単位ベクトル（画面座標, 右向き正）
+    var m=slope(sP), tl=Math.hypot(1,m), tx=1/tl, ty=m/tl; // 画面yは下向き正
+    // 法線（経路の内側=下向き側）: 接線を90°回転 (tx,ty)->(-ty,tx) と (ty,-tx) の下向き(yが正)を選ぶ
+    var n1x=-ty,n1y=tx, n2x=ty,n2y=-tx; var nx,ny; if(n1y>0){nx=n1x;ny=n1y;}else{nx=n2x;ny=n2y;}
+    // 加速度 g は画面下向き（0, +1）。長さ L ピクセル
+    var L=64, gx=0, gy=1;
+    // 成分: at = (g・t) , an = (g・n)
+    var at=(gx*tx+gy*ty), an=(gx*nx+gy*ny);
+    function arr(x,y,ux,uy,len,col,w){var ex=x+ux*len,ey=y+uy*len; ctx.strokeStyle=col; ctx.lineWidth=w||3; ctx.lineCap='round';
+      ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(ex,ey); ctx.stroke();
+      var a=Math.atan2(ey-y,ex-x); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(ex,ey);
+      ctx.lineTo(ex-10*Math.cos(a-.4),ey-10*Math.sin(a-.4)); ctx.lineTo(ex-10*Math.cos(a+.4),ey-10*Math.sin(a+.4)); ctx.closePath(); ctx.fill();}
+    // 全加速度 g（橙の点線でも参考に薄く）
+    arr(X,Y,gx,gy,L,cssv('--act'),3.4);
+    // 接線成分（緑）
+    arr(X,Y,tx,ty,L*at,cssv('--thr'),3.2);
+    // 法線成分（紫）
+    arr(X,Y,nx,ny,L*an,cssv('--sin'),3.2);
+    // 質点
+    ctx.fillStyle=cssv('--act'); ctx.beginPath(); ctx.arc(X,Y,7,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle=cssv('--surface'); ctx.lineWidth=2; ctx.stroke();
+    // ラベル
+    ctx.fillStyle=cssv('--mut'); ctx.font='12px sans-serif';
+    var loc = sP<0.47?'上り坂（減速）': (sP>0.53?'下り坂（加速）':'最高点付近');
+    ctx.fillText(loc, X-22, Y-14);
+    var atv=(at*9.8), anv=(an*9.8);
+    $('#eq-tn').innerHTML='<div><i>a</i><sub>t</sub> = '+(atv).toFixed(2)+' m/s²（'+(atv<-0.05?'減速':(atv>0.05?'加速':'≈ 0'))+'）</div>'
+      +'<div><i>a</i><sub>n</sub> = '+(anv).toFixed(2)+' m/s²（向きを変える）</div>'
+      +'<div style="color:var(--mut);font-size:.85em;margin-top:.3em;">√(<i>a</i><sub>t</sub>²+<i>a</i><sub>n</sub>²) = '+Math.hypot(atv,anv).toFixed(2)+' = <i>g</i></div>';
+  }
+  // ドラッグ：質点の水平位置を選ぶ
+  cv.style.touchAction='none';
+  function setFromX(clientX){var r=cv.getBoundingClientRect(); var s=(clientX-r.left-padL)/((W-padL-padR)||1); sP=Math.max(0.04,Math.min(0.96,s)); draw();}
+  var down=false;
+  cv.addEventListener('pointerdown',function(e){down=true; cv.setPointerCapture(e.pointerId); setFromX(e.clientX); e.preventDefault();});
+  cv.addEventListener('pointermove',function(e){if(down)setFromX(e.clientX);});
+  cv.addEventListener('pointerup',function(){down=false;}); cv.addEventListener('pointercancel',function(){down=false;});
+  reg('sl-tn-do',{show:draw,redraw:draw});})();
+
+(function(){var cv=$('#cv-proj'); if(!cv)return;
+  var ctx=cv.getContext('2d'),dpr=window.devicePixelRatio||1,W=0,H=0,g=9.8;
+  var v0=20, th=45;
+  var sv=$('#s-v0'),vv=$('#v-v0'),st=$('#s-th'),vt=$('#v-th');
+  function fit(){var w=cv.clientWidth,h=cv.clientHeight; cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); W=w; H=h;}
+  function draw(){ fit(); ctx.clearRect(0,0,W,H);
+    var thr=th*Math.PI/180, vx=v0*Math.cos(thr), vy=v0*Math.sin(thr);
+    var R=v0*v0*Math.sin(2*thr)/g, Hm=vy*vy/(2*g), T=2*vy/g;
+    // スケール: 全θで同じ v0 の最大飛距離 v0^2/g を基準に固定
+    var Rmax=v0*v0/g, Hmax=v0*v0/(2*g);
+    var padL=42,padR=24,padT=20,padB=34;
+    var sx=(W-padL-padR)/Rmax, sy=(H-padT-padB)/Hmax; var s=Math.min(sx,sy);
+    function PX(x){return padL+x*s;} function PY(y){return H-padB-y*s;}
+    // 軸
+    ctx.strokeStyle=cssv('--ax'); ctx.lineWidth=1.4;
+    ctx.beginPath(); ctx.moveTo(padL,H-padB); ctx.lineTo(W-padR,H-padB); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(padL,H-padB); ctx.lineTo(padL,padT); ctx.stroke();
+    ctx.fillStyle=cssv('--mut'); ctx.font='11px sans-serif'; ctx.fillText('x', W-padR+4, H-padB+4); ctx.fillText('y', padL-8, padT-4);
+    // 軌道
+    ctx.strokeStyle=cssv('--ref'); ctx.lineWidth=2.8; ctx.lineJoin='round'; ctx.beginPath();
+    for(var i=0;i<=80;i++){var t=T*i/80, x=vx*t, y=vy*t-0.5*g*t*t; if(i===0)ctx.moveTo(PX(x),PY(y)); else ctx.lineTo(PX(x),PY(y));} ctx.stroke();
+    // 最高点
+    var hx=R/2; ctx.setLineDash([4,4]); ctx.strokeStyle=cssv('--act'); ctx.lineWidth=1.4;
+    ctx.beginPath(); ctx.moveTo(padL,PY(Hm)); ctx.lineTo(PX(hx),PY(Hm)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(PX(hx),PY(Hm)); ctx.lineTo(PX(hx),H-padB); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle=cssv('--act'); ctx.beginPath(); ctx.arc(PX(hx),PY(Hm),5,0,Math.PI*2); ctx.fill();
+    // 到達距離マーカー
+    ctx.fillStyle=cssv('--thr'); ctx.beginPath(); ctx.arc(PX(R),H-padB,5,0,Math.PI*2); ctx.fill();
+    // 到達距離の下線
+    ctx.strokeStyle=cssv('--thr'); ctx.lineWidth=2.4; ctx.beginPath(); ctx.moveTo(PX(0),H-padB+0); ctx.lineTo(PX(R),H-padB+0); ctx.stroke();
+    $('#eq-proj').innerHTML=
+      '<div>最高点 <i>H</i> = (<i>v</i>₀ sin&theta;)²/2<i>g</i> = <strong>'+Hm.toFixed(1)+' m</strong></div>'+
+      '<div>到達距離 <i>R</i> = <i>v</i>₀² sin2&theta; /<i>g</i> = <strong style="color:var(--thr);">'+R.toFixed(1)+' m</strong></div>'+
+      '<div>飛行時間 <i>t</i>₂ = 2<i>v</i>₀ sin&theta;/<i>g</i> = '+T.toFixed(2)+' s</div>';
+  }
+  function upd(){ v0=parseFloat(sv.value); th=parseFloat(st.value); vv.textContent=v0+' m/s'; vt.textContent=th+'°'; draw(); }
+  if(sv)sv.addEventListener('input',upd); if(st)st.addEventListener('input',upd);
+  upd(); reg('sl-proj-do',{show:draw,redraw:draw});})();
+
+(function(){var cv=$('#cv-rtheta'); if(!cv)return;
+  var ctx=cv.getContext('2d'),dpr=window.devicePixelRatio||1,W=0,H=0;
+  function fit(){var w=cv.clientWidth,h=cv.clientHeight; cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); W=w; H=h;}
+  function draw(){ fit(); ctx.clearRect(0,0,W,H);
+    var padL=34,padR=18,padT=16,padB=28;
+    function PX(th){return padL+(th/90)*(W-padL-padR);}   // θ 0..90 deg
+    function PY(r){return H-padB-r*(H-padT-padB);}        // r 0..1 (normalized sin2θ)
+    // 軸
+    ctx.strokeStyle=cssv('--ax'); ctx.lineWidth=1.4;
+    ctx.beginPath(); ctx.moveTo(padL,H-padB); ctx.lineTo(W-padR,H-padB); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(padL,H-padB); ctx.lineTo(padL,padT); ctx.stroke();
+    ctx.fillStyle=cssv('--mut'); ctx.font='11px sans-serif';
+    ctx.fillText('θ', W-padR-2, H-padB+16); ctx.fillText('R', padL-10, padT+2);
+    // 45,90 目盛り
+    ctx.strokeStyle=cssv('--grd'); ctx.lineWidth=1; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(PX(45),H-padB); ctx.lineTo(PX(45),PY(1)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle=cssv('--mut'); ctx.fillText('45°', PX(45)-8, H-padB+16); ctx.fillText('90°', PX(90)-12, H-padB+16);
+    // R(θ) = sin(2θ)
+    ctx.strokeStyle=cssv('--act'); ctx.lineWidth=2.8; ctx.lineJoin='round'; ctx.beginPath();
+    for(var i=0;i<=90;i++){var th=i, r=Math.sin(2*th*Math.PI/180); if(i===0)ctx.moveTo(PX(th),PY(r)); else ctx.lineTo(PX(th),PY(r));} ctx.stroke();
+    // 頂点
+    ctx.fillStyle=cssv('--act'); ctx.beginPath(); ctx.arc(PX(45),PY(1),5,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=cssv('--mut'); ctx.fillText('R_max', PX(45)+6, PY(1)+2);
+  }
+  reg('sl-optangle',{show:draw,redraw:draw});})();
+
+(function(){var cv=$('#cv-comp'); if(!cv)return;
+  var ctx=cv.getContext('2d'),dpr=window.devicePixelRatio||1,W=0,H=0,g=9.8,v0=20;
+  var th=30;
+  var sc=$('#s-comp'),vc=$('#v-comp');
+  function fit(){var w=cv.clientWidth,h=cv.clientHeight; cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); W=w; H=h;}
+  function traj(ctx2,thr,col,PX,PY){var vx=v0*Math.cos(thr),vy=v0*Math.sin(thr),T=2*vy/g;
+    ctx2.strokeStyle=col; ctx2.lineWidth=2.8; ctx2.lineJoin='round'; ctx2.beginPath();
+    for(var i=0;i<=80;i++){var t=T*i/80,x=vx*t,y=vy*t-0.5*g*t*t; if(i===0)ctx2.moveTo(PX(x),PY(y)); else ctx2.lineTo(PX(x),PY(y));} ctx2.stroke();}
+  function draw(){ fit(); ctx.clearRect(0,0,W,H);
+    var th2=90-th, thr=th*Math.PI/180, thr2=th2*Math.PI/180;
+    var R=v0*v0*Math.sin(2*thr)/g; // 同じ
+    var Hmax=v0*v0/(2*g), Rmax=v0*v0/g;
+    var padL=40,padR=22,padT=18,padB=32; var s=Math.min((W-padL-padR)/Rmax,(H-padT-padB)/Hmax);
+    function PX(x){return padL+x*s;} function PY(y){return H-padB-y*s;}
+    ctx.strokeStyle=cssv('--ax'); ctx.lineWidth=1.4;
+    ctx.beginPath(); ctx.moveTo(padL,H-padB); ctx.lineTo(W-padR,H-padB); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(padL,H-padB); ctx.lineTo(padL,padT); ctx.stroke();
+    traj(ctx,thr,cssv('--ref'),PX,PY);
+    traj(ctx,thr2,cssv('--act'),PX,PY);
+    // 共通の到達距離マーカー（緑）
+    ctx.fillStyle=cssv('--thr'); ctx.beginPath(); ctx.arc(PX(R),H-padB,6,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle=cssv('--thr'); ctx.setLineDash([4,4]); ctx.lineWidth=1.4;
+    ctx.beginPath(); ctx.moveTo(PX(R),H-padB); ctx.lineTo(PX(R),padT); ctx.stroke(); ctx.setLineDash([]);
+    var vy1=v0*Math.sin(thr),vy2=v0*Math.sin(thr2);
+    $('#eq-comp').innerHTML=
+      '<div><span style="color:var(--ref);">θ = '+th+'°</span> ／ <span style="color:var(--act);">補角 '+th2+'°</span></div>'+
+      '<div>到達距離 <i>R</i> = <strong style="color:var(--thr);">'+R.toFixed(1)+' m</strong>（両方とも同じ）</div>'+
+      '<div style="color:var(--mut);font-size:.85em;">飛行時間 '+th+'°: '+(2*vy1/g).toFixed(2)+' s ／ '+th2+'°: '+(2*vy2/g).toFixed(2)+' s</div>';
+  }
+  function upd(){ th=parseFloat(sc.value); vc.textContent=th+'°'; draw(); }
+  if(sc)sc.addEventListener('input',upd); upd(); reg('sl-comp-do',{show:draw,redraw:draw});})();
+
+(function(){var cv=$('#cv-env'); if(!cv)return;
+  var ctx=cv.getContext('2d'),dpr=window.devicePixelRatio||1,W=0,H=0,g=9.8,v0=1; // v0=1 (規格化)
+  var hi=45;
+  var se=$('#s-env'),ve=$('#v-env');
+  function fit(){var w=cv.clientWidth,h=cv.clientHeight; cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); W=w; H=h;}
+  function draw(){ fit(); ctx.clearRect(0,0,W,H);
+    var Rmax=v0*v0/g;             // x 最大 = v0^2/g
+    var Ymax=v0*v0/(2*g);         // 包絡線頂点 = v0^2/2g
+    var padL=38,padR=22,padT=18,padB=30; var s=Math.min((W-padL-padR)/Rmax,(H-padT-padB)/Ymax);
+    function PX(x){return padL+x*s;} function PY(y){return H-padB-y*s;}
+    // 軸
+    ctx.strokeStyle=cssv('--ax'); ctx.lineWidth=1.4;
+    ctx.beginPath(); ctx.moveTo(padL,H-padB); ctx.lineTo(W-padR,H-padB); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(padL,H-padB); ctx.lineTo(padL,padT); ctx.stroke();
+    ctx.fillStyle=cssv('--mut'); ctx.font='11px sans-serif';
+    ctx.fillText('x', W-padR-4, H-padB+15); ctx.fillText('y', padL-8, padT+2);
+    // いろいろな角度の軌道（薄）
+    var angs=[15,30,45,60,75]; ctx.lineWidth=1.6;
+    angs.forEach(function(a){var thr=a*Math.PI/180,vx=v0*Math.cos(thr),vy=v0*Math.sin(thr),T=2*vy/g;
+      ctx.strokeStyle = (a===hi)? cssv('--ref') : cssv('--grd'); ctx.lineWidth=(a===hi)?2.8:1.6;
+      ctx.beginPath(); for(var i=0;i<=70;i++){var t=T*i/70,x=vx*t,y=vy*t-0.5*g*t*t; if(i===0)ctx.moveTo(PX(x),PY(y)); else ctx.lineTo(PX(x),PY(y));} ctx.stroke();
+      if(a===hi){ctx.fillStyle=cssv('--ref'); var lx=vx*(T*0.5),ly=vy*(T*0.5)-0.5*g*(T*0.5)*(T*0.5); ctx.fillText(a+'°', PX(lx)+2, PY(ly)-4);}
+    });
+    // 包絡線 y0 = v0^2/2g - g/(2 v0^2) x^2
+    ctx.strokeStyle=cssv('--act'); ctx.lineWidth=3.4; ctx.lineJoin='round'; ctx.beginPath(); var started=false;
+    for(var i=0;i<=120;i++){var x=Rmax*i/120, y=Ymax-(g/(2*v0*v0))*x*x; if(y<0)continue; if(!started){ctx.moveTo(PX(x),PY(y));started=true;} else ctx.lineTo(PX(x),PY(y));} ctx.stroke();
+    ctx.fillStyle=cssv('--act'); ctx.font='bold 12px sans-serif'; ctx.fillText('包絡線（到達限界）', PX(Rmax*0.30), PY(Ymax*0.86));
+    $('#v-env').textContent=hi+'°';
+  }
+  function upd(){ hi=parseFloat(se.value); draw(); }
+  if(se)se.addEventListener('input',upd); upd(); reg('sl-envelope',{show:draw,redraw:draw});})();
+
+(function(){var cv=$('#cv-monkey'); if(!cv)return;
+  var ctx=cv.getContext('2d'),dpr=window.devicePixelRatio||1,W=0,H=0,g=9.8;
+  var s=14, h=10;                 // 水平距離, 高さ（m, 図示用）
+  var v0=18;                      // 石の初速
+  var thr=Math.atan2(h,s);        // 命中仰角
+  var playing=false, t0=0;
+  function fit(){var w=cv.clientWidth,hh=cv.clientHeight; cv.width=w*dpr; cv.height=hh*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); W=w; H=hh;}
+  var padL=34,padR=20,padT=18,padB=28;
+  function sc(){return Math.min((W-padL-padR)/(s*1.15),(H-padT-padB)/(h*1.15));}
+  function PX(x){return padL+x*sc();} function PY(y){return H-padB-y*sc();}
+  function frame(){ fit(); ctx.clearRect(0,0,W,H);
+    // 地面 + ビル
+    ctx.strokeStyle=cssv('--ax'); ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(padL,H-padB); ctx.lineTo(W-padR,H-padB); ctx.stroke();
+    ctx.strokeStyle=cssv('--mut'); ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(PX(s),PY(0)); ctx.lineTo(PX(s),PY(h)); ctx.stroke();
+    // 照準線（石→ボール初期位置）
+    ctx.strokeStyle=cssv('--grd'); ctx.setLineDash([4,4]); ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(PX(0),PY(0)); ctx.lineTo(PX(s),PY(h)); ctx.stroke(); ctx.setLineDash([]);
+    // 仰角弧
+    ctx.fillStyle=cssv('--mut'); ctx.font='12px sans-serif'; ctx.fillText('θ', PX(0)+16, PY(0)-6);
+    ctx.fillText('ボール', PX(s)+4, PY(h)-6); ctx.fillText('石', PX(0)-4, PY(0)+16);
+    var vx=v0*Math.cos(thr), vy=v0*Math.sin(thr);
+    // ボール初期位置までの飛行時間で正規化したアニメ（命中まで）
+    var tmeet=s/vx; // 水平でボール真下到達 = 命中時刻
+    var t=0; if(playing){t=(performance.now()-t0)/1000*1.0; if(t>tmeet){t=tmeet; playing=false;}}
+    // 石
+    var sx=vx*t, sy=vy*t-0.5*g*t*t;
+    // ボール
+    var bx=s, by=h-0.5*g*t*t;
+    ctx.fillStyle=cssv('--act'); ctx.beginPath(); ctx.arc(PX(sx),PY(Math.max(sy,0)),6,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=cssv('--ref'); ctx.beginPath(); ctx.arc(PX(bx),PY(Math.max(by,0)),6,0,Math.PI*2); ctx.fill();
+    // 石の軌道（薄）
+    ctx.strokeStyle=cssv('--act'); ctx.globalAlpha=.4; ctx.lineWidth=1.6; ctx.beginPath();
+    for(var i=0;i<=40;i++){var tt=tmeet*i/40,x=vx*tt,y=vy*tt-0.5*g*tt*tt; if(i===0)ctx.moveTo(PX(x),PY(y)); else ctx.lineTo(PX(x),PY(y));} ctx.stroke(); ctx.globalAlpha=1;
+  }
+  var A=anim(frame);
+  var btn=$('#btn-monkey'); if(btn)btn.onclick=function(){ playing=true; t0=performance.now(); };
+  reg('sl-ex3',{show:A.start,hide:A.stop,redraw:frame});})();
+
+(function(){var root=$('#sl-practice'); if(!root)return; var g=9.8,v0=14,thr=45*Math.PI/180;
+  var vy=v0*Math.sin(thr), vx=v0*Math.cos(thr);
+  var Hh=vy*vy/(2*g), R=v0*v0*Math.sin(2*thr)/g, t2=2*vy/g;
+  var ans={H:Hh,R:R,t:t2};
+  function mark(id,want){var el=$('#pr-'+id),mk=$('#m-'+id); if(!el||el.value==='')return null;
+    var dp=1; var got=roundTo(parseFloat(el.value),dp), w=roundTo(want,dp); var ok=Math.abs(got-w)<1e-9;
+    mk.textContent=ok?'○':'✕'; mk.className='prmark '+(ok?'good':'bad'); return ok;}
+  $('#pr-grade').onclick=function(){var r=[mark('H',ans.H),mark('R',ans.R),mark('t',ans.t)];
+    var done=r.filter(function(x){return x!==null;}).length, ok=r.filter(function(x){return x===true;}).length;
+    var res=$('#pr-res'); if(done===0){res.textContent='値を入力してから採点してください。'; res.className='prresult';}
+    else{res.textContent=ok+' / 3 問 正解'; res.className='prresult '+(ok===3?'good':'bad');}};
+  $('#pr-reveal').onclick=function(){var a=$('#pr-ans'); a.classList.add('show');
+    a.innerHTML='① <i>H</i> = (14·sin45°)²/(2·9.8) = '+ans.H.toFixed(1)+' m<br>'+
+      '② <i>R</i> = 14²·sin90°/9.8 = '+ans.R.toFixed(1)+' m<br>'+
+      '③ <i>t</i>₂ = 2·14·sin45°/9.8 = '+ans.t.toFixed(1)+' s';};
+  $('#pr-reset').onclick=function(){['H','R','t'].forEach(function(id){$('#pr-'+id).value=''; var mk=$('#m-'+id); mk.textContent=''; mk.className='prmark';});
+    var res=$('#pr-res'); res.textContent=''; res.className='prresult'; var a=$('#pr-ans'); a.classList.remove('show'); a.innerHTML='';};
+  reg('sl-practice',{});})();
+  /* HOOKS:END */
+
+  // ---- 起動 ----
+  var start=0, h=parseInt((location.hash||'').replace('#',''),10); if(h>=1&&h<=N)start=h-1;
+  go(start);
+})();
+</script>
+</body>
+</html>

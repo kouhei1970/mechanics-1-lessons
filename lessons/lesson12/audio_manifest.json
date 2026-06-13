@@ -1,0 +1,142 @@
+[
+  {
+    "id": "sl-title",
+    "file": "audio/sl-title.mp3",
+    "duration": 52.51
+  },
+  {
+    "id": "sl-schedule",
+    "file": "audio/sl-schedule.mp3",
+    "duration": 51.53
+  },
+  {
+    "id": "sl-agenda",
+    "file": "audio/sl-agenda.mp3",
+    "duration": 53.71
+  },
+  {
+    "id": "sl-review",
+    "file": "audio/sl-review.mp3",
+    "duration": 57.55
+  },
+  {
+    "id": "sl-posvec",
+    "file": "audio/sl-posvec.mp3",
+    "duration": 59.74
+  },
+  {
+    "id": "sl-velvec",
+    "file": "audio/sl-velvec.mp3",
+    "duration": 61.13
+  },
+  {
+    "id": "sl-accvec",
+    "file": "audio/sl-accvec.mp3",
+    "duration": 63.07
+  },
+  {
+    "id": "sl-decomp",
+    "file": "audio/sl-decomp.mp3",
+    "duration": 73.7
+  },
+  {
+    "id": "sl-tangent",
+    "file": "audio/sl-tangent.mp3",
+    "duration": 63.79
+  },
+  {
+    "id": "sl-normal",
+    "file": "audio/sl-normal.mp3",
+    "duration": 71.23
+  },
+  {
+    "id": "sl-tn-do",
+    "file": "audio/sl-tn-do.mp3",
+    "duration": 82.44
+  },
+  {
+    "id": "sl-tn-summary",
+    "file": "audio/sl-tn-summary.mp3",
+    "duration": 68.04
+  },
+  {
+    "id": "sl-proj-def",
+    "file": "audio/sl-proj-def.mp3",
+    "duration": 67.51
+  },
+  {
+    "id": "sl-proj-eom",
+    "file": "audio/sl-proj-eom.mp3",
+    "duration": 84.46
+  },
+  {
+    "id": "sl-trajectory",
+    "file": "audio/sl-trajectory.mp3",
+    "duration": 62.81
+  },
+  {
+    "id": "sl-proj-do",
+    "file": "audio/sl-proj-do.mp3",
+    "duration": 73.34
+  },
+  {
+    "id": "sl-ymax",
+    "file": "audio/sl-ymax.mp3",
+    "duration": 73.13
+  },
+  {
+    "id": "sl-range",
+    "file": "audio/sl-range.mp3",
+    "duration": 73.85
+  },
+  {
+    "id": "sl-optangle",
+    "file": "audio/sl-optangle.mp3",
+    "duration": 75.24
+  },
+  {
+    "id": "sl-comp-do",
+    "file": "audio/sl-comp-do.mp3",
+    "duration": 82.1
+  },
+  {
+    "id": "sl-envelope",
+    "file": "audio/sl-envelope.mp3",
+    "duration": 85.44
+  },
+  {
+    "id": "sl-ex1-q",
+    "file": "audio/sl-ex1-q.mp3",
+    "duration": 59.23
+  },
+  {
+    "id": "sl-ex1-a",
+    "file": "audio/sl-ex1-a.mp3",
+    "duration": 88.7
+  },
+  {
+    "id": "sl-ex2",
+    "file": "audio/sl-ex2.mp3",
+    "duration": 87.65
+  },
+  {
+    "id": "sl-ex3",
+    "file": "audio/sl-ex3.mp3",
+    "duration": 89.57
+  },
+  {
+    "id": "sl-practice",
+    "file": "audio/sl-practice.mp3",
+    "duration": 68.35
+  },
+  {
+    "id": "sl-summary",
+    "file": "audio/sl-summary.mp3",
+    "duration": 88.51
+  },
+  {
+    "id": "sl-next",
+    "file": "audio/sl-next.mp3",
+    "duration": 65.81
+  }
+]
