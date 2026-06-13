@@ -696,19 +696,21 @@
   <div class="twocol">
     <div class="figbox">
       <svg class="fig" viewBox="0 0 320 230" role="img" aria-label="円柱に巻きついたベルトの張力" style="max-width:24em;">
+        <defs>
+          <marker id="belt-ar" markerWidth="13" markerHeight="13" refX="10" refY="6.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L13 6.5 L0 13 z" fill="context-stroke"/></marker>
+        </defs>
         <circle class="w" cx="160" cy="120" r="66"/>
-        <path d="M160 120 L226 120" stroke="var(--mut)" stroke-width="1.4" stroke-dasharray="4 4" fill="none"/>
-        <path d="M99 93 A66 66 0 0 1 219 89" fill="none" stroke="var(--act)" stroke-width="7" stroke-linecap="round"/>
-        <path d="M226 120 A38 38 0 0 0 199 84" fill="none" stroke="var(--ref)" stroke-width="1.6"/>
-        <text x="196" y="105" style="fill:var(--ref);font-style:italic;">θ₀</text>
-        <text x="196" y="132" style="fill:var(--mut);font-style:italic;">r</text>
-        <line x1="219" y1="89" x2="288" y2="58" stroke="var(--thr)" stroke-width="3"/>
-        <polygon points="288,58 277,58 285,69" fill="var(--thr)"/>
-        <text x="291" y="56" style="fill:var(--thr);font-style:italic;font-weight:bold;">T₁</text>
-        <line x1="99" y1="93" x2="30" y2="128" stroke="var(--re)" stroke-width="3"/>
-        <polygon points="30,128 41,123 38,135" fill="var(--re)"/>
-        <text x="12" y="126" style="fill:var(--re);font-style:italic;font-weight:bold;">T₂</text>
-        <text x="150" y="160" style="fill:var(--mut);font-style:italic;">O</text>
+        <path d="M160 120 L210.6 77.6" stroke="var(--mut)" stroke-width="1.4" stroke-dasharray="4 4" fill="none"/>
+        <path d="M160 120 L109.4 77.6" stroke="var(--mut)" stroke-width="1.4" stroke-dasharray="4 4" fill="none"/>
+        <path d="M109.4 77.6 A66 66 0 0 1 210.6 77.6" fill="none" stroke="var(--act)" stroke-width="7" stroke-linecap="round"/>
+        <path d="M183 100.7 A30 30 0 0 0 137 100.7" fill="none" stroke="var(--ref)" stroke-width="1.6"/>
+        <text x="151" y="94" style="fill:var(--ref);font-style:italic;">θ₀</text>
+        <text x="189" y="104" style="fill:var(--mut);font-style:italic;">r</text>
+        <line x1="210.6" y1="77.6" x2="249.2" y2="123.6" stroke="var(--thr)" stroke-width="3" marker-end="url(#belt-ar)"/>
+        <text x="253" y="128" style="fill:var(--thr);font-style:italic;font-weight:bold;">T₁</text>
+        <line x1="109.4" y1="77.6" x2="63.1" y2="132.8" stroke="var(--re)" stroke-width="3" marker-end="url(#belt-ar)"/>
+        <text x="40" y="139" style="fill:var(--re);font-style:italic;font-weight:bold;">T₂</text>
+        <text x="148" y="150" style="fill:var(--mut);font-style:italic;">O</text>
       </svg>
       <div class="figcap">図4.14 円柱に巻きついたベルト（T₂ &gt; T₁）</div>
     </div>
@@ -725,16 +727,16 @@
   </div>
 </div></section>
 
-<section class="slide" id="sl-belt-do" data-title="巻き角を変えて張力比を見る"><div class="inner">
+<section class="slide" id="sl-belt-do" data-title="接触角を変えて張力比を見る"><div class="inner">
   <span class="tag2 tag-do">操作</span>
   <p class="kicker">確認</p>
-  <h1 class="tt">巻き角を変えて張力比を見る</h1>
+  <h1 class="tt">接触角を変えて張力比を見る</h1>
   <div class="confirm">
-    <span class="lab">スライダーで巻き角と摩擦係数を変える</span>
+    <span class="lab">スライダーで接触角と摩擦係数を変える</span>
     <div class="grid2">
       <div><canvas id="cv-l10-belt" class="plot"></canvas></div>
       <div>
-        <div class="row"><label>巻き角 θ<sub>0</sub></label><input type="range" id="s-l10-wrap" min="0" max="4" step="0.25" value="1"><span class="val" id="v-l10-wrap">1回</span></div>
+        <div class="row"><label>接触角 θ<sub>0</sub></label><input type="range" id="s-l10-wrap" min="0" max="4" step="0.25" value="1"><span class="val" id="v-l10-wrap">1回</span></div>
         <div class="row"><label>静摩擦 μ<sub>s</sub></label><input type="range" id="s-l10-beltmu" min="0.1" max="0.6" step="0.05" value="0.4"><span class="val" id="v-l10-beltmu">0.40</span></div>
         <div class="eq" id="eq-l10-belt"></div>
       </div>
@@ -1307,7 +1309,7 @@
     ctx.fillStyle=cssv('--act'); ctx.beginPath(); ctx.arc(cx,cy,6,0,TAU2); ctx.fill();
     var deg=wrap*360;
     var t2for500=500*ratio;
-    $('#eq-l10-belt').innerHTML='巻き角 θ₀ = '+fmt(wrap,2)+' 回 = '+fmt(deg,0)+'° = '+fmt(th0,2)+' rad<br>μ<sub>s</sub> = '+fmt(mu,2)+'<br>張力比 <i>T<sub>2</sub>/T<sub>1</sub></i> = e<sup>μ<sub>s</sub>θ₀</sup> = <b>'+fmt(ratio,2)+'</b><br>T₁ = 500 N を支えるのに必要な T₂ = 500×'+fmt(ratio,2)+' = <b>'+fmt(t2for500,0)+' N</b>';
+    $('#eq-l10-belt').innerHTML='接触角 θ₀ = '+fmt(wrap,2)+' 回 = '+fmt(deg,0)+'° = '+fmt(th0,2)+' rad<br>μ<sub>s</sub> = '+fmt(mu,2)+'<br>張力比 <i>T<sub>2</sub>/T<sub>1</sub></i> = e<sup>μ<sub>s</sub>θ₀</sup> = <b>'+fmt(ratio,2)+'</b><br>T₁ = 500 N を支えるのに必要な T₂ = 500×'+fmt(ratio,2)+' = <b>'+fmt(t2for500,0)+' N</b>';
   }
   if(sW)sW.addEventListener('input',function(){wrap=parseFloat(sW.value); oW.textContent=fmt(wrap,2)+'回'; draw();});
   if(sM)sM.addEventListener('input',function(){mu=parseFloat(sM.value); oM.textContent=fmt(mu,2); draw();});
