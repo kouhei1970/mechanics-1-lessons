@@ -506,9 +506,9 @@
   </div>
 </div></section>
 
-<section class="slide" id="sl-ex43" data-title="例題4.3 摩擦角と静止できる力の範囲"><div class="inner"><span class="tag2 tag-fig">図</span><span class="tag2 tag-ex">解説</span>
-<p class="kicker">例題4.3（教科書 p.63）</p>
-<h1 class="tt">摩擦角で静止できる力の範囲を出す</h1>
+<section class="slide" id="sl-ex43" data-title="例題4.3 ① 問題と考え方"><div class="inner"><span class="tag2 tag-fig">図</span><span class="tag2 tag-ex">解説</span>
+<p class="kicker">例題4.3（教科書 p.63）① 問題と方針</p>
+<h1 class="tt">水平力で斜面に静止できる <i>F</i> の範囲</h1>
 <div class="twocol">
   <div class="figbox">
     <svg class="fig" viewBox="0 0 320 210" role="img" aria-label="斜面上の物体と水平力F">
@@ -527,12 +527,111 @@
     <div class="figcap">斜面 θ=20°、質量 m=100 kg、水平力 F、静摩擦角 φ₀=10°</div>
   </div>
   <div>
-    <p class="ex">水平とのなす角 θ=20° の斜面上に質量 m=100 kg の物体が水平力 <i>F</i> を受けて静止している。静摩擦角を φ₀=10° とするとき、静止状態を持続できる <i>F</i> の範囲を求めよ。</p>
-    <p class="steps">摩擦角を使うと、滑り落ちる寸前（下限）と押し上がる寸前（上限）が一気に書ける：</p>
-    <span class="eq big">sin(θ−φ₀)/cos(θ+φ₀) · <i>mg</i> ≤ <i>F</i> ≤ sin(θ+φ₀)/cos(θ−φ₀) · <i>mg</i></span>
-    <p class="steps"><i>mg</i> = 100×9.8 = 980 N を代入して</p>
-    <span class="eq big">173 N ≤ <i>F</i> ≤ 566 N</span>
-    <p class="note">摩擦角を使うと、力の分解を細かくやらずに上限・下限が一気に書ける。下限は滑り落ちる寸前、上限は押し上がる寸前。</p>
+    <p class="ex">水平となす角 θ=20° の斜面に、質量 m=100 kg の物体が<strong>水平な力 <i>F</i></strong> で押されて静止している。静摩擦角 φ<sub>0</sub>=10° のとき、静止し続けられる <i>F</i> の範囲を求めよ。</p>
+    <p class="steps"><strong>考え方。</strong> <i>F</i> が小さすぎると物体は斜面を<strong>滑り落ち</strong>、大きすぎると斜面を<strong>押し上がって</strong>しまう。止まっていられるのは、その2つの限界の<em>あいだ</em>だけ。</p>
+    <ul class="lead">
+      <li><strong>下限 <i>F</i><sub>1</sub></strong>：滑り落ちる寸前。摩擦は<strong>斜面上向き</strong>で最大 μ<sub>s</sub><i>R</i></li>
+      <li><strong>上限 <i>F</i><sub>2</sub></strong>：押し上がる寸前。摩擦は<strong>斜面下向き</strong>で最大 μ<sub>s</sub><i>R</i></li>
+    </ul>
+    <p class="note">この2つの限界を別々に計算すれば、答えは <i>F</i><sub>1</sub> ≤ <i>F</i> ≤ <i>F</i><sub>2</sub>。次ページから、力を「斜面方向」と「面に垂直な方向」に分けて求めていく。</p>
+  </div>
+</div></div></section>
+
+<section class="slide" id="sl-ex43-decomp" data-title="例題4.3 ② 力の分解と垂直抗力"><div class="inner"><span class="tag2 tag-fig">図</span><span class="tag2 tag-ex">解説</span>
+<p class="kicker">例題4.3 ② 力の分解</p>
+<h1 class="tt">力を「斜面方向」と「面に垂直」に分ける</h1>
+<div class="twocol">
+  <div class="figbox">
+    <svg class="fig" viewBox="0 0 330 224" role="img" aria-label="水平力Fと重力mgを斜面方向と法線方向に分解した図">
+      <defs><marker id="dec-ar" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L9 4.5 L0 9 z" fill="context-stroke"/></marker></defs>
+      <path class="w" d="M28 196 H150"/>
+      <path class="w" d="M28 196 L300 97"/>
+      <path class="w" d="M70 196 a42 42 0 0 0 -5 -14" fill="none"/>
+      <text x="74" y="190" font-size="12">θ</text>
+      <g transform="translate(150 177) rotate(-20)"><rect x="-22" y="-27" width="44" height="27" rx="2" fill="var(--surface2)" stroke="var(--ink)" stroke-width="1.6"/></g>
+      <line x1="155" y1="158" x2="155" y2="212" stroke="var(--ink)" stroke-width="2.4" marker-end="url(#dec-ar)"/>
+      <text x="158" y="208" fill="var(--ink)">mg</text>
+      <line x1="155" y1="158" x2="212" y2="158" stroke="var(--act)" stroke-width="2.4" marker-end="url(#dec-ar)"/>
+      <text x="215" y="155" fill="var(--act)">F</text>
+      <line x1="155" y1="158" x2="133" y2="166" stroke="var(--ink)" stroke-width="1.8" stroke-dasharray="4 3" marker-end="url(#dec-ar)"/>
+      <text x="74" y="186" fill="var(--ink)" font-size="12">mg sinθ</text>
+      <line x1="155" y1="158" x2="204" y2="140" stroke="var(--act)" stroke-width="1.8" stroke-dasharray="4 3" marker-end="url(#dec-ar)"/>
+      <text x="200" y="133" fill="var(--act)" font-size="12">F cosθ</text>
+      <line x1="155" y1="158" x2="132" y2="99" stroke="var(--ref)" stroke-width="2.4" marker-end="url(#dec-ar)"/>
+      <text x="113" y="96" fill="var(--ref)">R</text>
+    </svg>
+    <div class="figcap">F と mg を 斜面方向(∥) と 面に垂直な方向(⊥) に分解</div>
+  </div>
+  <div>
+    <p class="steps">斜面に沿う向き(∥)と面に垂直な向き(⊥)に分けると：</p>
+    <div class="eq"><span style="color:var(--act);font-weight:700;">水平力 F</span> → ∥ <i>F</i> cos θ（上る）　⊥ <i>F</i> sin θ（押す）</div>
+    <div class="eq"><span style="font-weight:700;">重力 mg</span> → ∥ <i>mg</i> sin θ（下る）　⊥ <i>mg</i> cos θ（押す）</div>
+    <p class="steps">⊥方向は釣合い → 垂直抗力 <i>R</i>（押し付け成分の和）：</p>
+    <div class="eq big"><i>R</i> = <i>mg</i> cos θ + <i>F</i> sin θ</div>
+    <p class="steps">出せる摩擦力の最大値は</p>
+    <div class="eq big"><i>f</i><sub>max</sub> = μ<sub>s</sub><i>R</i> = μ<sub>s</sub>(<i>mg</i> cos θ + <i>F</i> sin θ)</div>
+  </div>
+</div></div></section>
+
+<section class="slide" id="sl-ex43-lower" data-title="例題4.3 ③ 下限（滑り落ちる寸前）"><div class="inner"><span class="tag2 tag-fig">図</span><span class="tag2 tag-ex">解説</span>
+<p class="kicker">例題4.3 ③ 下限 <i>F</i><sub>1</sub></p>
+<h1 class="tt">滑り落ちる寸前 — 摩擦は斜面上向き</h1>
+<div class="twocol">
+  <div class="figbox">
+    <svg class="fig" viewBox="0 0 300 196" role="img" aria-label="下限：摩擦が斜面上向きの図">
+      <defs><marker id="lo-ar" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L9 4.5 L0 9 z" fill="context-stroke"/></marker></defs>
+      <path class="w" d="M26 168 H140"/>
+      <path class="w" d="M26 168 L270 79"/>
+      <path class="w" d="M66 168 a40 40 0 0 0 -5 -13" fill="none"/>
+      <text x="70" y="163" font-size="12">θ</text>
+      <g transform="translate(138 142) rotate(-20)"><rect x="-20" y="-25" width="40" height="25" rx="2" fill="var(--surface2)" stroke="var(--ink)" stroke-width="1.6"/></g>
+      <line x1="138" y1="118" x2="188" y2="100" stroke="var(--act)" stroke-width="2.4" marker-end="url(#lo-ar)"/>
+      <text x="178" y="95" fill="var(--act)" font-size="12">F cosθ</text>
+      <line x1="138" y1="118" x2="96" y2="133" stroke="var(--ink)" stroke-width="2.4" marker-end="url(#lo-ar)"/>
+      <text x="44" y="128" fill="var(--ink)" font-size="12">mg sinθ</text>
+      <line x1="151" y1="146" x2="180" y2="135" stroke="var(--thr)" stroke-width="2.6" marker-end="url(#lo-ar)"/>
+      <text x="184" y="142" fill="var(--thr)">f</text>
+    </svg>
+    <div class="figcap">F が小さい → 下へ滑ろうとする → 摩擦 f は斜面上向き</div>
+  </div>
+  <div>
+    <p class="steps">斜面方向(∥)の釣合い：「上る向きの力」＝「下る向きの力」</p>
+    <div class="eq"><i>F</i> cos θ ＋ <i>f</i><sub>max</sub> ＝ <i>mg</i> sin θ</div>
+    <p class="steps"><i>f</i><sub>max</sub> = μ<sub>s</sub>(<i>mg</i> cos θ + <i>F</i> sin θ) を代入し、<i>F</i><sub>1</sub> について解く（μ<sub>s</sub> = tan φ<sub>0</sub>）：</p>
+    <div class="eq"><i>F</i><sub>1</sub> ＝ <span style="display:inline-block;vertical-align:middle;text-align:center;margin:0 .15em;font-size:.78em;"><span style="display:block;border-bottom:1.5px solid;padding:0 .4em 1px;"><i>mg</i>(sin θ − μ<sub>s</sub> cos θ)</span><span style="display:block;padding:1px .4em 0;">cos θ + μ<sub>s</sub> sin θ</span></span> ＝ <i>mg</i> tan(θ − φ<sub>0</sub>)</div>
+    <div class="eq big"><i>F</i><sub>1</sub> = 980 × tan 10° = <strong>173 N</strong></div>
+  </div>
+</div></div></section>
+
+<section class="slide" id="sl-ex43-upper" data-title="例題4.3 ④ 上限と結論"><div class="inner"><span class="tag2 tag-fig">図</span><span class="tag2 tag-ex">解説</span>
+<p class="kicker">例題4.3 ④ 上限 <i>F</i><sub>2</sub>・結論</p>
+<h1 class="tt">押し上がる寸前 — 摩擦は斜面下向き</h1>
+<div class="twocol">
+  <div class="figbox">
+    <svg class="fig" viewBox="0 0 300 196" role="img" aria-label="上限：摩擦が斜面下向きの図">
+      <defs><marker id="up-ar" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L9 4.5 L0 9 z" fill="context-stroke"/></marker></defs>
+      <path class="w" d="M26 168 H140"/>
+      <path class="w" d="M26 168 L270 79"/>
+      <path class="w" d="M66 168 a40 40 0 0 0 -5 -13" fill="none"/>
+      <text x="70" y="163" font-size="12">θ</text>
+      <g transform="translate(138 142) rotate(-20)"><rect x="-20" y="-25" width="40" height="25" rx="2" fill="var(--surface2)" stroke="var(--ink)" stroke-width="1.6"/></g>
+      <line x1="138" y1="118" x2="188" y2="100" stroke="var(--act)" stroke-width="2.4" marker-end="url(#up-ar)"/>
+      <text x="178" y="95" fill="var(--act)" font-size="12">F cosθ</text>
+      <line x1="138" y1="118" x2="96" y2="133" stroke="var(--ink)" stroke-width="2.4" marker-end="url(#up-ar)"/>
+      <text x="44" y="128" fill="var(--ink)" font-size="12">mg sinθ</text>
+      <line x1="151" y1="146" x2="122" y2="157" stroke="var(--thr)" stroke-width="2.6" marker-end="url(#up-ar)"/>
+      <text x="124" y="167" fill="var(--thr)">f</text>
+    </svg>
+    <div class="figcap">F が大きい → 上へ動こうとする → 摩擦 f は斜面下向き</div>
+  </div>
+  <div>
+    <p class="steps">こんどは「上る向きの力」＝「下る向き ＋ 摩擦」：</p>
+    <div class="eq"><i>F</i> cos θ ＝ <i>mg</i> sin θ ＋ <i>f</i><sub>max</sub></div>
+    <p class="steps">同じように <i>F</i><sub>2</sub> について解くと（μ<sub>s</sub> = tan φ<sub>0</sub>）：</p>
+    <div class="eq"><i>F</i><sub>2</sub> ＝ <span style="display:inline-block;vertical-align:middle;text-align:center;margin:0 .15em;font-size:.78em;"><span style="display:block;border-bottom:1.5px solid;padding:0 .4em 1px;"><i>mg</i>(sin θ + μ<sub>s</sub> cos θ)</span><span style="display:block;padding:1px .4em 0;">cos θ − μ<sub>s</sub> sin θ</span></span> ＝ <i>mg</i> tan(θ + φ<sub>0</sub>)</div>
+    <div class="eq big"><i>F</i><sub>2</sub> = 980 × tan 30° = <strong>566 N</strong></div>
+    <div class="eq big" style="box-shadow:inset 0 0 0 2px var(--act);text-align:center;">173 N ≤ <i>F</i> ≤ 566 N　（答）</div>
+    <p class="note">下限・上限で摩擦の向きが逆。まとめると <i>mg</i> tan(θ−φ<sub>0</sub>) ≤ <i>F</i> ≤ <i>mg</i> tan(θ+φ<sub>0</sub>)。</p>
   </div>
 </div></div></section>
 
