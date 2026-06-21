@@ -196,18 +196,19 @@
           <path class="w" style="stroke-width:1" d="M40 150 L30 160 M60 150 L50 160 M80 150 L70 160 M100 150 L90 160 M120 150 L110 160 M140 150 L130 160 M160 150 L150 160 M180 150 L170 160 M200 150 L190 160 M220 150 L210 160 M240 150 L230 160 M260 150 L250 160 M280 150 L270 160"/>
           <rect class="w" x="130" y="112" width="70" height="38" fill="var(--surface2)"/>
           <text x="158" y="136">m</text>
-          <line x1="165" y1="112" x2="165" y2="52" stroke="var(--ref)" stroke-width="2.6"/>
-          <polygon points="160,60 170,60 165,48" fill="var(--ref)"/>
-          <text x="171" y="58" style="fill:var(--ref)">R</text>
-          <line x1="165" y1="150" x2="165" y2="200" stroke="var(--act)" stroke-width="2.6"/>
+          <!-- 作用点で統一: R=接触面(165,150)↑ / mg=重心(165,131)↓ / f=接触面↙ / F=右面(200,131) -->
+          <line x1="180" y1="150" x2="180" y2="86" stroke="var(--ref)" stroke-width="2.6"/>
+          <polygon points="175,94 185,94 180,82" fill="var(--ref)"/>
+          <text x="186" y="92" style="fill:var(--ref)">R</text>
+          <line x1="165" y1="131" x2="165" y2="200" stroke="var(--act)" stroke-width="2.6"/>
           <polygon points="160,192 170,192 165,204" fill="var(--act)"/>
           <text x="171" y="196" style="fill:var(--act)">mg</text>
           <line x1="200" y1="131" x2="272" y2="131" stroke="var(--act)" stroke-width="2.6"/>
           <polygon points="264,126 264,136 276,131" fill="var(--act)"/>
           <text x="278" y="135" style="fill:var(--act)">F</text>
-          <line x1="130" y1="131" x2="62" y2="131" stroke="var(--thr)" stroke-width="2.6"/>
-          <polygon points="70,126 70,136 58,131" fill="var(--thr)"/>
-          <text x="40" y="135" style="fill:var(--thr)">f</text>
+          <line x1="150" y1="150" x2="82" y2="150" stroke="var(--thr)" stroke-width="2.6"/>
+          <polygon points="90,145 90,155 78,150" fill="var(--thr)"/>
+          <text x="58" y="166" style="fill:var(--thr)">f</text>
         </svg>
         <div class="figcap">摩擦力 <i>f</i> は外力 <i>F</i> に逆らう向きに働く</div>
       </div>
@@ -679,18 +680,20 @@
       <text x="6" y="16" font-style="normal" font-family="sans-serif" font-size="13" fill="var(--mut)">物体 A</text>
       <rect class="w" x="60" y="36" width="60" height="40"/>
       <text x="82" y="62" font-size="16">A</text>
-      <line class="cur" x1="90" y1="36" x2="90" y2="6"/><polygon class="curf" points="84,10 96,10 90,2"/><text x="96" y="16">R₁</text>
-      <line class="cur" x1="60" y1="56" x2="24" y2="56"/><polygon class="curf" points="28,50 28,62 20,56"/><text x="22" y="48">T</text>
-      <line class="cur" x1="120" y1="56" x2="156" y2="56"/><polygon class="curf" points="152,50 152,62 160,56"/><text x="140" y="48">f₁</text>
-      <line class="cur" x1="90" y1="76" x2="90" y2="106"/><polygon class="curf" points="84,102 96,102 90,110"/><text x="96" y="100">W_A</text>
+      <!-- A の FBD: T=左面(60,56) / W_A=重心(90,56)↓ / R₁=底面(B接触)↑ / f₁=底面(B接触)→ -->
+      <line class="cur" x1="60" y1="52" x2="24" y2="52"/><polygon class="curf" points="28,46 28,58 20,52"/><text x="18" y="48">T</text>
+      <line class="cur" x1="86" y1="56" x2="86" y2="104"/><polygon class="curf" points="80,100 92,100 86,108"/><text x="40" y="100">W_A</text>
+      <line class="cur" x1="106" y1="106" x2="106" y2="80"/><polygon class="curf" points="100,84 112,84 106,76"/><text x="112" y="100">R₁</text>
+      <line class="cur" x1="74" y1="76" x2="110" y2="76"/><polygon class="curf" points="106,70 106,82 114,76"/><text x="116" y="71">f₁</text>
       <text x="6" y="150" font-style="normal" font-family="sans-serif" font-size="13" fill="var(--mut)">物体 B</text>
       <rect class="w" x="60" y="168" width="80" height="44"/>
       <text x="94" y="196" font-size="16">B</text>
-      <line class="cur" x1="82" y1="140" x2="82" y2="160"/><polygon class="curf" points="76,160 88,160 82,168"/><text x="58" y="150">R₁</text>
-      <line class="cur" x1="118" y1="212" x2="118" y2="242"/><polygon class="curf" points="112,238 124,238 118,246"/><text x="124" y="236">W_B</text>
-      <line class="cur" x1="100" y1="212" x2="100" y2="242" stroke="var(--thr)"/><polygon class="curf" points="94,222 106,222 100,214" fill="var(--thr)"/><text x="68" y="234" fill="var(--thr)">R₂</text>
-      <line class="cur" x1="60" y1="180" x2="24" y2="180"/><polygon class="curf" points="28,174 28,186 20,180"/><text x="20" y="172">f₁</text>
-      <line class="cur" x1="60" y1="200" x2="24" y2="200" stroke="var(--thr)"/><polygon class="curf" points="28,194 28,206 20,200" fill="var(--thr)"/><text x="20" y="216" fill="var(--thr)">f₂</text>
+      <!-- B の FBD: F=右面 / W_B=重心(100,190)↓ / R₁=上面(A反作用)↓ / R₂=底面(床)↑ / f₁=上面(A)← / f₂=底面(床)← -->
+      <line class="cur" x1="82" y1="140" x2="82" y2="164"/><polygon class="curf" points="76,160 88,160 82,168"/><text x="58" y="150">R₁</text>
+      <line class="cur" x1="116" y1="168" x2="80" y2="168"/><polygon class="curf" points="84,162 84,174 76,168"/><text x="118" y="165">f₁</text>
+      <line class="cur" x1="100" y1="190" x2="100" y2="244"/><polygon class="curf" points="94,240 106,240 100,248"/><text x="70" y="242">W_B</text>
+      <line class="cur" x1="122" y1="244" x2="122" y2="216" stroke="var(--thr)"/><polygon class="curf" points="116,220 128,220 122,212" fill="var(--thr)"/><text x="128" y="240" fill="var(--thr)">R₂</text>
+      <line class="cur" x1="116" y1="212" x2="80" y2="212" stroke="var(--thr)"/><polygon class="curf" points="84,206 84,218 76,212" fill="var(--thr)"/><text x="60" y="224" fill="var(--thr)">f₂</text>
       <line class="cur" x1="140" y1="190" x2="176" y2="190"/><polygon class="curf" points="172,184 172,196 180,190"/><text x="160" y="182">F</text>
     </svg>
     <div class="figcap">上：物体 A の FBD、下：物体 B の FBD（R₁ は反作用として B に下向き）</div>
@@ -1023,12 +1026,13 @@
         <g transform="translate(150 142.8) rotate(-16.3)">
           <rect x="-22" y="-26" width="44" height="26" rx="2" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/>
         </g>
+        <!-- 作用点で統一: W(荷重)=重心(146.4,130.3)↓ / F(回す力)=押す面(125.2,136.5) -->
         <line x1="146.4" y1="130.3" x2="146.4" y2="192" stroke="var(--ink)" stroke-width="2.6"/>
         <polygon points="141,186 151,186 146.4,196" fill="var(--ink)"/>
         <text x="151" y="190" style="fill:var(--ink);font-style:italic">W</text>
-        <line x1="146.4" y1="130.3" x2="214" y2="130.3" stroke="var(--act)" stroke-width="2.6"/>
-        <polygon points="206,125 216,130.3 206,135.6" fill="var(--act)"/>
-        <text x="218" y="127" style="fill:var(--act);font-style:italic">F</text>
+        <line x1="57.6" y1="136.5" x2="125.2" y2="136.5" stroke="var(--act)" stroke-width="2.6"/>
+        <polygon points="117,131.5 127,136.5 117,141.5" fill="var(--act)"/>
+        <text x="42" y="140" style="fill:var(--act);font-style:italic">F</text>
         <path d="M80 175 A40 40 0 0 0 78.4 163.8" fill="none" stroke="var(--ref)" stroke-width="1.8"/>
         <text x="84" y="170" style="fill:var(--ref);font-size:13px">θ</text>
         <text x="92" y="200" style="fill:var(--mut);font-size:11px;font-style:normal;font-family:sans-serif">リード角 θ（ねじの傾き）</text>
@@ -1359,10 +1363,11 @@
     var mg=m*g, Rn=mg*Math.cos(th), comp=mg*Math.sin(th), fmax=mu*Rn;
     var fval=slipping?fmax:comp;
     var k=42/mg;
+    // 作用点で統一: mg・mg sinθ=重心(px,py) / R・f=接触面(cxp,cyp=箱の底面中央)
     arrow(px,py, px, py+mg*k, cssv('--ink'), 2.8); label(px+6, py+mg*k, 'mg', cssv('--ink'));
-    arrow(px,py, px+nx*Rn*k, py+ny*Rn*k, cssv('--ref'), 2.8); label(px+nx*Rn*k-2, py+ny*Rn*k-4, 'R', cssv('--ref'));
+    arrow(cxp,cyp, cxp+nx*Rn*k, cyp+ny*Rn*k, cssv('--ref'), 2.8); label(cxp+nx*Rn*k-2, cyp+ny*Rn*k-4, 'R', cssv('--ref'));
     arrow(px,py, px-ux*comp*k, py-uy*comp*k, cssv('--act'), 2.8); label(px-ux*comp*k-2, py-uy*comp*k+14, 'mg sinθ', cssv('--act'));
-    arrow(px,py, px+ux*fval*k, py+uy*fval*k, cssv('--thr'), 2.8); label(px+ux*fval*k+4, py+uy*fval*k-2, 'f', cssv('--thr'));
+    arrow(cxp,cyp, cxp+ux*fval*k, cyp+uy*fval*k, cssv('--thr'), 2.8); label(cxp+ux*fval*k+4, cyp+uy*fval*k-2, 'f', cssv('--thr'));
     ctx.font='bold 14px sans-serif';
     if(slipping){ ctx.fillStyle=cssv('--act'); ctx.fillText('滑り出し！ θ > φ₀', ox+4, 22); }
     else { ctx.fillStyle=cssv('--thr'); ctx.fillText('静止（θ ≦ φ₀）', ox+4, 22); }
