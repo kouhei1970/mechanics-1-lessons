@@ -548,17 +548,20 @@
       <path class="w" d="M28 196 L300 97"/>
       <path class="w" d="M70 196 a42 42 0 0 0 -5 -14" fill="none"/>
       <text x="74" y="190" font-size="12">θ</text>
+      <!-- 箱と力ベクトル群をまとめて斜面に密着させる（接地補正: 法線上方へ -25px） -->
+      <g transform="translate(0 -25)">
       <g transform="translate(150 177) rotate(-20)"><rect x="-22" y="-27" width="44" height="27" rx="2" fill="var(--surface2)" stroke="var(--ink)" stroke-width="1.6"/></g>
       <line x1="155" y1="158" x2="155" y2="212" stroke="var(--ink)" stroke-width="2.4" marker-end="url(#dec-ar)"/>
       <text x="158" y="208" fill="var(--ink)">mg</text>
       <line x1="155" y1="158" x2="212" y2="158" stroke="var(--act)" stroke-width="2.4" marker-end="url(#dec-ar)"/>
       <text x="215" y="155" fill="var(--act)">F</text>
       <line x1="155" y1="158" x2="133" y2="166" stroke="var(--ink)" stroke-width="1.8" stroke-dasharray="4 3" marker-end="url(#dec-ar)"/>
-      <text x="74" y="186" fill="var(--ink)" font-size="12">mg sinθ</text>
       <line x1="155" y1="158" x2="204" y2="140" stroke="var(--act)" stroke-width="1.8" stroke-dasharray="4 3" marker-end="url(#dec-ar)"/>
       <text x="200" y="133" fill="var(--act)" font-size="12">F cosθ</text>
       <line x1="155" y1="158" x2="132" y2="99" stroke="var(--ref)" stroke-width="2.4" marker-end="url(#dec-ar)"/>
       <text x="113" y="96" fill="var(--ref)">R</text>
+      </g>
+      <text x="74" y="150" fill="var(--ink)" font-size="12">mg sinθ</text>
     </svg>
     <div class="figcap">F と mg を 斜面方向(∥) と 面に垂直な方向(⊥) に分解</div>
   </div>
@@ -584,6 +587,8 @@
       <path class="w" d="M26 168 L270 79"/>
       <path class="w" d="M66 168 a40 40 0 0 0 -5 -13" fill="none"/>
       <text x="70" y="163" font-size="12">θ</text>
+      <!-- 箱と力ベクトル群をまとめて斜面に密着させる（接地補正: 法線上方へ -15px） -->
+      <g transform="translate(0 -15)">
       <g transform="translate(138 142) rotate(-20)"><rect x="-20" y="-25" width="40" height="25" rx="2" fill="var(--surface2)" stroke="var(--ink)" stroke-width="1.6"/></g>
       <line x1="138" y1="118" x2="188" y2="100" stroke="var(--act)" stroke-width="2.4" marker-end="url(#lo-ar)"/>
       <text x="178" y="95" fill="var(--act)" font-size="12">F cosθ</text>
@@ -591,6 +596,7 @@
       <text x="44" y="128" fill="var(--ink)" font-size="12">mg sinθ</text>
       <line x1="151" y1="146" x2="180" y2="135" stroke="var(--thr)" stroke-width="2.6" marker-end="url(#lo-ar)"/>
       <text x="184" y="142" fill="var(--thr)">f</text>
+      </g>
     </svg>
     <div class="figcap">F が小さい → 下へ滑ろうとする → 摩擦 f は斜面上向き</div>
   </div>
@@ -614,6 +620,8 @@
       <path class="w" d="M26 168 L270 79"/>
       <path class="w" d="M66 168 a40 40 0 0 0 -5 -13" fill="none"/>
       <text x="70" y="163" font-size="12">θ</text>
+      <!-- 箱と力ベクトル群をまとめて斜面に密着させる（接地補正: 法線上方へ -15px） -->
+      <g transform="translate(0 -15)">
       <g transform="translate(138 142) rotate(-20)"><rect x="-20" y="-25" width="40" height="25" rx="2" fill="var(--surface2)" stroke="var(--ink)" stroke-width="1.6"/></g>
       <line x1="138" y1="118" x2="188" y2="100" stroke="var(--act)" stroke-width="2.4" marker-end="url(#up-ar)"/>
       <text x="178" y="95" fill="var(--act)" font-size="12">F cosθ</text>
@@ -621,6 +629,7 @@
       <text x="44" y="128" fill="var(--ink)" font-size="12">mg sinθ</text>
       <line x1="151" y1="146" x2="122" y2="157" stroke="var(--thr)" stroke-width="2.6" marker-end="url(#up-ar)"/>
       <text x="124" y="167" fill="var(--thr)">f</text>
+      </g>
     </svg>
     <div class="figcap">F が大きい → 上へ動こうとする → 摩擦 f は斜面下向き</div>
   </div>
