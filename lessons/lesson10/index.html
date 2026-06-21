@@ -1366,8 +1366,8 @@
     // 作用点で統一: mg・mg sinθ=重心(px,py) / R・f=接触面(cxp,cyp=箱の底面中央)
     arrow(px,py, px, py+mg*k, cssv('--ink'), 2.8); label(px+6, py+mg*k, 'mg', cssv('--ink'));
     arrow(cxp,cyp, cxp+nx*Rn*k, cyp+ny*Rn*k, cssv('--ref'), 2.8); label(cxp+nx*Rn*k-2, cyp+ny*Rn*k-4, 'R', cssv('--ref'));
-    arrow(px,py, px-ux*comp*k, py-uy*comp*k, cssv('--act'), 2.8); label(px-ux*comp*k-2, py-uy*comp*k+14, 'mg sinθ', cssv('--act'));
-    arrow(cxp,cyp, cxp+ux*fval*k, cyp+uy*fval*k, cssv('--thr'), 2.8); label(cxp+ux*fval*k+4, cyp+uy*fval*k-2, 'f', cssv('--thr'));
+    arrow(px,py, px-ux*comp*k, py-uy*comp*k, cssv('--act'), 2.8); label(px-ux*comp*k-48, py-uy*comp*k+16, 'mg sinθ', cssv('--act'));
+    arrow(cxp,cyp, cxp+ux*fval*k, cyp+uy*fval*k, cssv('--thr'), 2.8); label(cxp+ux*fval*k+6, cyp+uy*fval*k-4, 'f', cssv('--thr'));
     ctx.font='bold 14px sans-serif';
     if(slipping){ ctx.fillStyle=cssv('--act'); ctx.fillText('滑り出し！ θ > φ₀', ox+4, 22); }
     else { ctx.fillStyle=cssv('--thr'); ctx.fillText('静止（θ ≦ φ₀）', ox+4, 22); }
