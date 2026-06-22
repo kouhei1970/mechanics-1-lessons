@@ -858,7 +858,7 @@
   <h1 class="tt">例題4.5 円柱に巻いたロープ</h1>
   <p class="ex">ロープを円柱に1回巻き、<i>T</i> = 500 N の張力を支えるには <i>T<sub>0</sub></i> の張力はどれほど必要か。ロープと円柱の静摩擦係数は μ<sub>s</sub> = 0.4 とする。（教科書 例題4.5, p.69）</p>
   <p class="steps">1回巻きなので接触角 θ<sub>0</sub> = 2π。オイラーの式より：</p>
-  <div class="eq"><i>T<sub>0</sub></i> = <i>T</i> e<sup>−μ<sub>s</sub>θ<sub>0</sub></sup> = 500 × e<sup>−0.4×2π</sup> = 500 × 0.0809 = <span class="eq big">40.5 N</span></div>
+  <div class="eq"><i>T<sub>0</sub></i> = <i>T</i> e<sup>−μ<sub>s</sub>θ<sub>0</sub></sup> = 500 × e<sup>−0.4×2π</sup> = 500 × 0.0810 = <span class="eq big">40.5 N</span></div>
   <p class="note">ロープと円柱の摩擦を利用すると、1/10 以下の力で支えられる。これが「巻きつけて支える」仕組みの本質。</p>
 </div></section>
 
@@ -920,7 +920,7 @@
       <button class="btn" data-reset="2">やり直す</button>
     </div>
     <div class="prresult" id="res-l10-p2"></div>
-    <div class="reveal" id="rev-l10-p2">(a) θ<sub>c</sub> = arctan(μ<sub>s</sub>) = arctan(0.40) = <b>21.8°</b>。<br>(b) <i>a</i> = g(sin θ − μ<sub>k</sub> cos θ) = 9.80×(sin30° − 0.30 cos30°) = 9.80×(0.5 − 0.2598) = <b>2.36 m/s²</b>。</div>
+    <div class="reveal" id="rev-l10-p2">(a) θ<sub>c</sub> = arctan(μ<sub>s</sub>) = arctan(0.40) = <b>21.8°</b>。<br>(b) <i>a</i> = g(sin θ − μ<sub>k</sub> cos θ) = 9.80×(sin30° − 0.30 cos30°) = 9.80×(0.5 − 0.2598) = <b>2.35 m/s²</b>。</div>
   </div>
 
   <div id="l10-pr-p3" class="pr-panel" style="display:none;">
@@ -1494,8 +1494,8 @@
     btn.addEventListener('click',function(){
       var g=btn.getAttribute('data-grade');
       if(g==='1'){var a=check('pr-l10-q1a','mk-l10-q1a',68.6,1); var b=check('pr-l10-q1b','mk-l10-q1b',1.55,2); setRes('res-l10-p1',(a?1:0)+(b?1:0),2);}
-      else if(g==='2'){var a2=check('pr-l10-q2a','mk-l10-q2a',21.8,1); var b2=check('pr-l10-q2b','mk-l10-q2b',2.36,2); setRes('res-l10-p2',(a2?1:0)+(b2?1:0),2);}
-      else if(g==='3'){var a3=check('pr-l10-q3','mk-l10-q3',48.5,1); setRes('res-l10-p3',a3?1:0,1);}
+      else if(g==='2'){var a2=check('pr-l10-q2a','mk-l10-q2a',21.8,1); var b2=check('pr-l10-q2b','mk-l10-q2b',2.35,2); setRes('res-l10-p2',(a2?1:0)+(b2?1:0),2);}
+      else if(g==='3'){var a3=check('pr-l10-q3','mk-l10-q3',48.6,1); setRes('res-l10-p3',a3?1:0,1);}
     });
   });
   [].slice.call(root.querySelectorAll('[data-reveal]')).forEach(function(btn){
