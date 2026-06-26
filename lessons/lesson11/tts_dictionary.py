@@ -8,6 +8,9 @@ REPLACEMENTS = [
     # 初速度: pyopenjtalk が「ハツソクド」と誤読するため「ショソクド」に固定
     # 初速度 (initial velocity) is misread as ハツソクド; fix to ショソクド
     ("初速度", "ショソクド"),
+    # Eシラバス: ラテン文字 E を確実に「イー」と読ませる
+    # Eシラバス (e-syllabus): force the Latin "E" to read as イー
+    ("Eシラバス", "イーシラバス"),
 ]
 
 
