@@ -7,17 +7,22 @@
   {
     "id": "sl11-ondemand",
     "file": "audio/sl11-ondemand.mp3",
-    "duration": 74.71
+    "duration": 74.28
   },
   {
     "id": "sl11-schedule",
     "file": "audio/sl11-schedule.mp3",
-    "duration": 69.05
+    "duration": 70.37
   },
   {
     "id": "sl11-roadmap",
     "file": "audio/sl11-roadmap.mp3",
     "duration": 64.01
+  },
+  {
+    "id": "sl11-formula-mindset",
+    "file": "audio/sl11-formula-mindset.mp3",
+    "duration": 54.98
   },
   {
     "id": "sl11-recap",
@@ -137,6 +142,6 @@
   {
     "id": "sl11-summary",
     "file": "audio/sl11-summary.mp3",
-    "duration": 81.38
+    "duration": 81.05
   }
 ]
