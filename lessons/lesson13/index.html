@@ -500,10 +500,10 @@
     <div class="grid2">
       <div><canvas id="cv13-river" class="plane"></canvas></div>
       <div>
-        <div class="row"><label>船の向き θ</label><input type="range" id="s13-th" min="0" max="90" step="1" value="60"><span class="val" id="v13-th">60°</span></div>
+        <div class="row"><label>上流への傾き θ</label><input type="range" id="s13-th" min="0" max="90" step="1" value="30"><span class="val" id="v13-th">30°</span></div>
         <div class="row"><label>流速 v<sub>W</sub></label><input type="range" id="s13-vw" min="0" max="4" step="0.2" value="3"><span class="val" id="v13-vw">3.0</span></div>
         <div class="eq" id="eq13-river"></div>
-        <p class="note">船速 v<sub>B</sub>=5.0。流れ（青）と船速（赤）の合成が、地面から見た実際の速度（緑）。θ=90°で上流に向けると流されない。</p>
+        <p class="note">船速 v<sub>B</sub>=5.0。θ は対岸向き（真横）から上流への傾き。流れ（青）と船速（赤）の合成が、地面から見た実際の速度（緑）。sinθ = v<sub>W</sub>/v<sub>B</sub> となる θ（既定値では約36.9°）で流されず、まっすぐ渡れる。</p>
       </div>
     </div>
   </div>
@@ -555,7 +555,7 @@
     <span class="tag2 tag-do">操作</span>
     <p class="kicker">採点つき練習</p>
     <h1 class="tt">相対速度を計算しよう</h1>
-    <div class="eq" style="font-size:var(--fs-note);">A君が東向きに v<sub>A</sub>=1.2 m/s、B君が南向きに v<sub>B</sub>=1.0 m/s で歩く。A君から見たB君の相対速度の大きさを求めよ。（東をx正、北をy正、小数第2位まで）</div>
+    <div class="eq" style="font-size:var(--fs-note);">（教科書 例題5.11）A君が東向きに v<sub>A</sub>=1.2 m/s、B君が南向きに v<sub>B</sub>=1.0 m/s で歩く。A君から見たB君の相対速度の大きさを求めよ。（東をx正、北をy正、小数第2位まで）</div>
     <div class="prfields">
       <div class="prf"><span>|v<sub>B/A</sub>|［m/s］</span><input type="number" id="in13-rel" step="0.01"><span class="prmark" id="mk13-rel"></span></div>
     </div>
@@ -578,7 +578,7 @@
     <div class="steps" style="font-size:var(--fs-note);">
       (a) ω = 2π/<i>T</i> = 2π/0.40 ≈ <strong>15.7 rad/s</strong>　（周期から角速度へ）<br>
       (b) <i>v</i> = <i>r</i>ω = 0.50 × 15.7 ≈ <strong>7.9 m/s</strong>　（橋渡しの式 <i>v</i> = <i>r</i>ω）<br>
-      (c) <i>a<sub>n</sub></i> = <i>r</i>ω² = 0.50 × 15.7² ≈ <strong>123 m/s²</strong>　（= <i>v</i>²/<i>r</i> = 7.9²/0.50 でも同じ）
+      (c) <i>a<sub>n</sub></i> = <i>r</i>ω² = 0.50 × 15.7² ≈ <strong>123 m/s²</strong>　（= <i>v</i>²/<i>r</i> でも同じ。ただし丸め前の <i>v</i> = 7.85 m/s で計算すると 123 m/s² に一致。丸めた 7.9 を使うと 124.8 と僅かにずれる）
     </div>
     <p class="note">向心加速度は約 123 m/s²、重力加速度 <i>g</i> ≈ 9.8 m/s² の<strong>約13倍</strong>。半径が小さく速さが大きいほど大きくなる。<i>a<sub>n</sub></i> = <i>r</i>ω² と <i>v</i>²/<i>r</i> は同じ値（ω = <i>v</i>/<i>r</i> を代入すれば一致）。</p>
   </div>
@@ -768,9 +768,9 @@
   var A=anim(function(){var w=cv.clientWidth,h=cv.clientHeight; cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
     var cxp=w*0.5, cyp=h*0.5, R=Math.min(w,h)*0.34, ph=performance.now()/900;
     ctx.strokeStyle=cssv('--grd'); ctx.lineWidth=1.4; ctx.setLineDash([4,5]); ctx.beginPath(); ctx.arc(cxp,cyp,R,0,Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
-    var px=cxp+R*Math.cos(ph), py=cyp+R*Math.sin(ph);
+    var px=cxp+R*Math.cos(ph), py=cyp-R*Math.sin(ph);
     ctx.strokeStyle=cssv('--ax'); ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(cxp,cyp); ctx.lineTo(px,py); ctx.stroke();
-    var tx=-Math.sin(ph), ty=Math.cos(ph), L=R*0.6;
+    var tx=-Math.sin(ph), ty=-Math.cos(ph), L=R*0.6;
     ctx.strokeStyle=cssv('--ref'); ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(px+tx*L,py+ty*L); ctx.stroke();
     var aL=R*0.45; ctx.strokeStyle=cssv('--act'); ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(px+(cxp-px)/R*aL,py+(cyp-py)/R*aL); ctx.stroke();
     ctx.fillStyle=cssv('--ref'); ctx.beginPath(); ctx.arc(px,py,5,0,Math.PI*2); ctx.fill();});
@@ -786,9 +786,9 @@
     var cxp=w*0.45, cyp=h*0.55, R=Math.min(w,h)*0.4, ph=performance.now()/1100;
     ctx.strokeStyle=cssv('--grd'); ctx.lineWidth=1.3; ctx.setLineDash([4,5]); ctx.beginPath(); ctx.arc(cxp,cyp,R,0,Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
     ctx.fillStyle=cssv('--ink'); ctx.beginPath(); ctx.arc(cxp,cyp,3.5,0,Math.PI*2); ctx.fill();
-    function pt(rr,col,lab){var x=cxp+rr*Math.cos(ph), y=cyp+rr*Math.sin(ph);
+    function pt(rr,col,lab){var x=cxp+rr*Math.cos(ph), y=cyp-rr*Math.sin(ph);
       ctx.strokeStyle=cssv('--grd'); ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(cxp,cyp); ctx.lineTo(x,y); ctx.stroke();
-      var tx=-Math.sin(ph), ty=Math.cos(ph), L=rr*0.65;
+      var tx=-Math.sin(ph), ty=-Math.cos(ph), L=rr*0.65;
       ctx.strokeStyle=col; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+tx*L,y+ty*L); ctx.stroke();
       var a=Math.atan2(ty,tx); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x+tx*L,y+ty*L); ctx.lineTo(x+tx*L-9*Math.cos(a-.4),y+ty*L-9*Math.sin(a-.4)); ctx.lineTo(x+tx*L-9*Math.cos(a+.4),y+ty*L-9*Math.sin(a+.4)); ctx.closePath(); ctx.fill();
       ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2); ctx.fill(); ctx.font='bold 13px Georgia,serif'; ctx.fillText(lab,x+7,y-7);}
@@ -801,8 +801,10 @@
   if(sw)sw.addEventListener('input',function(){wv=parseFloat(sw.value); vw.textContent=fmt(wv,1); upd();});
   if(sr)sr.addEventListener('input',function(){rv=parseFloat(sr.value); vr.textContent=fmt(rv,1); upd();});
   function upd(){$('#eq13-omega').innerHTML='<span class="big">v = rω = '+fmt(rv*wv,2)+' m/s</span><br>a<sub>n</sub> = rω² = '+fmt(rv*wv*wv,2)+' m/s² = v²/r<br><span style="color:var(--mut);">T = 2π/ω = '+fmt(2*Math.PI/wv,2)+' s</span>';}
+  var ph=0, lastT=null;
   var A=anim(function(){var w=cv.clientWidth,h=cv.clientHeight; cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
-    var s=Math.min(w,h)/(W*2.4); var cxp=w/2, cyp=h/2; var R=rv*s; var ph=performance.now()/1000*wv;
+    var now=performance.now()/1000; if(lastT===null)lastT=now; ph+=wv*(now-lastT); lastT=now;
+    var s=Math.min(w,h)/(W*2.4); var cxp=w/2, cyp=h/2; var R=rv*s;
     ctx.strokeStyle=cssv('--grd'); ctx.lineWidth=1.3; ctx.setLineDash([4,5]); ctx.beginPath(); ctx.arc(cxp,cyp,R,0,Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
     ctx.fillStyle=cssv('--ink'); ctx.beginPath(); ctx.arc(cxp,cyp,3.5,0,Math.PI*2); ctx.fill();
     var x=cxp+R*Math.cos(ph), y=cyp-R*Math.sin(ph);
@@ -813,7 +815,7 @@
     var amag=rv*wv*wv, asc=10; var ax=(cxp-x), ay=(cyp-y), aL=Math.hypot(ax,ay); ax/=aL; ay/=aL;
     arr(x,y,ax*amag*asc,ay*amag*asc,cssv('--act'));
     ctx.fillStyle=cssv('--ref'); ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2); ctx.fill();});
-  upd(); reg('sl13-omega-do',{show:A.start,hide:A.stop});})();
+  upd(); reg('sl13-omega-do',{show:function(){lastT=null; A.start();},hide:A.stop});})();
 
 (function(){var cv=$('#cv13-cent'); if(!cv)return; var ctx=cv.getContext('2d'),dpr=window.devicePixelRatio||1;
   var A=anim(function(){var w=cv.clientWidth,h=cv.clientHeight; cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
@@ -845,10 +847,10 @@
   var A=anim(function(){var w=cv.clientWidth,h=cv.clientHeight; cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
     var R1=Math.min(w,h)*0.3, R2=R1*0.6, cy=h*0.52, c1x=w*0.32, c2x=w*0.72, ph=performance.now()/1300;
     ctx.strokeStyle=cssv('--thr'); ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(c1x,cy-R1); ctx.lineTo(c2x,cy-R2); ctx.moveTo(c1x,cy+R1); ctx.lineTo(c2x,cy+R2); ctx.stroke();
-    function pl(cxp,R,col){ctx.strokeStyle=col; ctx.lineWidth=2.5; ctx.beginPath(); ctx.arc(cxp,cy,R,0,Math.PI*2); ctx.stroke();
-      ctx.strokeStyle=cssv('--mut'); ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(cxp,cy); ctx.lineTo(cxp+R*Math.cos(ph),cy+R*Math.sin(ph)); ctx.stroke();
+    function pl(cxp,R,phase,col){ctx.strokeStyle=col; ctx.lineWidth=2.5; ctx.beginPath(); ctx.arc(cxp,cy,R,0,Math.PI*2); ctx.stroke();
+      ctx.strokeStyle=cssv('--mut'); ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(cxp,cy); ctx.lineTo(cxp+R*Math.cos(phase),cy+R*Math.sin(phase)); ctx.stroke();
       ctx.fillStyle=col; ctx.beginPath(); ctx.arc(cxp,cy,3,0,Math.PI*2); ctx.fill();}
-    pl(c1x,R1,cssv('--ref')); pl(c2x,R2,cssv('--act'));
+    pl(c1x,R1,ph,cssv('--ref')); pl(c2x,R2,ph*R1/R2,cssv('--act'));
     ctx.fillStyle=cssv('--mut'); ctx.font='13px Georgia,serif'; ctx.fillText('r\u2081',c1x-4,cy+R1+18); ctx.fillText('r\u2082',c2x-4,cy+R2+16);});
   reg('sl13-pulley',{show:A.start,hide:A.stop});})();
 
@@ -863,12 +865,15 @@
   function gear(cxp,cyp,R,teeth,ang,col){ctx.strokeStyle=col; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(cxp,cyp,R*0.82,0,Math.PI*2); ctx.stroke();
     for(var i=0;i<teeth;i++){var th=ang+i*Math.PI*2/teeth; ctx.beginPath(); ctx.moveTo(cxp+R*0.82*Math.cos(th),cyp+R*0.82*Math.sin(th)); ctx.lineTo(cxp+R*Math.cos(th),cyp+R*Math.sin(th)); ctx.stroke();}
     ctx.fillStyle=col; ctx.beginPath(); ctx.arc(cxp,cyp,3,0,Math.PI*2); ctx.fill();}
+  var ph1=0, ph2=0.2, lastT=null;
   var A=anim(function(){var w=cv.clientWidth,h=cv.clientHeight; cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
+    var now=performance.now()/1000; if(lastT===null)lastT=now; var dt=now-lastT; lastT=now;
+    ph1+=w1*0.5*dt; ph2+=-(w1*N1/N2)*0.5*dt;
     var base=Math.min(w,h)*0.0115; var R1=base*N1, R2=base*N2; var lim=Math.min(w,h)*0.42; var sc=Math.min(1,lim/Math.max(R1,R2)); R1*=sc; R2*=sc;
-    var cy=h*0.52; var c1x=w*0.36, c2x=c1x+R1*0.82+R2*0.82; var ph=performance.now()/1000*w1*0.5;
-    gear(c1x,cy,R1,Math.max(8,Math.round(N1/2)),ph,cssv('--ref'));
-    gear(c2x,cy,R2,Math.max(6,Math.round(N2/2)),-ph*N1/N2+0.2,cssv('--act'));});
-  upd(); reg('sl13-gear-do',{show:A.start,hide:A.stop});})();
+    var cy=h*0.52; var c1x=w*0.36, c2x=c1x+R1*0.82+R2*0.82;
+    gear(c1x,cy,R1,N1,ph1,cssv('--ref'));
+    gear(c2x,cy,R2,N2,ph2,cssv('--act'));});
+  upd(); reg('sl13-gear-do',{show:function(){lastT=null; A.start();},hide:A.stop});})();
 
 (function(){var cv=$('#cv13-relf'); if(!cv)return; var ctx=cv.getContext('2d'),dpr=window.devicePixelRatio||1;
   function draw(){var w=cv.clientWidth,h=cv.clientHeight; cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
@@ -881,8 +886,9 @@
     arr(Qx,Qy,Qx-50,Qy+h*0.28,cssv('--im'),2.4,[5,4]);
     arr(Qx,Qy,Qx-20,Qy-h*0.14,cssv('--thr'),3.4);
     ctx.fillStyle=cssv('--thr'); ctx.font='bold 13px Georgia,serif'; ctx.fillText('vQ/P',Qx-54,Qy-h*0.17);
-    ctx.fillStyle=cssv('--act'); ctx.fillText('vQ',Qx+24,Qy-h*0.38);
-    ctx.fillStyle=cssv('--im'); ctx.fillText('−vP',Qx-58,Qy+h*0.2);}
+    ctx.fillStyle=cssv('--act'); ctx.fillText('vQ',Qx+38,Qy-h*0.40);
+    ctx.fillStyle=cssv('--ref'); ctx.fillText('vP',Px+56,Py-h*0.30);
+    ctx.fillStyle=cssv('--im'); ctx.fillText('−vP',Qx-68,Qy+h*0.15);}
   reg('sl13-relformula',{show:draw,redraw:draw});})();
 
 (function(){var cv=$('#cv13-tri'); if(!cv)return; var pl=makePlane(cv,7,7); var P={x:2.5,y:1}, Q={x:1,y:3};
@@ -899,29 +905,30 @@
   reg('sl13-reltri-do',{show:draw,redraw:draw});})();
 
 (function(){var cv=$('#cv13-river'); if(!cv)return; var ctx=cv.getContext('2d'),dpr=window.devicePixelRatio||1;
-  var thd=60, vw=3, vb=5;
+  var thd=30, vw=3, vb=5;
   var es=$('#s13-th'),os=$('#v13-th'),ew=$('#s13-vw'),ow=$('#v13-vw');
   if(es)es.addEventListener('input',function(){thd=+es.value; os.textContent=thd+'°'; draw();});
   if(ew)ew.addEventListener('input',function(){vw=parseFloat(ew.value); ow.textContent=fmt(vw,1); draw();});
   function draw(){var w=cv.clientWidth,h=cv.clientHeight; cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
-    var th=thd*Math.PI/180; var bx=vb*Math.cos(th), by=vb*Math.sin(th); var wx=vw, wy=0; var rx=bx+wx, ry=by+wy;
-    var sc=Math.min(w,h)/16; var ox=w*0.28, oy=h*0.78;
+    var th=thd*Math.PI/180; var bx=-vb*Math.sin(th), by=vb*Math.cos(th); var wx=vw, wy=0; var rx=bx+wx, ry=by+wy;
+    var sc=Math.min(w,h)/16; var ox=w*0.28, oy=h*0.68;
     ctx.fillStyle=cssv('--surface2'); ctx.fillRect(0,h*0.18,w,h*0.5);
     ctx.strokeStyle=cssv('--grd'); ctx.setLineDash([4,4]); for(var yy=h*0.22;yy<h*0.65;yy+=18){ctx.beginPath(); ctx.moveTo(0,yy); ctx.lineTo(w,yy); ctx.stroke();} ctx.setLineDash([]);
     function arr(vx,vy,col,wd){ctx.strokeStyle=col; ctx.lineWidth=wd||3; ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(ox+vx*sc,oy-vy*sc); ctx.stroke(); var a=Math.atan2(-vy,vx); ctx.fillStyle=col; var ex=ox+vx*sc, ey=oy-vy*sc; ctx.beginPath(); ctx.moveTo(ex,ey); ctx.lineTo(ex-10*Math.cos(a-.4),ey-10*Math.sin(a-.4)); ctx.lineTo(ex-10*Math.cos(a+.4),ey-10*Math.sin(a+.4)); ctx.closePath(); ctx.fill();}
     arr(wx,wy,cssv('--ref'),2.6); arr(bx,by,cssv('--act'),2.6); arr(rx,ry,cssv('--thr'),3.6);
     ctx.fillStyle=cssv('--ink'); ctx.beginPath(); ctx.arc(ox,oy,4,0,Math.PI*2); ctx.fill();
-    var vy2=vb*Math.sin(th), drift=rx, mag=Math.hypot(rx,ry);
-    $('#eq13-river').innerHTML='<span class="big">実際の速度 = '+fmt(mag,2)+' m/s</span><br>横切る成分 v<sub>y</sub> = '+fmt(vy2,2)+'　流される向き v<sub>x</sub> = '+fmt(drift,2)+'<br><span style="color:var(--mut);">θ=90°（真上流）で v<sub>x</sub>=0 に近づく</span>';}
+    var vy2=by, drift=rx, mag=Math.hypot(rx,ry);
+    var thStar=(vw<=vb)?Math.asin(vw/vb)*180/Math.PI:null;
+    $('#eq13-river').innerHTML='<span class="big">実際の速度 = '+fmt(mag,2)+' m/s</span><br>横切る成分 v<sub>y</sub> = v<sub>B</sub>cosθ = '+fmt(vy2,2)+'<br>流される成分 v<sub>x</sub> = v<sub>W</sub> − v<sub>B</sub>sinθ = '+fmt(drift,2)+'<br><span style="color:var(--mut);">'+(thStar!==null?('θ* = arcsin(v<sub>W</sub>/v<sub>B</sub>) = '+fmt(thStar,1)+'° で v<sub>x</sub>=0、まっすぐ渡れる'):'v<sub>W</sub> &gt; v<sub>B</sub> のため流されずに渡ることは不可能')+'</span>';}
   reg('sl13-river-do',{show:draw,redraw:draw});})();
 
 (function(){var cv=$('#cv13-rain'); if(!cv)return; var ctx=cv.getContext('2d'),dpr=window.devicePixelRatio||1;
   function draw(){var w=cv.clientWidth,h=cv.clientHeight; cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
     var ox=w*0.55, oy=h*0.3, sc=Math.min(w,h)*0.08;
-    function arr(vx,vy,col,wd,dash,lab){ctx.strokeStyle=col; ctx.lineWidth=wd||3; ctx.setLineDash(dash||[]); var ex=ox+vx*sc, ey=oy+vy*sc; ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(ex,ey); ctx.stroke(); ctx.setLineDash([]); var a=Math.atan2(vy,vx); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(ex,ey); ctx.lineTo(ex-10*Math.cos(a-.4),ey-10*Math.sin(a-.4)); ctx.lineTo(ex-10*Math.cos(a+.4),ey-10*Math.sin(a+.4)); ctx.closePath(); ctx.fill(); if(lab){ctx.font='bold 13px Georgia,serif'; ctx.fillText(lab,ex+4,ey);}}
+    function arr(vx,vy,col,wd,dash,lab,lx,ly){ctx.strokeStyle=col; ctx.lineWidth=wd||3; ctx.setLineDash(dash||[]); var ex=ox+vx*sc, ey=oy+vy*sc; ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(ex,ey); ctx.stroke(); ctx.setLineDash([]); var a=Math.atan2(vy,vx); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(ex,ey); ctx.lineTo(ex-10*Math.cos(a-.4),ey-10*Math.sin(a-.4)); ctx.lineTo(ex-10*Math.cos(a+.4),ey-10*Math.sin(a+.4)); ctx.closePath(); ctx.fill(); if(lab){ctx.font='bold 13px Georgia,serif'; ctx.fillText(lab,ex+(lx===undefined?4:lx),ey+(ly||0));}}
     arr(0,5,cssv('--re'),3,[], 'vR');
-    arr(-3,0,cssv('--ref'),2.6,[6,4],'-vP');
-    arr(-3,5,cssv('--thr'),3.6,[],'vR/P');
+    arr(-3,0,cssv('--ref'),2.6,[6,4],'−vP',6,-8);
+    arr(-3,5,cssv('--thr'),3.6,[],'vR/P',-50,4);
     // stick figure
     var fx=w*0.5, fy=h*0.62; ctx.strokeStyle=cssv('--ink'); ctx.lineWidth=2; ctx.beginPath(); ctx.arc(fx,fy,8,0,Math.PI*2); ctx.moveTo(fx,fy+8); ctx.lineTo(fx,fy+30); ctx.moveTo(fx-12,fy+18); ctx.lineTo(fx+12,fy+18); ctx.moveTo(fx,fy+30); ctx.lineTo(fx-10,fy+48); ctx.moveTo(fx,fy+30); ctx.lineTo(fx+10,fy+48); ctx.stroke();}
   reg('sl13-ex4',{show:draw,redraw:draw});})();
